@@ -19,25 +19,13 @@ export const SpeechBubble = ({
   isDarkMode = false,
   totalMessages = 1
 }: SpeechBubbleProps) => {
-  // Dynamic sizing based on position and available space
+  // Simpler, more reliable sizing
   const getDynamicSizing = () => {
-    const messageAge = index; // 0 = newest, higher = older
+    // Use consistent width that doesn't cause layout issues
+    const widthPercent = 85;
     
-    // Calculate dynamic width (more conservative scaling)
-    let widthPercent;
-    if (totalMessages <= 2) {
-      widthPercent = messageAge === 0 ? 90 : 80; // Use most width when few messages
-    } else {
-      widthPercent = Math.max(70, 90 - (messageAge * 5)); // Gentler scale down
-    }
-    
-    // Calculate dynamic font size (more conservative)
-    let fontSize;
-    if (messageAge === 0 && totalMessages <= 2) {
-      fontSize = "text-base"; // Slightly larger for newest when space available
-    } else {
-      fontSize = "text-sm"; // Standard size for others
-    }
+    // Use consistent font size that's readable
+    const fontSize = "text-sm";
     
     return { widthPercent, fontSize };
   };

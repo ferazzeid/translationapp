@@ -43,9 +43,9 @@ export const SpeakerSection = ({
 
       <div className={cn(
         "absolute inset-x-0 overflow-y-auto px-2",
-        isTop ? "top-12 bottom-48 flex flex-col-reverse" : "bottom-12 top-48 flex flex-col"
+        isTop ? "top-20 bottom-20 flex flex-col-reverse" : "bottom-20 top-20 flex flex-col"
       )}>
-        <div className="flex-1 py-8">
+        <div className="flex-1 py-4 space-y-2">
           {messages}
         </div>
       </div>
