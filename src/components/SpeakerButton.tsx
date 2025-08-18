@@ -37,21 +37,18 @@ export const SpeakerButton = ({
           size="lg"
           variant="outline"
           className={cn(
-            "h-20 w-20 rounded-full border-2 transition-all duration-200 relative z-10",
+            "h-20 w-20 rounded-full transition-all duration-200 relative z-10",
             "hover:scale-105 active:scale-95",
             isListening ? [
-              "border-red-500 bg-red-500 text-white shadow-lg shadow-red-500/25",
+              "bg-red-500 text-white shadow-lg shadow-red-500/25 border-0",
               "animate-pulse",
-              speaker === "B" && "border-orange-500 bg-orange-500 shadow-orange-500/25"
+              speaker === "B" && "bg-orange-500 shadow-orange-500/25"
             ] : [
               "bg-background border-border hover:border-muted-foreground",
               "hover:bg-muted/50"
             ]
           )}
-          onMouseDown={onStart}
-          onMouseUp={onStop}
-          onTouchStart={onStart}
-          onTouchEnd={onStop}
+          onClick={isListening ? onStop : onStart}
         >
           <Mic className={cn(
             "h-8 w-8 transition-all duration-200",
