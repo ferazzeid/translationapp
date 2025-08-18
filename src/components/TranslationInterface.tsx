@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { SpeechBubble } from "./SpeechBubble";
 import { CentralVolumeControl } from "./CentralVolumeControl";
 import { SpeakerButton } from "./SpeakerButton";
@@ -225,15 +225,8 @@ export const TranslationInterface = ({
         return updated;
       });
 
-      // Show success toast
-      toast({
-        title: "Translation Complete",
-        description: `${originalText} → ${translatedText}`,
-        duration: 3000
-      });
-
       // Step 4: Text to speech for the translation
-      console.log('Step 3: Calling text-to-speech...');
+      console.log('Step 4: Calling text-to-speech...');
       const { data: ttsResponse, error: ttsError } = await supabase.functions.invoke('text-to-speech', {
         body: {
           text: translatedText,
@@ -298,6 +291,13 @@ export const TranslationInterface = ({
 
   return (
     <div className="h-full w-full relative bg-background overflow-hidden">
+      {/* Debug Info */}
+      <div className="absolute top-2 left-2 z-50 bg-black/80 text-white p-2 rounded text-sm">
+        Messages: {messages.length}
+        {messages.length > 0 && (
+          <div>Last: {messages[0]?.originalText?.substring(0, 20)}...</div>
+        )}
+      </div>
       {/* Speaker A Half - Top (Rotated 180°) */}
       <div className="absolute inset-x-0 top-0 h-1/2 rotate-180">
         {/* Speaker A Microphone Button - At Edge */}
