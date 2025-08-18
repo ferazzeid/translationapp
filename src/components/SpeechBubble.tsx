@@ -16,71 +16,112 @@ export const SpeechBubble = ({
   speaker,
   isNew = false 
 }: SpeechBubbleProps) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [shouldRemove, setShouldRemove] = useState(false);
 
-  useEffect(() => {
-    // Animate in
-    const timer = setTimeout(() => setIsVisible(true), 50);
-    
-    // Auto-remove after 10 seconds for older messages
-    if (index > 0) {
-      const removeTimer = setTimeout(() => {
-        setShouldRemove(true);
-      }, 10000 - (index * 2000));
-      
-      return () => {
-        clearTimeout(timer);
-        clearTimeout(removeTimer);
-      };
-    }
+  // Calculate dynamic sizing based on text length
+  const getInitialSize = () => {
+    const textLength = text.length;
+    if (textLength <= 10) return 1.2; // Very large for short text
+    if (textLength <= 30) return 1.0; // Large for medium text
+    if (textLength <= 60) return 0.85; // Medium for longer text
+    return 0.7; // Smaller for very long text
+  };
 
-    return () => clearTimeout(timer);
-  }, [index]);
+  const initialSize = getInitialSize();
+  const lifespan = 8000; // 8 seconds total lifespan
+  const centerReachTime = 0.7; // Reach center at 70% of lifespan
+
+  useEffect(() => {
+    let animationFrame: number;
+    const startTime = Date.now();
+
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const newProgress = Math.min(elapsed / lifespan, 1);
+      
+      setProgress(newProgress);
+
+      if (newProgress >= 1) {
+        setShouldRemove(true);
+      } else {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    };
+
+    // Start animation after a brief delay
+    const delay = index * 200; // Stagger bubbles
+    const timer = setTimeout(() => {
+      animationFrame = requestAnimationFrame(animate);
+    }, delay);
+
+    return () => {
+      clearTimeout(timer);
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
+  }, [index, lifespan]);
 
   if (shouldRemove) return null;
 
-  const scale = index === 0 ? 1 : Math.max(0.7, 1 - (index * 0.15));
-  const opacity = index === 0 ? 1 : Math.max(0.4, 1 - (index * 0.2));
+  // Calculate position and scale based on progress
+  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 390;
+  const startX = speaker === "A" ? 20 : screenWidth - 20; // Start at edges
+  const centerX = screenWidth / 2;
+  const targetX = centerX + (speaker === "A" ? -60 : 60); // Stop before center with gap
+  
+  // Smooth movement from edge to center
+  const currentX = startX + (targetX - startX) * Math.min(progress / centerReachTime, 1);
+  
+  // Dynamic scaling: start large, shrink as it moves to center
+  const currentScale = initialSize * (1 - (progress * 0.6));
+  
+  // Opacity: fade out in final 30% of lifespan
+  const currentOpacity = progress > 0.7 ? 1 - ((progress - 0.7) / 0.3) : 1;
+  
+  // Vertical position with floating effect
+  const baseY = 120 + (index * 60);
+  const floatOffset = Math.sin(progress * Math.PI * 4) * 10; // Gentle floating
+  const currentY = baseY + floatOffset;
+
+  // Font size scales with bubble size
+  const fontSize = currentScale > 0.9 ? 'text-lg' : currentScale > 0.8 ? 'text-base' : 'text-sm';
 
   return (
     <div
-      className={cn(
-        "absolute transition-all duration-500 ease-out pointer-events-none",
-        speaker === "A" ? "left-4" : "right-4",
-        !isVisible && "opacity-0 translate-y-4",
-        isVisible && "opacity-100 translate-y-0",
-        isNew && "animate-fade-in-up"
-      )}
+      className="absolute pointer-events-none transition-all duration-100 ease-linear"
       style={{
-        bottom: `${120 + (index * 80)}px`,
-        transform: `scale(${scale})`,
-        opacity: opacity,
-        zIndex: 10 - index
+        left: `${currentX}px`,
+        bottom: `${currentY}px`,
+        transform: `translateX(-50%) scale(${currentScale})`,
+        opacity: currentOpacity,
+        zIndex: 50 - index
       }}
     >
       <div
         className={cn(
-          "max-w-xs rounded-2xl px-4 py-3 shadow-medium backdrop-blur-sm border",
+          "rounded-2xl px-4 py-3 shadow-lg backdrop-blur-md border-2 min-w-max max-w-xs",
           speaker === "A" 
-            ? "bg-primary/90 text-primary-foreground border-primary/20" 
-            : "bg-accent/90 text-accent-foreground border-accent/20",
-          isOriginal ? "text-sm font-medium" : "text-xs opacity-80"
+            ? "bg-primary/95 text-primary-foreground border-primary/30 shadow-primary/20" 
+            : "bg-accent/95 text-accent-foreground border-accent/30 shadow-accent/20",
+          fontSize,
+          isOriginal ? "font-semibold" : "font-medium opacity-90"
         )}
       >
-        <p className="break-words">{text}</p>
+        <p className="break-words leading-tight">{text}</p>
         {!isOriginal && (
-          <div className="w-2 h-2 rounded-full bg-current opacity-50 mt-1" />
+          <div className="w-1.5 h-1.5 rounded-full bg-current opacity-60 mt-1.5 mx-auto" />
         )}
       </div>
       
-      {/* Speech bubble tail */}
+      {/* Enhanced speech bubble tail */}
       <div
         className={cn(
-          "absolute top-1/2 -translate-y-1/2 w-3 h-3 rotate-45",
+          "absolute top-1/2 -translate-y-1/2 w-4 h-4 rotate-45",
           speaker === "A" 
-            ? "-left-1.5 bg-primary/90 border-l border-b border-primary/20" 
-            : "-right-1.5 bg-accent/90 border-r border-t border-accent/20"
+            ? "-left-2 bg-primary/95 border-l border-b border-primary/30" 
+            : "-right-2 bg-accent/95 border-r border-t border-accent/30"
         )}
       />
     </div>
