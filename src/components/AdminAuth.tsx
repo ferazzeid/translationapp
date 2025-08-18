@@ -47,23 +47,51 @@ export const AdminAuth = ({ onAdminAuthenticated, onBackToApp }: AdminAuthProps)
     try {
       // Development bypass for admin@admin
       if (email === "admin@admin" && password === "admin") {
-        // Create a mock user object for development
-        const mockUser = {
-          id: "dev-admin-user",
-          email: "admin@dev.local",
-          user_metadata: { display_name: "admin" },
-          app_metadata: {},
-          aud: "authenticated",
-          created_at: new Date().toISOString()
-        } as unknown as User;
-        
-        onAdminAuthenticated(mockUser);
-        toast({
-          title: "Success",
-          description: "Development admin access granted!",
+        // Create a real admin user for development
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email: "dev-admin@localhost.dev",
+          password: "dev-admin-pass",
+          options: {
+            emailRedirectTo: `${window.location.origin}/`,
+            data: {
+              display_name: "admin"
+            }
+          }
         });
-        setLoading(false);
-        return;
+
+        if (signUpError && !signUpError.message.includes("already registered")) {
+          throw signUpError;
+        }
+
+        // Try to sign in with the dev admin account
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+          email: "dev-admin@localhost.dev",
+          password: "dev-admin-pass"
+        });
+
+        if (signInError) throw signInError;
+
+        if (signInData.user) {
+          // Ensure profile exists
+          const { error: profileError } = await supabase
+            .from("profiles")
+            .upsert({
+              user_id: signInData.user.id,
+              display_name: "admin"
+            }, {
+              onConflict: "user_id"
+            });
+
+          if (profileError) console.log("Profile creation error:", profileError);
+
+          onAdminAuthenticated(signInData.user);
+          toast({
+            title: "Success",
+            description: "Development admin access granted!",
+          });
+          setLoading(false);
+          return;
+        }
       }
 
       if (isLogin) {
