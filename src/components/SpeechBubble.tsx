@@ -37,12 +37,6 @@ export const SpeechBubble = ({
         <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
           {text}
         </p>
-        {!isOriginal && (
-          <div className={cn(
-            "w-2 h-2 rounded-full mt-2",
-            isDarkMode ? "bg-background/60" : "bg-foreground/60"
-          )} />
-        )}
       </div>
     </div>
   );

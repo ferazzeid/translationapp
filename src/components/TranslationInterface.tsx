@@ -313,7 +313,8 @@ export const TranslationInterface = ({
 
   const getRecentMessages = (viewerSpeaker: "A" | "B") => {
     // Each speaker sees ALL recent messages (both their own and translated from other speaker)
-    return messages.slice(0, 3);
+    // Keep up to 50 messages - they persist until replaced due to space constraints
+    return messages.slice(0, 50);
   };
 
   return (
