@@ -30,7 +30,7 @@ export const useAudioRecorder = (): AudioRecorderHook => {
       });
 
       const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'audio/webm;codecs=opus'
+        mimeType: 'audio/wav'
       });
 
       chunksRef.current = [];
@@ -76,7 +76,7 @@ export const useAudioRecorder = (): AudioRecorderHook => {
 
       mediaRecorder.onstop = async () => {
         try {
-          const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm' });
+          const audioBlob = new Blob(chunksRef.current, { type: 'audio/wav' });
           
           // Additional check on blob size
           if (audioBlob.size < 1000) { // Less than 1KB is likely too short
