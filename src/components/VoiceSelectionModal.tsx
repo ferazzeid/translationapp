@@ -18,6 +18,7 @@ interface VoiceSelectionModalProps {
   onClose: () => void;
   selectedVoice: string;
   onVoiceSelect: (voiceId: string) => void;
+  speaker?: "A" | "B"; // Add speaker prop for orientation
 }
 
 const AVAILABLE_VOICES: Voice[] = [
@@ -33,7 +34,8 @@ export const VoiceSelectionModal = ({
   isOpen,
   onClose,
   selectedVoice,
-  onVoiceSelect
+  onVoiceSelect,
+  speaker = "B"
 }: VoiceSelectionModalProps) => {
   const [playingVoice, setPlayingVoice] = useState<string | null>(null);
 
@@ -75,18 +77,13 @@ export const VoiceSelectionModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-xs bg-background border border-border shadow-lg p-0">
-        {/* Header with close button */}
-        <div className="flex items-center justify-between p-4 border-b border-border">
+      <DialogContent className={cn(
+        "max-w-xs bg-background border border-border shadow-lg p-0",
+        speaker === "A" && "rotate-180" // Rotate modal for Speaker A
+      )}>
+        {/* Header */}
+        <div className="flex items-center justify-center p-4 border-b border-border">
           <span className="text-sm font-medium text-foreground">Voice Selection</span>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="h-6 w-6 text-foreground hover:bg-foreground hover:text-background"
-          >
-            <X className="h-4 w-4" />
-          </Button>
         </div>
         
         {/* Voice List */}

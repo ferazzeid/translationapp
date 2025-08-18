@@ -437,6 +437,7 @@ export const TranslationInterface = ({
         isOpen={activeVoiceModal !== null}
         onClose={() => setActiveVoiceModal(null)}
         selectedVoice={activeVoiceModal === "A" ? speakerAVoice : speakerBVoice}
+        speaker={activeVoiceModal || "B"}
         onVoiceSelect={(voice) => {
           if (activeVoiceModal === "A") {
             setSpeakerAVoice(voice);
