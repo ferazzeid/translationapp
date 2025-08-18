@@ -1,4 +1,4 @@
-import { Volume2, Settings } from "lucide-react";
+import { Volume2, Settings, Wifi, WifiOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -10,49 +10,31 @@ interface CentralVolumeControlProps {
   onOpenSettings: () => void;
 }
 
-// Modern 5-bar signal strength indicator
-const SignalBars = ({ isOnline }: { isOnline: boolean }) => {
-  const signalStrength = isOnline ? 5 : 0; // Full signal when online, none when offline
-  
-  return (
-    <div className="flex items-end gap-0.5">
-      {Array.from({ length: 5 }, (_, i) => {
-        const barHeight = (i + 1) * 2 + 6; // Heights: 8, 10, 12, 14, 16
-        const isActive = i < signalStrength;
-        
-        return (
-          <div
-            key={i}
-            className={cn(
-              "w-1 rounded-sm transition-colors",
-              isActive 
-                ? signalStrength === 5 
-                  ? "bg-emerald-500" 
-                  : signalStrength >= 3 
-                  ? "bg-yellow-500" 
-                  : "bg-red-500"
-                : "bg-muted"
-            )}
-            style={{ height: `${barHeight}px` }}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
 export const CentralVolumeControl = ({
   volume,
   onVolumeChange,
   isOnline,
   onOpenSettings
 }: CentralVolumeControlProps) => {
+  const ConnectionIcon = isOnline ? Wifi : WifiOff;
+
   return (
     <div className="flex items-center gap-6 w-full max-w-md">
-      {/* Modern Signal Strength */}
-      <SignalBars isOnline={isOnline} />
+      {/* Connection Status */}
+      <div className="flex items-center gap-2">
+        <div className={cn(
+          "w-2 h-2 rounded-full",
+          isOnline ? "bg-green-500" : "bg-red-500"
+        )} />
+        <ConnectionIcon 
+          className={cn(
+            "h-4 w-4",
+            isOnline ? "text-green-500" : "text-red-500"
+          )} 
+        />
+      </div>
 
-      {/* Volume Slider */}
+      {/* Horizontal Volume Slider */}
       <div className="flex items-center gap-3 flex-1">
         <Volume2 className="h-4 w-4 text-muted-foreground" />
         <Slider
@@ -63,6 +45,9 @@ export const CentralVolumeControl = ({
           orientation="horizontal"
           className="flex-1"
         />
+        <span className="text-sm text-muted-foreground min-w-8">
+          {Math.round(volume * 100)}%
+        </span>
       </div>
 
       {/* Settings Button */}
