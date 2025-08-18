@@ -30,8 +30,8 @@ export const SpeakerButton = ({
           "h-20 w-20 rounded-full transition-all duration-300",
           "hover:scale-105",
           isListening ? [
-            "bg-red-500 text-white border-0",
-            "animate-[pulse_6s_ease-in-out_infinite]"
+            "bg-red-500 text-white border-0 hover:bg-red-500",
+            "animate-[pulse_8s_ease-in-out_infinite]"
           ] : [
             "bg-transparent hover:bg-green-500 hover:text-white border border-border"
           ]
