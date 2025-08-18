@@ -306,7 +306,7 @@ export const TranslationInterface = ({
       {/* Speaker A Half - Top (Rotated 180°) */}
       <div className="absolute inset-x-0 top-0 h-1/2 rotate-180">
         {/* Speaker A Microphone Button - At Edge */}
-        <div className="absolute left-1/2 bottom-12 -translate-x-1/2 z-20">
+        <div className="absolute left-1/2 bottom-4 -translate-x-1/2 z-20">
           <SpeakerButton
             speaker="A"
             isListening={isListeningA}
@@ -355,7 +355,7 @@ export const TranslationInterface = ({
       {/* Speaker B Half - Bottom (Normal) */}
       <div className="absolute inset-x-0 bottom-0 h-1/2">
         {/* Speaker B Microphone Button */}
-        <div className="absolute left-1/2 top-12 -translate-x-1/2 z-20">
+        <div className="absolute left-1/2 bottom-4 -translate-x-1/2 z-20">
           <SpeakerButton
             speaker="B"
             isListening={isListeningB}

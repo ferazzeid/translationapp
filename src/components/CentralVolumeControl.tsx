@@ -33,12 +33,8 @@ export const CentralVolumeControl = ({
 
   return (
     <div className="flex items-center gap-6 w-full max-w-md">
-      {/* Connection Status */}
+      {/* Connection Status - Without dot */}
       <div className="flex items-center gap-2">
-        <div className={cn(
-          "w-2 h-2 rounded-full",
-          isOnline ? "bg-green-500" : "bg-red-500"
-        )} />
         <ConnectionIcon 
           className={cn(
             "h-4 w-4",
