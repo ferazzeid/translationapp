@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Play, Pause } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Voice {
   id: string;
@@ -54,16 +55,15 @@ export const VoiceSelectionModal = ({
     
     try {
       // Call text-to-speech function with preview text
-      const { data } = await fetch('/api/supabase/functions/text-to-speech', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const { data, error } = await supabase.functions.invoke('text-to-speech', {
+        body: {
           text: "Hello, this is a voice preview",
           voice: voiceId,
           language: "en"
-        })
-      }).then(res => res.json());
+        }
+      });
 
+      if (error) throw error;
       if (data?.audioContent) {
         const audio = new Audio(`data:audio/mp3;base64,${data.audioContent}`);
         audio.onended = () => setPlayingVoice(null);
