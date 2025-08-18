@@ -26,38 +26,33 @@ export const VerticalVolumeControl = ({
   const VolumeIcon = getVolumeIcon();
 
   return (
-    <div className="fixed left-4 top-1/2 -translate-y-1/2 z-40 bg-background/90 backdrop-blur-sm border border-border rounded-full p-3 shadow-lg">
-      <div className="flex flex-col items-center gap-4">
+    <div className="absolute left-2 top-1/2 -translate-y-1/2 z-40">
+      <div className="flex flex-col items-center gap-3">
         {/* Speaker Toggle Button */}
         <Button
           variant="ghost"
           size="icon"
           onClick={onToggleSpeaker}
           className={cn(
-            "h-10 w-10 rounded-full",
+            "h-8 w-8 rounded-full p-0",
             isSpeakerEnabled ? "text-foreground" : "text-muted-foreground"
           )}
           title={isSpeakerEnabled ? "Disable Speaker" : "Enable Speaker"}
         >
-          <VolumeIcon className="h-5 w-5" />
+          <VolumeIcon className="h-4 w-4" />
         </Button>
 
         {/* Vertical Volume Slider */}
-        <div className="h-32 flex flex-col items-center">
+        <div className="h-24 flex flex-col items-center">
           <Slider
             value={[Math.round(volume * 100)]}
             onValueChange={(value) => onVolumeChange(value[0] / 100)}
             max={100}
             step={5}
             orientation="vertical"
-            className="h-full"
+            className="h-full [&_[role=slider]]:bg-foreground [&_[data-orientation=vertical]]:bg-border"
             disabled={!isSpeakerEnabled}
           />
-        </div>
-
-        {/* Volume Percentage */}
-        <div className="text-xs text-center text-muted-foreground font-mono min-w-8">
-          {isSpeakerEnabled ? Math.round(volume * 100) : 0}%
         </div>
       </div>
     </div>
