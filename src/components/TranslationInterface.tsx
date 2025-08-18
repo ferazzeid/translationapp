@@ -244,71 +244,105 @@ export const TranslationInterface = ({
   };
 
   return (
-    <div className="h-full w-full relative bg-gradient-surface overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="h-full w-full bg-gradient-primary" />
+    <div className="h-full w-full relative bg-background overflow-hidden">
+      {/* Speaker A Half - Top (Rotated 180°) */}
+      <div className="absolute inset-x-0 top-0 h-1/2 rotate-180 border-b border-border">
+        {/* Speaker A Microphone Button */}
+        <div className="absolute left-1/2 bottom-4 -translate-x-1/2 z-20">
+          <SpeakerButton
+            speaker="A"
+            isListening={isListeningA}
+            onStart={() => startListening("A")}
+            onStop={() => stopListening("A")}
+            language={speakerALanguage}
+            flag={getLanguageFlag(speakerALanguage)}
+          />
+        </div>
+
+        {/* Speaker A Speech Bubbles Area */}
+        <div className="absolute inset-4 bottom-20 pointer-events-none">
+          {messages.filter(msg => msg.speaker === "A").slice(0, 3).map((message, index) => (
+            <div key={message.id} className="mb-2">
+              <SpeechBubble
+                text={message.originalText}
+                isOriginal={true}
+                index={index}
+                speaker="A"
+                isNew={index === 0}
+              />
+            </div>
+          ))}
+          {messages.filter(msg => msg.speaker === "B").slice(0, 3).map((message, index) => (
+            <div key={`translated-${message.id}`} className="mb-2">
+              <SpeechBubble
+                text={message.translatedText}
+                isOriginal={false}
+                index={index}
+                speaker="A"
+                isNew={index === 0}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Speaker A - Left Side */}
-      <div className="absolute left-8 top-1/2 -translate-y-1/2 z-20">
-        <SpeakerButton
-          speaker="A"
-          isListening={isListeningA}
-          onStart={() => startListening("A")}
-          onStop={() => stopListening("A")}
-          language={speakerALanguage}
-          flag={getLanguageFlag(speakerALanguage)}
+      {/* Central Control Strip */}
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-16 bg-muted border-t border-b border-border z-30 flex items-center justify-center">
+        <CentralVolumeControl
+          volume={volume}
+          onVolumeChange={setVolume}
+          isOnline={isOnline}
+          onOpenSettings={onOpenSettings}
         />
       </div>
 
-      {/* Speaker B - Right Side */}
-      <div className="absolute right-8 top-1/2 -translate-y-1/2 z-20">
-        <SpeakerButton
-          speaker="B"
-          isListening={isListeningB}
-          onStart={() => startListening("B")}
-          onStop={() => stopListening("B")}
-          language={speakerBLanguage}
-          flag={getLanguageFlag(speakerBLanguage)}
-        />
-      </div>
+      {/* Speaker B Half - Bottom (Normal) */}
+      <div className="absolute inset-x-0 bottom-0 h-1/2 border-t border-border">
+        {/* Speaker B Microphone Button */}
+        <div className="absolute left-1/2 top-4 -translate-x-1/2 z-20">
+          <SpeakerButton
+            speaker="B"
+            isListening={isListeningB}
+            onStart={() => startListening("B")}
+            onStop={() => stopListening("B")}
+            language={speakerBLanguage}
+            flag={getLanguageFlag(speakerBLanguage)}
+          />
+        </div>
 
-      {/* Dynamic Speech Bubbles */}
-      <div className="absolute inset-0 pointer-events-none z-15">
-        {messages.slice(0, 5).map((message, index) => (
-          <div key={message.id}>
-            {/* Original message bubble */}
-            <SpeechBubble
-              text={message.originalText}
-              isOriginal={true}
-              index={index * 2}
-              speaker={message.speaker}
-              isNew={index === 0}
-            />
-            {/* Translated message bubble */}
-            <SpeechBubble
-              text={message.translatedText}
-              isOriginal={false}
-              index={index * 2 + 1}
-              speaker={message.speaker === "A" ? "B" : "A"}
-              isNew={index === 0}
-            />
-          </div>
-        ))}
+        {/* Speaker B Speech Bubbles Area */}
+        <div className="absolute inset-4 top-20 pointer-events-none">
+          {messages.filter(msg => msg.speaker === "B").slice(0, 3).map((message, index) => (
+            <div key={message.id} className="mb-2">
+              <SpeechBubble
+                text={message.originalText}
+                isOriginal={true}
+                index={index}
+                speaker="B"
+                isNew={index === 0}
+              />
+            </div>
+          ))}
+          {messages.filter(msg => msg.speaker === "A").slice(0, 3).map((message, index) => (
+            <div key={`translated-${message.id}`} className="mb-2">
+              <SpeechBubble
+                text={message.translatedText}
+                isOriginal={false}
+                index={index}
+                speaker="B"
+                isNew={index === 0}
+              />
+            </div>
+          ))}
+        </div>
       </div>
-
-      {/* Central Volume Control */}
-      <CentralVolumeControl
-        volume={volume}
-        onVolumeChange={setVolume}
-        isOnline={isOnline}
-        onOpenSettings={onOpenSettings}
-      />
 
       {/* Visual feedback for listening states */}
-      {(isListeningA || isListeningB) && (
-        <div className="fixed inset-0 bg-listening-glow/5 animate-pulse-glow pointer-events-none z-5" />
+      {isListeningA && (
+        <div className="absolute inset-x-0 top-0 h-1/2 bg-speaker-a/5 animate-pulse pointer-events-none z-10" />
+      )}
+      {isListeningB && (
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-speaker-b/5 animate-pulse pointer-events-none z-10" />
       )}
     </div>
   );

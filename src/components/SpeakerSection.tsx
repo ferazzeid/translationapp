@@ -1,0 +1,61 @@
+import { ReactNode } from "react";
+import { cn } from "@/lib/utils";
+import { SpeakerButton } from "./SpeakerButton";
+
+interface SpeakerSectionProps {
+  speaker: "A" | "B";
+  isListening: boolean;
+  onStart: () => void;
+  onStop: () => void;
+  language: string;
+  flag: string;
+  messages: ReactNode;
+  isTop?: boolean;
+  className?: string;
+}
+
+export const SpeakerSection = ({
+  speaker,
+  isListening,
+  onStart,
+  onStop,
+  language,
+  flag,
+  messages,
+  isTop = false,
+  className
+}: SpeakerSectionProps) => {
+  const buttonPosition = isTop ? "bottom-4" : "top-4";
+  
+  return (
+    <div className={cn("relative w-full h-full", className)}>
+      {/* Microphone Button */}
+      <div className={cn("absolute left-1/2 -translate-x-1/2 z-20", buttonPosition)}>
+        <SpeakerButton
+          speaker={speaker}
+          isListening={isListening}
+          onStart={onStart}
+          onStop={onStop}
+          language={language}
+          flag={flag}
+        />
+      </div>
+
+      {/* Speech Bubbles Area */}
+      <div className={cn(
+        "absolute inset-4 pointer-events-none",
+        isTop ? "bottom-20" : "top-20"
+      )}>
+        {messages}
+      </div>
+
+      {/* Listening feedback overlay */}
+      {isListening && (
+        <div className={cn(
+          "absolute inset-0 animate-pulse pointer-events-none z-10",
+          speaker === "A" ? "bg-speaker-a/5" : "bg-speaker-b/5"
+        )} />
+      )}
+    </div>
+  );
+};
