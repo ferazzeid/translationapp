@@ -30,7 +30,7 @@ export const HorizontalVolumeControl = ({
   const VolumeIcon = getVolumeIcon();
 
   return (
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-full max-w-96 px-4">
+    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-full max-w-72 px-4">
       <div className="flex items-center justify-center gap-4">
         {/* Speaker Toggle Button */}
         <Button
@@ -47,7 +47,7 @@ export const HorizontalVolumeControl = ({
         </Button>
 
         {/* Horizontal Volume Slider */}
-        <div className="flex-1 max-w-48">
+        <div className="flex-1 max-w-32">
           <Slider
             value={[Math.round(volume * 100)]}
             onValueChange={(value) => onVolumeChange(value[0] / 100)}
@@ -63,8 +63,8 @@ export const HorizontalVolumeControl = ({
         <div className="h-8 w-8 rounded-full flex-shrink-0 flex items-center justify-center bg-muted border border-border">
           <Brain 
             className={cn(
-              "h-4 w-4 text-muted-foreground",
-              isProcessing && "animate-pulse text-primary"
+              "h-4 w-4 text-black",
+              isProcessing && "animate-pulse"
             )} 
           />
         </div>
