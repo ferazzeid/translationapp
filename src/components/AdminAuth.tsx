@@ -49,8 +49,8 @@ export const AdminAuth = ({ onAdminAuthenticated, onBackToApp }: AdminAuthProps)
       if (email === "admin@admin" && password === "admin") {
         // Create a real admin user for development
         const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          email: "dev-admin@localhost.dev",
-          password: "dev-admin-pass",
+          email: "devadmin@example.com",
+          password: "devadminpass123",
           options: {
             emailRedirectTo: `${window.location.origin}/`,
             data: {
@@ -65,8 +65,8 @@ export const AdminAuth = ({ onAdminAuthenticated, onBackToApp }: AdminAuthProps)
 
         // Try to sign in with the dev admin account
         const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-          email: "dev-admin@localhost.dev",
-          password: "dev-admin-pass"
+          email: "devadmin@example.com",
+          password: "devadminpass123"
         });
 
         if (signInError) throw signInError;
