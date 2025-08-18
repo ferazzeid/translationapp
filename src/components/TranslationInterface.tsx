@@ -368,16 +368,19 @@ export const TranslationInterface = ({
       </div>
 
       {/* Central Controls Strip */}
-      <div className="flex-shrink-0 h-20 bg-background border-t border-b border-border z-30 flex items-center justify-center relative">
+      <div className="flex-shrink-0 h-20 bg-background z-30 flex items-center justify-center relative">
+        {/* Connection Status - Left Side */}
+        <div className="absolute left-4 top-1/2 -translate-y-1/2">
+          <CentralVolumeControl isOnline={isOnline} />
+        </div>
+        
+        {/* Volume Control - Center */}
         <HorizontalVolumeControl
           volume={volume}
           onVolumeChange={setVolume}
           isSpeakerEnabled={isSpeakerEnabled}
           onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
         />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <CentralVolumeControl isOnline={isOnline} />
-        </div>
       </div>
 
       {/* Speaker B Half - Bottom (Normal) */}

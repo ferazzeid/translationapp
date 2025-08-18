@@ -182,11 +182,6 @@ export const AdminSettings = ({ onBackToApp, onSignOut }: AdminSettingsProps) =>
                     </Button>
                   </div>
                 </div>
-                {openaiKey && !showKey && (
-                  <p className="text-xs text-muted-foreground">
-                    Current: {maskedKey}
-                  </p>
-                )}
               </div>
 
               <div className="flex gap-2">

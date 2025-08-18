@@ -65,7 +65,7 @@ export const SimpleLanguageModal = ({
                 <SelectItem 
                   key={lang.code} 
                   value={lang.code}
-                  className="text-foreground hover:bg-muted"
+                  className="text-foreground hover:bg-muted focus:bg-muted"
                 >
                   {lang.name}
                 </SelectItem>
@@ -83,7 +83,7 @@ export const SimpleLanguageModal = ({
                 <SelectItem 
                   key={lang.code} 
                   value={lang.code}
-                  className="text-foreground hover:bg-muted"
+                  className="text-foreground hover:bg-muted focus:bg-muted"
                 >
                   {lang.name}
                 </SelectItem>
