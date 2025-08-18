@@ -1,10 +1,16 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.55.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Initialize Supabase client
+const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 // Convert base64 to Uint8Array
 function base64ToUint8Array(base64String: string): Uint8Array {
@@ -46,16 +52,25 @@ serve(async (req) => {
       );
     }
 
-    const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openaiApiKey) {
+    // Get OpenAI API key from admin settings
+    const { data: settingsData, error: settingsError } = await supabase
+      .from('admin_settings')
+      .select('setting_key, setting_value')
+      .eq('setting_key', 'openai_api_key')
+      .single();
+
+    if (settingsError || !settingsData?.setting_value) {
+      console.error('OpenAI API key not configured in admin settings');
       return new Response(
-        JSON.stringify({ error: 'OpenAI API key not configured' }),
+        JSON.stringify({ error: 'OpenAI API key not configured in admin settings' }),
         { 
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         }
       );
     }
+
+    const openaiApiKey = settingsData.setting_value;
 
     // Convert base64 audio to binary
     const binaryAudio = base64ToUint8Array(audio);
