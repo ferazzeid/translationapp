@@ -48,18 +48,13 @@ export const SimpleLanguageModal = ({
       <DialogContent className="max-w-sm bg-background border border-border shadow-lg p-0">
         <DialogTitle className="sr-only">Language Selection</DialogTitle>
         
-        {/* Single Close Button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onClose}
-          className="absolute right-2 top-2 h-6 w-6 text-foreground hover:bg-foreground hover:text-background z-50"
-        >
-          <X className="h-4 w-4" />
-        </Button>
+        {/* Header */}
+        <div className="flex items-center justify-center p-4 border-b border-border">
+          <span className="text-sm font-medium text-foreground">Language Selection</span>
+        </div>
 
         {/* Content */}
-        <div className="pt-8 pb-4 px-4 space-y-4">
+        <div className="p-4 space-y-4">
           {/* First Language */}
           <Select value={speakerALanguage} onValueChange={onSpeakerALanguageChange}>
             <SelectTrigger className="w-full bg-background border border-border text-foreground">

@@ -14,6 +14,7 @@ import { SpeakerControls } from "./SpeakerControls";
 import { SpeakerSection } from "./SpeakerSection";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
 import { SimpleLanguageModal } from "./SimpleLanguageModal";
+import { ProcessingIndicator } from "./ProcessingIndicator";
 
 interface Message {
   id: string;
@@ -175,6 +176,8 @@ export const TranslationInterface = ({
   const processAudioData = async (audioData: string, speaker: "A" | "B") => {
     console.log('Processing audio data for speaker:', speaker);
     
+    setIsProcessing(true);
+    
     try {
       const isFromA = speaker === "A";
       const originalLang = isFromA ? speakerALanguage : speakerBLanguage;
@@ -266,12 +269,14 @@ export const TranslationInterface = ({
       }
 
     } catch (error) {
-      console.error('Error processing audio:', error);
+      console.error('Translation error:', error);
       toast({
-        title: "Translation Error",
-        description: error.message || "Failed to process audio. Please try again.",
+        title: "Translation Error", 
+        description: error instanceof Error ? error.message : "Failed to process audio",
         variant: "destructive"
       });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -340,7 +345,16 @@ export const TranslationInterface = ({
               isNew={index === 0}
               isDarkMode={speakerADarkMode}
             />
-          ))}
+          )).concat(
+            isProcessing ? [
+              <ProcessingIndicator 
+                key="processing-a"
+                isProcessing={true} 
+                message="Translating..."
+                speaker="A"
+              />
+            ] : []
+          )}
         />
         
         {/* Speaker A Controls */}
@@ -354,7 +368,7 @@ export const TranslationInterface = ({
       </div>
 
       {/* Central Controls Strip */}
-      <div className="flex-shrink-0 h-20 bg-muted border-t border-b border-border z-30 flex items-center justify-center relative">
+      <div className="flex-shrink-0 h-20 bg-background border-t border-b border-border z-30 flex items-center justify-center relative">
         <HorizontalVolumeControl
           volume={volume}
           onVolumeChange={setVolume}
@@ -386,7 +400,16 @@ export const TranslationInterface = ({
               isNew={index === 0}
               isDarkMode={speakerBDarkMode}
             />
-          ))}
+          )).concat(
+            isProcessing ? [
+              <ProcessingIndicator 
+                key="processing-b"
+                isProcessing={true} 
+                message="Translating..."
+                speaker="B"
+              />
+            ] : []
+          )}
         />
         
         {/* Speaker B Controls */}
