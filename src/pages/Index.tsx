@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { IntroductionMode } from "@/components/IntroductionMode";
 import { TranslationInterface } from "@/components/TranslationInterface";
+import { AdminAuth } from "@/components/AdminAuth";
+import { AdminSettings } from "@/components/AdminSettings";
+import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
 
-type AppState = "setup" | "introduction" | "translation" | "settings";
+type AppState = "setup" | "introduction" | "translation" | "settings" | "admin-auth" | "admin-settings";
 
 interface LanguageSelection {
   speakerA: string;
@@ -16,6 +20,7 @@ const Index = () => {
     speakerA: "",
     speakerB: ""
   });
+  const [adminUser, setAdminUser] = useState<User | null>(null);
 
   const handleLanguageChange = (speaker: "speakerA" | "speakerB", language: string) => {
     setSelectedLanguages(prev => ({
@@ -34,6 +39,24 @@ const Index = () => {
 
   const handleOpenSettings = () => {
     setCurrentState("settings");
+  };
+
+  const handleOpenAdminSettings = () => {
+    setCurrentState("admin-auth");
+  };
+
+  const handleAdminAuthenticated = (user: User) => {
+    setAdminUser(user);
+    setCurrentState("admin-settings");
+  };
+
+  const handleAdminSignOut = () => {
+    setAdminUser(null);
+    setCurrentState("setup");
+  };
+
+  const handleBackToApp = () => {
+    setCurrentState("translation");
   };
 
   const renderCurrentView = () => {
@@ -61,6 +84,7 @@ const Index = () => {
             speakerALanguage={selectedLanguages.speakerA}
             speakerBLanguage={selectedLanguages.speakerB}
             onOpenSettings={handleOpenSettings}
+            onOpenAdminSettings={handleOpenAdminSettings}
           />
         );
       
@@ -68,14 +92,38 @@ const Index = () => {
         return (
           <div className="p-6 text-center">
             <h1 className="text-2xl font-bold mb-4">Settings</h1>
-            <p className="text-muted-foreground mb-4">Settings panel coming soon...</p>
-            <button 
-              onClick={() => setCurrentState("translation")}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg"
-            >
-              Back to Translation
-            </button>
+            <p className="text-muted-foreground mb-4">User settings panel coming soon...</p>
+            <div className="flex gap-2 justify-center">
+              <button 
+                onClick={() => setCurrentState("translation")}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg"
+              >
+                Back to Translation
+              </button>
+              <button 
+                onClick={handleOpenAdminSettings}
+                className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg border border-border"
+              >
+                Admin Settings
+              </button>
+            </div>
           </div>
+        );
+      
+      case "admin-auth":
+        return (
+          <AdminAuth
+            onAdminAuthenticated={handleAdminAuthenticated}
+            onBackToApp={handleBackToApp}
+          />
+        );
+      
+      case "admin-settings":
+        return (
+          <AdminSettings
+            onBackToApp={handleBackToApp}
+            onSignOut={handleAdminSignOut}
+          />
         );
       
       default:

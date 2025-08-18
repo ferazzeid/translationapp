@@ -17,12 +17,14 @@ interface TranslationInterfaceProps {
   speakerALanguage: string;
   speakerBLanguage: string;
   onOpenSettings: () => void;
+  onOpenAdminSettings?: () => void;
 }
 
 export const TranslationInterface = ({ 
   speakerALanguage, 
   speakerBLanguage, 
-  onOpenSettings 
+  onOpenSettings,
+  onOpenAdminSettings
 }: TranslationInterfaceProps) => {
   const [isListening, setIsListening] = useState(false);
   const [activeSpeaker, setActiveSpeaker] = useState<"A" | "B" | null>(null);
