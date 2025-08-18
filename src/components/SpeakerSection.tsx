@@ -27,16 +27,18 @@ export const SpeakerSection = ({
   className
 }: SpeakerSectionProps) => {
   return (
-    <div className={cn("h-full w-full flex flex-col bg-background relative", className)}>
-      {/* Messages area - fills available space but leaves room for button */}
-      <div className="flex-1 min-h-0 pb-20"> {/* pb-20 gives space for the fixed button */}
-        <MessageArea speaker={speaker}>
-          {messages}
-        </MessageArea>
+    <div className={cn("h-full w-full relative bg-background overflow-hidden", className)}>
+      {/* Messages area - absolutely contained, can't push anything */}
+      <div className="absolute inset-0 bottom-24 overflow-hidden">
+        <div className="h-full p-4 overflow-y-auto flex flex-col-reverse">
+          <div className="space-y-3 min-h-0">
+            {messages}
+          </div>
+        </div>
       </div>
 
-      {/* Fixed microphone button at bottom - always visible */}
-      <div className="absolute bottom-0 left-0 right-0 flex justify-center py-4 bg-background z-20">
+      {/* Fixed microphone button - completely independent */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 flex items-center justify-center bg-background z-30">
         <SpeakerButton
           speaker={speaker}
           isListening={isListening}
