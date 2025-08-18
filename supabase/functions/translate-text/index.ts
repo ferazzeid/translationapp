@@ -82,7 +82,7 @@ serve(async (req) => {
     const fromLangName = languageNames[fromLanguage] || fromLanguage;
     const toLangName = languageNames[toLanguage] || toLanguage;
 
-    // Translate using OpenAI
+    // Translate using OpenAI GPT-4o
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -101,8 +101,7 @@ serve(async (req) => {
             content: text
           }
         ],
-        max_tokens: 1000,
-        temperature: 0.3,
+        max_completion_tokens: 1000,
       }),
     });
 
