@@ -37,7 +37,7 @@ export const SpeakerButton = ({
           size="lg"
           variant="outline"
           className={cn(
-            "h-24 w-24 rounded-full border-2 transition-all duration-200 relative z-10",
+            "h-20 w-20 rounded-full border-2 transition-all duration-200 relative z-10",
             "hover:scale-105 active:scale-95",
             isListening ? [
               "border-red-500 bg-red-500 text-white shadow-lg shadow-red-500/25",
@@ -54,7 +54,7 @@ export const SpeakerButton = ({
           onTouchEnd={onStop}
         >
           <Mic className={cn(
-            "h-10 w-10 transition-all duration-200",
+            "h-8 w-8 transition-all duration-200",
             isListening && "animate-pulse"
           )} />
         </Button>
@@ -71,21 +71,6 @@ export const SpeakerButton = ({
             Recording...
           </span>
         </div>
-      )}
-
-      {/* Language abbreviation with flag */}
-      <div className="flex items-center gap-1">
-        <span className="text-sm">{flag}</span>
-        <span className="text-sm font-medium text-muted-foreground">
-          {language.toUpperCase()}
-        </span>
-      </div>
-
-      {/* Instruction text */}
-      {!isListening && (
-        <span className="text-xs text-muted-foreground text-center max-w-20">
-          Hold to speak
-        </span>
       )}
     </div>
   );

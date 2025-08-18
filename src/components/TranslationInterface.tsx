@@ -246,8 +246,8 @@ export const TranslationInterface = ({
     <div className="h-full w-full relative bg-background overflow-hidden">
       {/* Speaker A Half - Top (Rotated 180°) */}
       <div className="absolute inset-x-0 top-0 h-1/2 rotate-180">
-        {/* Speaker A Microphone Button */}
-        <div className="absolute left-1/2 bottom-4 -translate-x-1/2 z-20">
+        {/* Speaker A Microphone Button - Top Edge */}
+        <div className="absolute left-1/2 top-4 -translate-x-1/2 z-20">
           <SpeakerButton
             speaker="A"
             isListening={isListeningA}
