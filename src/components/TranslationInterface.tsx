@@ -37,6 +37,7 @@ export const TranslationInterface = ({
   const [selectedVoice, setSelectedVoice] = useState("alloy");
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
   const audioRecorderA = useAudioRecorder();
@@ -334,6 +335,8 @@ export const TranslationInterface = ({
           onOpenSettings={onOpenSettings}
           onOpenAdminSettings={onOpenAdminSettings}
           onOpenVoiceSelection={() => setIsVoiceModalOpen(true)}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
         />
       </div>
 

@@ -6,6 +6,7 @@ interface SpeechBubbleProps {
   index: number;
   speaker: "A" | "B";
   isNew?: boolean;
+  isDarkMode?: boolean;
 }
 
 export const SpeechBubble = ({ 
@@ -13,7 +14,8 @@ export const SpeechBubble = ({
   isOriginal = true, 
   index, 
   speaker,
-  isNew = false 
+  isNew = false,
+  isDarkMode = false
 }: SpeechBubbleProps) => {
   // Simple chat bubble positioning
   const isLeftAligned = speaker === "A";
@@ -26,9 +28,9 @@ export const SpeechBubble = ({
       <div
         className={cn(
           "max-w-[80%] rounded-2xl px-4 py-3 shadow-sm",
-          isLeftAligned 
-            ? "bg-speaker-a text-primary-foreground rounded-bl-sm" 
-            : "bg-speaker-b text-accent-foreground rounded-br-sm",
+          isDarkMode 
+            ? "bg-foreground text-background border border-border/20" 
+            : "bg-background text-foreground border border-border",
           isNew && "animate-fade-in-up"
         )}
       >
@@ -38,7 +40,7 @@ export const SpeechBubble = ({
         {!isOriginal && (
           <div className={cn(
             "w-2 h-2 rounded-full mt-2",
-            isLeftAligned ? "bg-primary-foreground/60" : "bg-accent-foreground/60"
+            isDarkMode ? "bg-background/60" : "bg-foreground/60"
           )} />
         )}
       </div>

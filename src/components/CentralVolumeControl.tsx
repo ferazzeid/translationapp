@@ -1,4 +1,4 @@
-import { Volume2, Settings, Wifi, WifiOff, Shield, Mic2 } from "lucide-react";
+import { Volume2, Settings, Wifi, WifiOff, Shield, Mic2, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,8 @@ interface CentralVolumeControlProps {
   onOpenSettings: () => void;
   onOpenAdminSettings?: () => void;
   onOpenVoiceSelection: () => void;
+  isDarkMode: boolean;
+  onToggleDarkMode: () => void;
 }
 
 export const CentralVolumeControl = ({
@@ -18,7 +20,9 @@ export const CentralVolumeControl = ({
   isOnline,
   onOpenSettings,
   onOpenAdminSettings,
-  onOpenVoiceSelection
+  onOpenVoiceSelection,
+  isDarkMode,
+  onToggleDarkMode
 }: CentralVolumeControlProps) => {
   const ConnectionIcon = isOnline ? Wifi : WifiOff;
 
@@ -56,6 +60,15 @@ export const CentralVolumeControl = ({
 
       {/* Settings Buttons */}
       <div className="flex gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={onToggleDarkMode}
+          className="h-8 w-8 rounded-full"
+          title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+        >
+          {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        </Button>
         <Button
           variant="outline"
           size="icon"
