@@ -354,7 +354,6 @@ export const TranslationInterface = ({
               <ProcessingIndicator 
                 key="processing-a"
                 isProcessing={true} 
-                message="Translating..."
                 speaker="A"
               />
             ] : []
@@ -413,7 +412,6 @@ export const TranslationInterface = ({
               <ProcessingIndicator 
                 key="processing-b"
                 isProcessing={true} 
-                message="Translating..."
                 speaker="B"
               />
             ] : []
