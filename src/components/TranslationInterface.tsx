@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { Mic, MicOff, RotateCcw, Volume2, Settings, Wifi, WifiOff } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import { useToast } from "@/components/ui/use-toast";
+import { SpeechBubble } from "./SpeechBubble";
+import { FloatingControlPanel } from "./FloatingControlPanel";
+import { SpeakerButton } from "./SpeakerButton";
 
 interface Message {
   id: string;
@@ -244,173 +243,75 @@ export const TranslationInterface = ({
       .slice(0, 3);
   };
 
-  const ConnectionIcon = isOnline ? Wifi : WifiOff;
-
   return (
-    <div className="h-full w-full relative bg-background overflow-hidden">
-      {/* Split Screen Layout */}
-      <div className="h-full flex flex-col">
-        {/* Top Panel - Speaker B (Hungarian - Rotated 180°) */}
-        <div className="flex-1 bg-accent/5 border-b-2 border-accent relative">
-          <div className="h-full w-full transform rotate-180">
-            <div className="h-full flex flex-col p-4">
-              {/* Speaker B Language Header (rotated view) */}
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <span className="text-2xl">{getLanguageFlag(speakerBLanguage)}</span>
-                <span className="text-sm font-medium text-muted-foreground">
-                  {getLanguageName(speakerBLanguage)}
-                </span>
-              </div>
+    <div className="h-full w-full relative bg-gradient-surface overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="h-full w-full bg-gradient-primary" />
+      </div>
 
-              {/* Speaker B Messages (rotated view) */}
-              <div className="flex-1 space-y-2 mb-4 overflow-y-auto">
-                {getRecentMessages("B").map((message) => (
-                  <Card key={message.id} className="p-3 bg-accent/10 border-accent/20">
-                    <p className="text-sm font-medium text-foreground mb-1">
-                      {message.originalText}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {message.translatedText}
-                    </p>
-                  </Card>
-                ))}
-              </div>
+      {/* Speaker A - Left Side */}
+      <div className="absolute left-8 top-1/2 -translate-y-1/2 z-20">
+        <SpeakerButton
+          speaker="A"
+          isListening={isListeningA}
+          onStart={() => startListening("A")}
+          onStop={() => stopListening("A")}
+          language={speakerALanguage}
+          flag={getLanguageFlag(speakerALanguage)}
+        />
+      </div>
 
-              {/* Speaker B Microphone Button (rotated view) */}
-              <div className="flex justify-center">
-                <Button
-                  size="lg"
-                  variant={isListeningB ? "default" : "outline"}
-                  className={cn(
-                    "h-16 w-16 rounded-full transition-all duration-300",
-                    isListeningB && "bg-accent shadow-glow scale-110"
-                  )}
-                  onMouseDown={() => startListening("B")}
-                  onMouseUp={() => stopListening("B")}
-                  onTouchStart={() => startListening("B")}
-                  onTouchEnd={() => stopListening("B")}
-                >
-                  {isListeningB ? (
-                    <MicOff className="h-6 w-6 text-accent-foreground" />
-                  ) : (
-                    <Mic className="h-6 w-6" />
-                  )}
-                </Button>
-              </div>
-            </div>
+      {/* Speaker B - Right Side */}
+      <div className="absolute right-8 top-1/2 -translate-y-1/2 z-20">
+        <SpeakerButton
+          speaker="B"
+          isListening={isListeningB}
+          onStart={() => startListening("B")}
+          onStop={() => stopListening("B")}
+          language={speakerBLanguage}
+          flag={getLanguageFlag(speakerBLanguage)}
+        />
+      </div>
+
+      {/* Dynamic Speech Bubbles */}
+      <div className="absolute inset-0 pointer-events-none z-15">
+        {messages.slice(0, 5).map((message, index) => (
+          <div key={message.id}>
+            {/* Original message bubble */}
+            <SpeechBubble
+              text={message.originalText}
+              isOriginal={true}
+              index={index * 2}
+              speaker={message.speaker}
+              isNew={index === 0}
+            />
+            {/* Translated message bubble */}
+            <SpeechBubble
+              text={message.translatedText}
+              isOriginal={false}
+              index={index * 2 + 1}
+              speaker={message.speaker === "A" ? "B" : "A"}
+              isNew={index === 0}
+            />
           </div>
-        </div>
-
-        {/* Bottom Panel - Speaker A (English - Normal orientation) */}
-        <div className="flex-1 bg-primary/5 relative">
-          <div className="h-full flex flex-col p-4">
-            {/* Speaker A Language Header */}
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <span className="text-2xl">{getLanguageFlag(speakerALanguage)}</span>
-              <span className="text-sm font-medium text-muted-foreground">
-                {getLanguageName(speakerALanguage)}
-              </span>
-            </div>
-
-            {/* Speaker A Messages */}
-            <div className="flex-1 space-y-2 mb-4 overflow-y-auto">
-              {getRecentMessages("A").map((message) => (
-                <Card key={message.id} className="p-3 bg-primary/10 border-primary/20">
-                  <p className="text-sm font-medium text-foreground mb-1">
-                    {message.originalText}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {message.translatedText}
-                  </p>
-                </Card>
-              ))}
-            </div>
-
-            {/* Speaker A Microphone Button */}
-            <div className="flex justify-center">
-              <Button
-                size="lg"
-                variant={isListeningA ? "default" : "outline"}
-                className={cn(
-                  "h-16 w-16 rounded-full transition-all duration-300",
-                  isListeningA && "bg-primary shadow-glow scale-110"
-                )}
-                onMouseDown={() => startListening("A")}
-                onMouseUp={() => stopListening("A")}
-                onTouchStart={() => startListening("A")}
-                onTouchEnd={() => stopListening("A")}
-              >
-                {isListeningA ? (
-                  <MicOff className="h-6 w-6 text-primary-foreground" />
-                ) : (
-                  <Mic className="h-6 w-6" />
-                )}
-              </Button>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
 
-      {/* Floating Language Indicators */}
-      <div className="fixed top-4 left-4 z-20 flex flex-col gap-2">
-        <div className="bg-card/80 backdrop-blur-sm rounded-lg px-2 py-1 border border-border/50 shadow-lg">
-          <span className="text-xs font-medium text-muted-foreground">
-            {getLanguageFlag(speakerBLanguage)} {speakerBLanguage.toUpperCase()}
-          </span>
-        </div>
-        <div className="bg-card/80 backdrop-blur-sm rounded-lg px-2 py-1 border border-border/50 shadow-lg">
-          <span className="text-xs font-medium text-muted-foreground">
-            {getLanguageFlag(speakerALanguage)} {speakerALanguage.toUpperCase()}
-          </span>
-        </div>
-      </div>
+      {/* Floating Control Panel */}
+      <FloatingControlPanel
+        volume={volume}
+        onVolumeChange={setVolume}
+        isOnline={isOnline}
+        onOpenSettings={onOpenSettings}
+        onRepeatLastMessage={repeatLastMessage}
+        hasMessages={messages.length > 0}
+      />
 
-      {/* Volume Control - Large and prominent on right edge */}
-      <div className="fixed right-2 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-3 bg-card/80 backdrop-blur-sm rounded-lg p-3 border border-border/50 shadow-lg">
-        <Volume2 className="h-5 w-5 text-muted-foreground" />
-        <div className="h-32 flex items-center">
-          <Slider
-            value={[Math.round(volume * 100)]}
-            onValueChange={(value) => setVolume(value[0] / 100)}
-            max={100}
-            step={1}
-            orientation="vertical"
-            className="h-28"
-          />
-        </div>
-        <span className="text-xs font-medium text-muted-foreground">{Math.round(volume * 100)}%</span>
-      </div>
-
-      {/* Top Right Controls */}
-      <div className="fixed top-4 right-4 z-20 flex flex-col gap-2">
-        {/* Connection Status */}
-        <div className="bg-card/80 backdrop-blur-sm rounded-full p-2 border border-border/50 shadow-lg">
-          <ConnectionIcon className={cn("h-4 w-4", isOnline ? "text-success" : "text-destructive")} />
-        </div>
-        
-        {/* Combined Settings/Admin Button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onOpenSettings}
-          className="w-10 h-10 rounded-full bg-card/80 backdrop-blur-sm border border-border/50 shadow-lg hover:bg-accent/80"
-        >
-          <Settings className="h-4 w-4" />
-        </Button>
-      </div>
-
-      {/* Repeat Button - Bottom Right */}
-      <div className="fixed bottom-4 right-4 z-20">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={repeatLastMessage}
-          disabled={messages.length === 0}
-          className="w-12 h-12 rounded-full bg-card/80 backdrop-blur-sm border border-border/50 shadow-lg hover:bg-accent/80 disabled:opacity-50"
-        >
-          <RotateCcw className="h-5 w-5" />
-        </Button>
-      </div>
+      {/* Visual feedback for listening states */}
+      {(isListeningA || isListeningB) && (
+        <div className="fixed inset-0 bg-listening-glow/5 animate-pulse-glow pointer-events-none z-5" />
+      )}
     </div>
   );
 };
