@@ -45,58 +45,54 @@ export const SimpleLanguageModal = ({
 }: SimpleLanguageModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-sm bg-background border border-border shadow-lg">
-        {/* Close Button */}
+      <DialogContent className="max-w-sm bg-background border border-border shadow-lg p-0">
+        {/* Single Close Button */}
         <Button
           variant="ghost"
           size="icon"
           onClick={onClose}
-          className="absolute right-2 top-2 h-6 w-6 text-foreground hover:bg-foreground hover:text-background"
+          className="absolute right-2 top-2 h-6 w-6 text-foreground hover:bg-foreground hover:text-background z-50"
         >
           <X className="h-4 w-4" />
         </Button>
 
         {/* Content */}
-        <div className="pt-8 pb-4 px-4 space-y-6">
+        <div className="pt-8 pb-4 px-4 space-y-4">
           {/* First Language */}
-          <div className="space-y-2">
-            <Select value={speakerALanguage} onValueChange={onSpeakerALanguageChange}>
-              <SelectTrigger className="w-full bg-background border border-border text-foreground">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-background border border-border">
-                {LANGUAGES.map((lang) => (
-                  <SelectItem 
-                    key={lang.code} 
-                    value={lang.code}
-                    className="text-foreground hover:bg-muted"
-                  >
-                    {lang.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <Select value={speakerALanguage} onValueChange={onSpeakerALanguageChange}>
+            <SelectTrigger className="w-full bg-background border border-border text-foreground">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-background border border-border">
+              {LANGUAGES.map((lang) => (
+                <SelectItem 
+                  key={lang.code} 
+                  value={lang.code}
+                  className="text-foreground hover:bg-muted"
+                >
+                  {lang.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           {/* Second Language */}
-          <div className="space-y-2">
-            <Select value={speakerBLanguage} onValueChange={onSpeakerBLanguageChange}>
-              <SelectTrigger className="w-full bg-background border border-border text-foreground">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-background border border-border">
-                {LANGUAGES.map((lang) => (
-                  <SelectItem 
-                    key={lang.code} 
-                    value={lang.code}
-                    className="text-foreground hover:bg-muted"
-                  >
-                    {lang.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <Select value={speakerBLanguage} onValueChange={onSpeakerBLanguageChange}>
+            <SelectTrigger className="w-full bg-background border border-border text-foreground">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-background border border-border">
+              {LANGUAGES.map((lang) => (
+                <SelectItem 
+                  key={lang.code} 
+                  value={lang.code}
+                  className="text-foreground hover:bg-muted"
+                >
+                  {lang.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </DialogContent>
     </Dialog>

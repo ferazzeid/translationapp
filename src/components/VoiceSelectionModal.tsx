@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Volume2, Play, Pause } from "lucide-react";
+import { Play, Pause, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Voice {
@@ -76,60 +75,53 @@ export const VoiceSelectionModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Volume2 className="h-5 w-5" />
-            Voice Selection
-          </DialogTitle>
-        </DialogHeader>
+      <DialogContent className="max-w-xs bg-background border border-border shadow-lg p-0">
+        {/* Header with close button */}
+        <div className="flex items-center justify-between p-4 border-b border-border">
+          <span className="text-sm font-medium text-foreground">Voice Selection</span>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="h-6 w-6 text-foreground hover:bg-foreground hover:text-background"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
         
-        <div className="space-y-3 max-h-96 overflow-y-auto">
+        {/* Voice List */}
+        <div className="p-4 space-y-2 max-h-60 overflow-y-auto scrollbar-hide">
           {AVAILABLE_VOICES.map((voice) => (
             <div
               key={voice.id}
               className={cn(
-                "flex items-center justify-between p-4 rounded-lg border transition-all cursor-pointer",
+                "flex items-center justify-between p-3 rounded border cursor-pointer transition-colors",
                 selectedVoice === voice.id
-                  ? "border-primary bg-primary/5"
-                  : "border-border hover:border-primary/50 hover:bg-muted/50"
+                  ? "border-foreground bg-muted"
+                  : "border-border hover:bg-muted/50"
               )}
               onClick={() => handleVoiceSelect(voice.id)}
             >
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-medium">{voice.name}</span>
-                  {voice.isDefault && (
-                    <Badge variant="secondary" className="text-xs">Default</Badge>
-                  )}
-                  <Badge 
-                    variant="outline" 
-                    className={cn(
-                      "text-xs",
-                      voice.gender === "female" ? "border-pink-200 text-pink-700" : "border-blue-200 text-blue-700"
-                    )}
-                  >
-                    {voice.gender}
-                  </Badge>
+                  <span className="font-medium text-foreground text-sm">{voice.name}</span>
+                  <span className="text-xs text-muted-foreground">({voice.gender})</span>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {voice.language} {voice.accent && `• ${voice.accent}`}
-                </p>
               </div>
               
               <Button
                 variant="ghost"
                 size="icon"
-                className="ml-2 h-8 w-8"
+                className="ml-2 h-6 w-6 text-foreground hover:bg-foreground hover:text-background"
                 onClick={(e) => {
                   e.stopPropagation();
                   handlePreviewVoice(voice.id);
                 }}
               >
                 {playingVoice === voice.id ? (
-                  <Pause className="h-4 w-4" />
+                  <Pause className="h-3 w-3" />
                 ) : (
-                  <Play className="h-4 w-4" />
+                  <Play className="h-3 w-3" />
                 )}
               </Button>
             </div>
