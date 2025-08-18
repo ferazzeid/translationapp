@@ -297,6 +297,10 @@ export const TranslationInterface = ({
     }
   };
 
+  const clearAllMessages = () => {
+    setMessages([]);
+  };
+
   const repeatLastMessage = async () => {
     const lastMessage = messages[0];
     if (lastMessage) {
@@ -380,6 +384,7 @@ export const TranslationInterface = ({
           onVolumeChange={setVolume}
           isSpeakerEnabled={isSpeakerEnabled}
           onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
+          onClearMessages={clearAllMessages}
         />
       </div>
 
