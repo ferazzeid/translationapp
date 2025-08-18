@@ -90,12 +90,26 @@ serve(async (req) => {
 
     console.log(`Sending audio to OpenAI GPT-4o: ${binaryAudio.length} bytes`);
 
-    // Convert audio to base64 for GPT-4o in chunks to avoid stack overflow
+    // Enhanced base64 conversion with proper chunking to prevent stack overflow
     let audioBase64 = '';
-    const chunkSize = 8192; // Process in smaller chunks
-    for (let i = 0; i < binaryAudio.length; i += chunkSize) {
-      const chunk = binaryAudio.slice(i, i + chunkSize);
-      audioBase64 += btoa(String.fromCharCode.apply(null, Array.from(chunk)));
+    const chunkSize = 4096; // Smaller chunks for better reliability
+    
+    try {
+      for (let i = 0; i < binaryAudio.length; i += chunkSize) {
+        const chunk = binaryAudio.slice(i, i + chunkSize);
+        // Convert chunk to string array first, then join to avoid apply limit
+        const charArray = Array.from(chunk, byte => String.fromCharCode(byte));
+        audioBase64 += btoa(charArray.join(''));
+      }
+    } catch (chunkError) {
+      console.error('Base64 chunking error:', chunkError);
+      return new Response(
+        JSON.stringify({ error: 'Audio processing failed - please try a shorter recording' }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
     }
 
     // Send to OpenAI GPT-4o
@@ -116,11 +130,11 @@ serve(async (req) => {
                 text: `Please transcribe this audio to text. Respond only with the transcribed text, no additional formatting or explanation. Language: ${language || 'auto-detect'}`
               },
               {
-                type: 'input_audio',
-                input_audio: {
-                  data: audioBase64,
-                  format: 'wav'
-                }
+                  type: 'input_audio',
+                  input_audio: {
+                    data: audioBase64,
+                    format: 'wav' // GPT-4o requires wav or mp3 format
+                  }
               }
             ]
           }

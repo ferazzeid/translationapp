@@ -82,7 +82,7 @@ All colors MUST be HSL for maximum compatibility and theming.
     /* Animation variables */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    --pulse-duration: 2s;
+    --pulse-duration: 20s; /* Much slower pulse for better UX */
 
     --sidebar-background: 0 0% 98%;
 
@@ -148,4 +148,32 @@ All colors MUST be HSL for maximum compatibility and theming.
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom animation keyframes for recording states */
+@keyframes recording-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes recording-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px hsl(var(--destructive) / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px hsl(var(--destructive) / 0.6);
+  }
+}
+
+/* Recording button animation class */
+.recording-pulse {
+  animation: recording-pulse var(--pulse-duration) ease-in-out infinite, 
+             recording-glow var(--pulse-duration) ease-in-out infinite;
+}
 }

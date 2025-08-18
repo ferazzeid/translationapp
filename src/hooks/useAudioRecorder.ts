@@ -7,21 +7,63 @@ export interface AudioRecorderHook {
   error: string | null;
 }
 
+// Utility function to detect best audio format for the browser
+const getSupportedAudioFormat = (): { mimeType: string; extension: string } => {
+  const formats = [
+    { mimeType: 'audio/webm;codecs=opus', extension: 'webm' },
+    { mimeType: 'audio/wav', extension: 'wav' },
+    { mimeType: 'audio/mp4', extension: 'm4a' },
+    { mimeType: 'audio/ogg;codecs=opus', extension: 'ogg' }
+  ];
+
+  for (const format of formats) {
+    if (MediaRecorder.isTypeSupported(format.mimeType)) {
+      return format;
+    }
+  }
+  
+  // Fallback to basic webm if nothing else is supported
+  return { mimeType: 'audio/webm', extension: 'webm' };
+};
+
+// Enhanced base64 conversion with chunking to prevent stack overflow
+const convertBlobToBase64 = (blob: Blob): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    try {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (reader.result) {
+          const base64 = (reader.result as string).split(',')[1];
+          resolve(base64);
+        } else {
+          reject(new Error('Failed to convert audio to base64'));
+        }
+      };
+      reader.onerror = () => reject(new Error('FileReader error'));
+      reader.readAsDataURL(blob);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 export const useAudioRecorder = (): AudioRecorderHook => {
   const [isRecording, setIsRecording] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const startTimeRef = useRef<number>(0);
+  const streamRef = useRef<MediaStream | null>(null);
 
   const startRecording = useCallback(async () => {
     try {
       setError(null);
       startTimeRef.current = Date.now();
       
+      // Get user media with optimized settings
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
-          sampleRate: 44100,
+          sampleRate: 16000, // Lower sample rate for better compatibility
           channelCount: 1,
           echoCancellation: true,
           noiseSuppression: true,
@@ -29,9 +71,22 @@ export const useAudioRecorder = (): AudioRecorderHook => {
         }
       });
 
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'audio/wav'
-      });
+      streamRef.current = stream;
+      
+      // Get the best supported audio format for this browser
+      const audioFormat = getSupportedAudioFormat();
+      console.log('Using audio format:', audioFormat);
+
+      let mediaRecorder: MediaRecorder;
+      try {
+        mediaRecorder = new MediaRecorder(stream, {
+          mimeType: audioFormat.mimeType
+        });
+      } catch (formatError) {
+        // Fallback to no mimeType specified (let browser choose)
+        console.log('Falling back to browser default format');
+        mediaRecorder = new MediaRecorder(stream);
+      }
 
       chunksRef.current = [];
 
@@ -41,7 +96,13 @@ export const useAudioRecorder = (): AudioRecorderHook => {
         }
       };
 
-      mediaRecorder.start(100); // Collect data every 100ms for better responsiveness
+      mediaRecorder.onerror = (event) => {
+        console.error('MediaRecorder error:', event);
+        setError('Recording failed - microphone error');
+        setIsRecording(false);
+      };
+
+      mediaRecorder.start(250); // Collect data every 250ms for good balance
       mediaRecorderRef.current = mediaRecorder;
       setIsRecording(true);
 
@@ -49,6 +110,12 @@ export const useAudioRecorder = (): AudioRecorderHook => {
       const errorMessage = err instanceof Error ? err.message : 'Failed to start recording';
       setError(errorMessage);
       console.error('Error starting recording:', err);
+      
+      // Clean up stream if it was created
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+      }
     }
   }, []);
 
@@ -56,58 +123,95 @@ export const useAudioRecorder = (): AudioRecorderHook => {
     return new Promise((resolve) => {
       const mediaRecorder = mediaRecorderRef.current;
       
+      // Immediately set recording to false to prevent button stuck state
+      setIsRecording(false);
+      
       if (!mediaRecorder || mediaRecorder.state === 'inactive') {
-        setIsRecording(false);
+        // Clean up stream if it exists
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach(track => track.stop());
+          streamRef.current = null;
+        }
         resolve(null);
         return;
       }
 
-      // Check minimum recording duration (500ms minimum for better quality)
+      // Check minimum recording duration (300ms minimum for responsiveness)
       const recordingDuration = Date.now() - startTimeRef.current;
-      if (recordingDuration < 500) {
-        console.log(`Recording too short: ${recordingDuration}ms, minimum 500ms required`);
+      if (recordingDuration < 300) {
+        console.log(`Recording too short: ${recordingDuration}ms, minimum 300ms required`);
         // Clean up and return null for short recordings
-        mediaRecorder.stream.getTracks().forEach(track => track.stop());
-        setIsRecording(false);
-        setError('Recording too short, please speak for at least half a second');
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach(track => track.stop());
+          streamRef.current = null;
+        }
+        setError('Recording too short, please speak for at least a moment');
         resolve(null);
         return;
       }
 
       mediaRecorder.onstop = async () => {
         try {
-          const audioBlob = new Blob(chunksRef.current, { type: 'audio/wav' });
+          // Get the detected audio format
+          const detectedType = chunksRef.current[0]?.type || 'audio/webm';
+          const audioBlob = new Blob(chunksRef.current, { type: detectedType });
           
-          // Additional check on blob size
-          if (audioBlob.size < 1000) { // Less than 1KB is likely too short
+          console.log(`Audio blob created: ${audioBlob.size} bytes, type: ${detectedType}`);
+          
+          // Check blob size (minimum 500 bytes for any meaningful audio)
+          if (audioBlob.size < 500) {
             console.log(`Audio blob too small: ${audioBlob.size} bytes`);
             setError('Recording too short, please speak longer');
-            setIsRecording(false);
+            cleanupResources();
             resolve(null);
             return;
           }
           
-          // Convert blob to base64
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            const base64 = (reader.result as string).split(',')[1];
+          // Enhanced base64 conversion with error handling
+          try {
+            const base64 = await convertBlobToBase64(audioBlob);
+            console.log(`Audio converted to base64: ${base64.length} characters`);
             
-            // Clean up
-            mediaRecorder.stream.getTracks().forEach(track => track.stop());
-            setIsRecording(false);
+            cleanupResources();
             resolve(base64);
-          };
-          reader.readAsDataURL(audioBlob);
+          } catch (conversionError) {
+            console.error('Base64 conversion failed:', conversionError);
+            setError('Failed to process audio recording');
+            cleanupResources();
+            resolve(null);
+          }
           
         } catch (err) {
           console.error('Error processing recording:', err);
           setError('Failed to process recording');
-          setIsRecording(false);
+          cleanupResources();
           resolve(null);
         }
       };
 
-      mediaRecorder.stop();
+      mediaRecorder.onerror = (event) => {
+        console.error('MediaRecorder stop error:', event);
+        setError('Recording failed');
+        cleanupResources();
+        resolve(null);
+      };
+
+      // Clean up function
+      const cleanupResources = () => {
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach(track => track.stop());
+          streamRef.current = null;
+        }
+        chunksRef.current = [];
+      };
+
+      try {
+        mediaRecorder.stop();
+      } catch (stopError) {
+        console.error('Error stopping media recorder:', stopError);
+        cleanupResources();
+        resolve(null);
+      }
     });
   }, []);
 

@@ -126,6 +126,7 @@ export const TranslationInterface = ({
       }
 
       // Always reset the listening state immediately after stopping recording
+      // This prevents stuck button states
       if (speaker === "A") {
         setIsListeningA(false);
       } else {
