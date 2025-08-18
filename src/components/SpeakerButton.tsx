@@ -1,4 +1,4 @@
-import { Mic } from "lucide-react";
+import { Mic, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -39,7 +39,11 @@ export const SpeakerButton = ({
         )}
         onClick={isListening ? onStop : onStart}
       >
-        <Mic className="h-8 w-8" />
+        {isListening ? (
+          <Square className="h-8 w-8 fill-current" />
+        ) : (
+          <Mic className="h-8 w-8" />
+        )}
       </Button>
     </div>
   );
