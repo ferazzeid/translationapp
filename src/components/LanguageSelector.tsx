@@ -28,13 +28,15 @@ interface LanguageSelectorProps {
   onLanguageChange: (speaker: "speakerA" | "speakerB", language: string) => void;
   onContinue: () => void;
   onOpenSettings?: () => void;
+  showAsSettings?: boolean;
 }
 
 export const LanguageSelector = ({ 
   selectedLanguages, 
   onLanguageChange, 
   onContinue,
-  onOpenSettings
+  onOpenSettings,
+  showAsSettings = false
 }: LanguageSelectorProps) => {
   const [expandedSelector, setExpandedSelector] = useState<"speakerA" | "speakerB" | null>(null);
 
@@ -52,8 +54,20 @@ export const LanguageSelector = ({
     <div className="h-full flex flex-col bg-gradient-surface">
       {/* Header with settings */}
       <div className="flex justify-between items-center p-4 bg-white/50 backdrop-blur-sm border-b border-border/50">
-        <h1 className="text-lg font-bold text-foreground">Setup</h1>
-        {onOpenSettings && (
+        <h1 className="text-lg font-bold text-foreground">
+          {showAsSettings ? "Language Settings" : "Setup"}
+        </h1>
+        {onOpenSettings && !showAsSettings && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onOpenSettings}
+            className="h-8 w-8 p-0"
+          >
+            <Settings size={16} />
+          </Button>
+        )}
+        {showAsSettings && onOpenSettings && (
           <Button
             variant="ghost"
             size="sm"
@@ -174,7 +188,7 @@ export const LanguageSelector = ({
           disabled={!isReady}
           onClick={onContinue}
         >
-          Start Conversation
+          {showAsSettings ? "Save & Continue" : "Start Conversation"}
           <ArrowRight size={16} />
         </Button>
       </div>

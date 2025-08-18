@@ -1,18 +1,16 @@
 import { useState, useEffect } from "react";
-import { Mic, MicOff, RotateCcw, Volume2, Settings, Wifi } from "lucide-react";
+import { Mic, MicOff, RotateCcw, Volume2, Settings, Wifi, WifiOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { StatusIndicator } from "./StatusIndicator";
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 
 interface Message {
   id: string;
   speaker: "A" | "B";
-  original: string;
-  translated: string;
-  timestamp: number;
+  originalText: string;
+  translatedText: string;
+  timestamp: Date;
 }
 
 interface TranslationInterfaceProps {
@@ -22,192 +20,255 @@ interface TranslationInterfaceProps {
   onOpenAdminSettings?: () => void;
 }
 
-export const TranslationInterface = ({ 
-  speakerALanguage, 
-  speakerBLanguage, 
+export const TranslationInterface = ({
+  speakerALanguage,
+  speakerBLanguage,
   onOpenSettings,
   onOpenAdminSettings
 }: TranslationInterfaceProps) => {
-  const [isListening, setIsListening] = useState(false);
-  const [activeSpeaker, setActiveSpeaker] = useState<"A" | "B" | null>(null);
+  const [isListeningA, setIsListeningA] = useState(false);
+  const [isListeningB, setIsListeningB] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [volume, setVolume] = useState(0.8);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [lastMessage, setLastMessage] = useState<Message | null>(null);
+
+  // Language code to name mapping
+  const getLanguageName = (code: string) => {
+    const languages: Record<string, string> = {
+      en: "English",
+      hu: "Hungarian",
+      es: "Spanish",
+      fr: "French",
+      de: "German",
+      it: "Italian",
+      pt: "Portuguese",
+      zh: "Chinese",
+      ja: "Japanese",
+      ko: "Korean"
+    };
+    return languages[code] || code.toUpperCase();
+  };
+
+  // Language code to flag mapping  
+  const getLanguageFlag = (code: string) => {
+    const flags: Record<string, string> = {
+      en: "🇺🇸",
+      hu: "🇭🇺", 
+      es: "🇪🇸",
+      fr: "🇫🇷",
+      de: "🇩🇪",
+      it: "🇮🇹",
+      pt: "🇵🇹",
+      zh: "🇨🇳",
+      ja: "🇯🇵",
+      ko: "🇰🇷"
+    };
+    return flags[code] || "🌐";
+  };
 
   // Monitor online status
   useEffect(() => {
-    const handleOnlineChange = () => setIsOnline(navigator.onLine);
-    window.addEventListener('online', handleOnlineChange);
-    window.addEventListener('offline', handleOnlineChange);
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
     return () => {
-      window.removeEventListener('online', handleOnlineChange);
-      window.removeEventListener('offline', handleOnlineChange);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
   }, []);
 
   const startListening = (speaker: "A" | "B") => {
-    setIsListening(true);
-    setActiveSpeaker(speaker);
-    
-    // Simulate speech recognition - in real implementation, use Web Speech API
+    // Stop other speaker if listening
+    if (speaker === "A") {
+      setIsListeningB(false);
+      setIsListeningA(true);
+    } else {
+      setIsListeningA(false);
+      setIsListeningB(true);
+    }
+
+    // Simulate speech recognition and translation
     setTimeout(() => {
-      const simulatedMessages = [
-        { original: "Hello, how are you?", translated: "Hola, ¿cómo estás?" },
-        { original: "Where is the nearest restaurant?", translated: "¿Dónde está el restaurante más cercano?" },
-        { original: "Thank you very much!", translated: "¡Muchas gracias!" }
-      ];
+      const isFromA = speaker === "A";
+      const originalLang = isFromA ? speakerALanguage : speakerBLanguage;
+      const targetLang = isFromA ? speakerBLanguage : speakerALanguage;
       
-      const randomMessage = simulatedMessages[Math.floor(Math.random() * simulatedMessages.length)];
+      const sampleTexts = {
+        en: ["Hello, how are you?", "Nice to meet you", "Thank you very much"],
+        hu: ["Szia, hogy vagy?", "Örülök, hogy megismerlek", "Nagyon köszönöm"]
+      };
+      
+      const texts = sampleTexts[originalLang as keyof typeof sampleTexts] || ["Sample text"];
+      const originalText = texts[Math.floor(Math.random() * texts.length)];
+      
+      const translatedText = originalLang === "en" && targetLang === "hu" 
+        ? "Szia, hogy vagy?" 
+        : "Hello, how are you?";
+
       const newMessage: Message = {
         id: Date.now().toString(),
         speaker,
-        original: speaker === "A" ? randomMessage.original : randomMessage.translated,
-        translated: speaker === "A" ? randomMessage.translated : randomMessage.original,
-        timestamp: Date.now()
+        originalText,
+        translatedText,
+        timestamp: new Date()
       };
+
+      setMessages(prev => [newMessage, ...prev.slice(0, 4)]);
       
-      setMessages(prev => [newMessage, ...prev]);
-      setLastMessage(newMessage);
-      setIsListening(false);
-      setActiveSpeaker(null);
-      
-      // Simulate text-to-speech
-      const utterance = new SpeechSynthesisUtterance(newMessage.translated);
-      utterance.volume = volume;
-      speechSynthesis.speak(utterance);
+      if (speaker === "A") {
+        setIsListeningA(false);
+      } else {
+        setIsListeningB(false);
+      }
     }, 2000);
   };
 
-  const stopListening = () => {
-    setIsListening(false);
-    setActiveSpeaker(null);
-  };
-
-  const repeatLastMessage = () => {
-    if (lastMessage) {
-      const utterance = new SpeechSynthesisUtterance(lastMessage.translated);
-      utterance.volume = volume;
-      speechSynthesis.speak(utterance);
+  const stopListening = (speaker: "A" | "B") => {
+    if (speaker === "A") {
+      setIsListeningA(false);
+    } else {
+      setIsListeningB(false);
     }
   };
 
+  const repeatLastMessage = () => {
+    const lastMessage = messages[0];
+    if (lastMessage) {
+      // Simulate TTS for the last message
+      console.log(`Playing: ${lastMessage.originalText} -> ${lastMessage.translatedText}`);
+    }
+  };
+
+  const getRecentMessages = (speaker: "A" | "B") => {
+    return messages
+      .filter(msg => msg.speaker === speaker)
+      .slice(0, 3);
+  };
+
+  const ConnectionIcon = isOnline ? Wifi : WifiOff;
+
   return (
-    <div className="h-screen flex bg-gradient-surface">
-      {/* Main Split Screen Area */}
-      <div className="flex-1">
-        <ResizablePanelGroup direction="vertical">
-          {/* Speaker A Panel (Top) */}
-          <ResizablePanel defaultSize={50} minSize={30}>
-            <div className="h-full flex flex-col bg-speaker-a/5 border-b-2 border-primary/20">
-              {/* Speaker A Header */}
-              <div className="p-4 bg-speaker-a/10">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded-full bg-speaker-a"></div>
-                    <span className="font-semibold text-lg">You ({speakerALanguage.toUpperCase()})</span>
-                  </div>
-                  <Button
-                    size="lg"
-                    variant={activeSpeaker === "A" ? "destructive" : "default"}
-                    className={cn(
-                      "h-12 w-12 p-0 rounded-full transition-all",
-                      activeSpeaker === "A" && "shadow-glow animate-pulse-glow"
-                    )}
-                    onClick={() => activeSpeaker === "A" ? stopListening() : startListening("A")}
-                    disabled={isListening && activeSpeaker !== "A"}
-                  >
-                    {activeSpeaker === "A" ? <MicOff size={24} /> : <Mic size={24} />}
-                  </Button>
-                </div>
-                
-                {/* Status for A */}
-                {isListening && activeSpeaker === "A" && (
-                  <div className="text-center mb-2">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-listening rounded-full text-white shadow-glow animate-pulse-glow">
-                      <div className="w-2 h-2 bg-white rounded-full animate-listening-wave"></div>
-                      <span className="font-medium">Listening...</span>
-                      <div className="w-2 h-2 bg-white rounded-full animate-listening-wave" style={{ animationDelay: '0.2s' }}></div>
-                    </div>
-                  </div>
-                )}
+    <div className="h-full w-full relative bg-background overflow-hidden">
+      {/* Split Screen Layout */}
+      <div className="h-full flex flex-col">
+        {/* Top Panel - Speaker B (Hungarian - Rotated 180°) */}
+        <div className="flex-1 bg-accent/5 border-b-2 border-accent relative">
+          <div className="h-full w-full transform rotate-180">
+            <div className="h-full flex flex-col p-4">
+              {/* Speaker B Language Header (rotated view) */}
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <span className="text-2xl">{getLanguageFlag(speakerBLanguage)}</span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  {getLanguageName(speakerBLanguage)}
+                </span>
               </div>
-              
-              {/* Speaker A Messages */}
-              <div className="flex-1 p-4 overflow-y-auto">
-                <div className="space-y-3">
-                  {messages
-                    .filter(msg => msg.speaker === "A")
-                    .slice(0, 4)
-                    .map(msg => (
-                      <Card key={msg.id} className="p-4 bg-white/90 shadow-soft">
-                        <p className="text-xl font-medium text-foreground mb-2">{msg.original}</p>
-                        <p className="text-lg text-muted-foreground">{msg.translated}</p>
-                      </Card>
-                    ))}
-                </div>
+
+              {/* Speaker B Messages (rotated view) */}
+              <div className="flex-1 space-y-2 mb-4 overflow-y-auto">
+                {getRecentMessages("B").map((message) => (
+                  <Card key={message.id} className="p-3 bg-accent/10 border-accent/20">
+                    <p className="text-sm font-medium text-foreground mb-1">
+                      {message.originalText}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {message.translatedText}
+                    </p>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Speaker B Microphone Button (rotated view) */}
+              <div className="flex justify-center">
+                <Button
+                  size="lg"
+                  variant={isListeningB ? "default" : "outline"}
+                  className={cn(
+                    "h-16 w-16 rounded-full transition-all duration-300",
+                    isListeningB && "bg-accent shadow-glow scale-110"
+                  )}
+                  onMouseDown={() => startListening("B")}
+                  onMouseUp={() => stopListening("B")}
+                  onTouchStart={() => startListening("B")}
+                  onTouchEnd={() => stopListening("B")}
+                >
+                  {isListeningB ? (
+                    <MicOff className="h-6 w-6 text-accent-foreground" />
+                  ) : (
+                    <Mic className="h-6 w-6" />
+                  )}
+                </Button>
               </div>
             </div>
-          </ResizablePanel>
+          </div>
+        </div>
 
-          <ResizableHandle withHandle />
-
-          {/* Speaker B Panel (Bottom - Rotated) */}
-          <ResizablePanel defaultSize={50} minSize={30}>
-            <div className="h-full flex flex-col bg-speaker-b/5 transform rotate-180">
-              {/* Speaker B Header (appears at bottom when rotated) */}
-              <div className="p-4 bg-speaker-b/10">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded-full bg-speaker-b"></div>
-                    <span className="font-semibold text-lg">Other Person ({speakerBLanguage.toUpperCase()})</span>
-                  </div>
-                  <Button
-                    size="lg"
-                    variant={activeSpeaker === "B" ? "destructive" : "default"}
-                    className={cn(
-                      "h-12 w-12 p-0 rounded-full transition-all",
-                      activeSpeaker === "B" && "shadow-glow animate-pulse-glow"
-                    )}
-                    onClick={() => activeSpeaker === "B" ? stopListening() : startListening("B")}
-                    disabled={isListening && activeSpeaker !== "B"}
-                  >
-                    {activeSpeaker === "B" ? <MicOff size={24} /> : <Mic size={24} />}
-                  </Button>
-                </div>
-                
-                {/* Status for B */}
-                {isListening && activeSpeaker === "B" && (
-                  <div className="text-center mb-2">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-listening rounded-full text-white shadow-glow animate-pulse-glow">
-                      <div className="w-2 h-2 bg-white rounded-full animate-listening-wave"></div>
-                      <span className="font-medium">Listening...</span>
-                      <div className="w-2 h-2 bg-white rounded-full animate-listening-wave" style={{ animationDelay: '0.2s' }}></div>
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              {/* Speaker B Messages */}
-              <div className="flex-1 p-4 overflow-y-auto">
-                <div className="space-y-3">
-                  {messages
-                    .filter(msg => msg.speaker === "B")
-                    .slice(0, 4)
-                    .map(msg => (
-                      <Card key={msg.id} className="p-4 bg-white/90 shadow-soft">
-                        <p className="text-xl font-medium text-foreground mb-2">{msg.original}</p>
-                        <p className="text-lg text-muted-foreground">{msg.translated}</p>
-                      </Card>
-                    ))}
-                </div>
-              </div>
+        {/* Bottom Panel - Speaker A (English - Normal orientation) */}
+        <div className="flex-1 bg-primary/5 relative">
+          <div className="h-full flex flex-col p-4">
+            {/* Speaker A Language Header */}
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <span className="text-2xl">{getLanguageFlag(speakerALanguage)}</span>
+              <span className="text-sm font-medium text-muted-foreground">
+                {getLanguageName(speakerALanguage)}
+              </span>
             </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
+
+            {/* Speaker A Messages */}
+            <div className="flex-1 space-y-2 mb-4 overflow-y-auto">
+              {getRecentMessages("A").map((message) => (
+                <Card key={message.id} className="p-3 bg-primary/10 border-primary/20">
+                  <p className="text-sm font-medium text-foreground mb-1">
+                    {message.originalText}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {message.translatedText}
+                  </p>
+                </Card>
+              ))}
+            </div>
+
+            {/* Speaker A Microphone Button */}
+            <div className="flex justify-center">
+              <Button
+                size="lg"
+                variant={isListeningA ? "default" : "outline"}
+                className={cn(
+                  "h-16 w-16 rounded-full transition-all duration-300",
+                  isListeningA && "bg-primary shadow-glow scale-110"
+                )}
+                onMouseDown={() => startListening("A")}
+                onMouseUp={() => stopListening("A")}
+                onTouchStart={() => startListening("A")}
+                onTouchEnd={() => stopListening("A")}
+              >
+                {isListeningA ? (
+                  <MicOff className="h-6 w-6 text-primary-foreground" />
+                ) : (
+                  <Mic className="h-6 w-6" />
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Floating Controls */}
+      {/* Floating Language Indicators */}
+      <div className="fixed top-4 left-4 z-20 flex flex-col gap-2">
+        <div className="bg-card/80 backdrop-blur-sm rounded-lg px-2 py-1 border border-border/50 shadow-lg">
+          <span className="text-xs font-medium text-muted-foreground">
+            {getLanguageFlag(speakerBLanguage)} {speakerBLanguage.toUpperCase()}
+          </span>
+        </div>
+        <div className="bg-card/80 backdrop-blur-sm rounded-lg px-2 py-1 border border-border/50 shadow-lg">
+          <span className="text-xs font-medium text-muted-foreground">
+            {getLanguageFlag(speakerALanguage)} {speakerALanguage.toUpperCase()}
+          </span>
+        </div>
+      </div>
+
       {/* Volume Control - Large and prominent on right edge */}
       <div className="fixed right-2 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-3 bg-card/80 backdrop-blur-sm rounded-lg p-3 border border-border/50 shadow-lg">
         <Volume2 className="h-5 w-5 text-muted-foreground" />
@@ -228,7 +289,7 @@ export const TranslationInterface = ({
       <div className="fixed top-4 right-4 z-20 flex flex-col gap-2">
         {/* Connection Status */}
         <div className="bg-card/80 backdrop-blur-sm rounded-full p-2 border border-border/50 shadow-lg">
-          <Wifi className={cn("h-4 w-4", isOnline ? "text-green-500" : "text-red-500")} />
+          <ConnectionIcon className={cn("h-4 w-4", isOnline ? "text-success" : "text-destructive")} />
         </div>
         
         {/* Combined Settings/Admin Button */}
@@ -248,7 +309,7 @@ export const TranslationInterface = ({
           variant="ghost"
           size="icon"
           onClick={repeatLastMessage}
-          disabled={!lastMessage}
+          disabled={messages.length === 0}
           className="w-12 h-12 rounded-full bg-card/80 backdrop-blur-sm border border-border/50 shadow-lg hover:bg-accent/80 disabled:opacity-50"
         >
           <RotateCcw className="h-5 w-5" />

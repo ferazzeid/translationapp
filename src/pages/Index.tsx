@@ -15,19 +15,46 @@ interface LanguageSelection {
   speakerB: string;
 }
 
+// Language persistence utilities
+const STORAGE_KEY = "translation-app-languages";
+
+const loadSavedLanguages = (): LanguageSelection => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.speakerA && parsed.speakerB) {
+        return parsed;
+      }
+    }
+  } catch (error) {
+    console.log("No saved languages found");
+  }
+  return { speakerA: "", speakerB: "" };
+};
+
+const saveLanguages = (languages: LanguageSelection) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(languages));
+  } catch (error) {
+    console.log("Failed to save languages");
+  }
+};
+
 const Index = () => {
-  const [currentState, setCurrentState] = useState<AppState>("setup");
-  const [selectedLanguages, setSelectedLanguages] = useState<LanguageSelection>({
-    speakerA: "",
-    speakerB: ""
-  });
+  const [selectedLanguages, setSelectedLanguages] = useState<LanguageSelection>(loadSavedLanguages);
+  const [currentState, setCurrentState] = useState<AppState>(
+    selectedLanguages.speakerA && selectedLanguages.speakerB ? "translation" : "setup"
+  );
   const [adminUser, setAdminUser] = useState<User | null>(null);
 
   const handleLanguageChange = (speaker: "speakerA" | "speakerB", language: string) => {
-    setSelectedLanguages(prev => ({
-      ...prev,
+    const newLanguages = {
+      ...selectedLanguages,
       [speaker]: language
-    }));
+    };
+    setSelectedLanguages(newLanguages);
+    saveLanguages(newLanguages);
   };
 
   const handleSetupComplete = () => {
@@ -94,24 +121,13 @@ const Index = () => {
         
         case "settings":
           return (
-            <div className="p-6 text-center">
-              <h1 className="text-2xl font-bold mb-4">Settings</h1>
-              <p className="text-muted-foreground mb-4">User settings panel coming soon...</p>
-              <div className="flex gap-2 justify-center">
-                <button 
-                  onClick={() => setCurrentState("translation")}
-                  className="px-4 py-2 bg-primary text-primary-foreground rounded-lg"
-                >
-                  Back to Translation
-                </button>
-                <button 
-                  onClick={handleOpenAdminSettings}
-                  className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg border border-border"
-                >
-                  Admin Settings
-                </button>
-              </div>
-            </div>
+            <LanguageSelector
+              selectedLanguages={selectedLanguages}
+              onLanguageChange={handleLanguageChange}
+              onContinue={() => setCurrentState("translation")}
+              onOpenSettings={handleOpenAdminSettings}
+              showAsSettings={true}
+            />
           );
         
         case "admin-auth":
