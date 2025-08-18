@@ -3,17 +3,13 @@ import { Button } from "@/components/ui/button";
 
 interface AdminControlsProps {
   onOpenAdminSettings: () => void;
-  speaker: "A" | "B";
-  isTop?: boolean;
 }
 
 export const AdminControls = ({
-  onOpenAdminSettings,
-  speaker,
-  isTop = false
+  onOpenAdminSettings
 }: AdminControlsProps) => {
   return (
-    <div className={`absolute left-1/2 -translate-x-1/2 z-20 ${isTop ? "bottom-20" : "top-20"}`}>
+    <div className="absolute bottom-4 left-4 z-40">
       <Button
         variant="outline"
         size="icon"

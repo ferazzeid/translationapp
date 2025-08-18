@@ -356,13 +356,6 @@ export const TranslationInterface = ({
           onToggleDarkMode={() => setSpeakerADarkMode(!speakerADarkMode)}
           isTop={true}
         />
-        
-        {/* Admin Controls for Speaker A */}
-        <AdminControls
-          onOpenAdminSettings={onOpenAdminSettings}
-          speaker="A"
-          isTop={true}
-        />
       </div>
       {/* Horizontal Volume Control - Center Divider */}
       <HorizontalVolumeControl
@@ -417,13 +410,6 @@ export const TranslationInterface = ({
           onToggleDarkMode={() => setSpeakerBDarkMode(!speakerBDarkMode)}
           isTop={false}
         />
-        
-        {/* Admin Controls for Speaker B */}
-        <AdminControls
-          onOpenAdminSettings={onOpenAdminSettings}
-          speaker="B"
-          isTop={false}
-        />
       </div>
 
       {/* Visual feedback for listening states */}
@@ -434,14 +420,13 @@ export const TranslationInterface = ({
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-speaker-b/5 animate-pulse pointer-events-none z-10" />
       )}
 
+      {/* Admin Settings - Bottom Left */}
+      {onOpenAdminSettings && (
+        <AdminControls onOpenAdminSettings={onOpenAdminSettings} />
+      )}
+
       {/* Language Settings - Bottom Right */}
       <LanguageSettings onOpenSettings={onOpenSettings} />
-
-      {/* Vertical Volume Control - Left Side */}
-      {/* Removed - now using horizontal control */}
-
-      {/* Connection Status - Bottom Left */}
-      {/* Moved to center */}
 
       <VoiceSelectionModal
         isOpen={activeVoiceModal !== null}
