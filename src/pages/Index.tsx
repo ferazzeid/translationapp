@@ -4,6 +4,7 @@ import { IntroductionMode } from "@/components/IntroductionMode";
 import { TranslationInterface } from "@/components/TranslationInterface";
 import { AdminAuth } from "@/components/AdminAuth";
 import { AdminSettings } from "@/components/AdminSettings";
+import { MobileFrame } from "@/components/MobileFrame";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 
@@ -60,79 +61,93 @@ const Index = () => {
   };
 
   const renderCurrentView = () => {
-    switch (currentState) {
-      case "setup":
-        return (
-          <LanguageSelector
-            selectedLanguages={selectedLanguages}
-            onLanguageChange={handleLanguageChange}
-            onContinue={handleSetupComplete}
-          />
-        );
-      
-      case "introduction":
-        return (
-          <IntroductionMode
-            targetLanguage={selectedLanguages.speakerB}
-            onContinueToTranslation={handleContinueToTranslation}
-          />
-        );
-      
-      case "translation":
-        return (
-          <TranslationInterface
-            speakerALanguage={selectedLanguages.speakerA}
-            speakerBLanguage={selectedLanguages.speakerB}
-            onOpenSettings={handleOpenSettings}
-            onOpenAdminSettings={handleOpenAdminSettings}
-          />
-        );
-      
-      case "settings":
-        return (
-          <div className="p-6 text-center">
-            <h1 className="text-2xl font-bold mb-4">Settings</h1>
-            <p className="text-muted-foreground mb-4">User settings panel coming soon...</p>
-            <div className="flex gap-2 justify-center">
-              <button 
-                onClick={() => setCurrentState("translation")}
-                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg"
-              >
-                Back to Translation
-              </button>
-              <button 
-                onClick={handleOpenAdminSettings}
-                className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg border border-border"
-              >
-                Admin Settings
-              </button>
+    const content = (() => {
+      switch (currentState) {
+        case "setup":
+          return (
+            <LanguageSelector
+              selectedLanguages={selectedLanguages}
+              onLanguageChange={handleLanguageChange}
+              onContinue={handleSetupComplete}
+            />
+          );
+        
+        case "introduction":
+          return (
+            <IntroductionMode
+              targetLanguage={selectedLanguages.speakerB}
+              onContinueToTranslation={handleContinueToTranslation}
+            />
+          );
+        
+        case "translation":
+          return (
+            <TranslationInterface
+              speakerALanguage={selectedLanguages.speakerA}
+              speakerBLanguage={selectedLanguages.speakerB}
+              onOpenSettings={handleOpenSettings}
+              onOpenAdminSettings={handleOpenAdminSettings}
+            />
+          );
+        
+        case "settings":
+          return (
+            <div className="p-6 text-center">
+              <h1 className="text-2xl font-bold mb-4">Settings</h1>
+              <p className="text-muted-foreground mb-4">User settings panel coming soon...</p>
+              <div className="flex gap-2 justify-center">
+                <button 
+                  onClick={() => setCurrentState("translation")}
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-lg"
+                >
+                  Back to Translation
+                </button>
+                <button 
+                  onClick={handleOpenAdminSettings}
+                  className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg border border-border"
+                >
+                  Admin Settings
+                </button>
+              </div>
             </div>
-          </div>
-        );
-      
-      case "admin-auth":
-        return (
-          <AdminAuth
-            onAdminAuthenticated={handleAdminAuthenticated}
-            onBackToApp={handleBackToApp}
-          />
-        );
-      
-      case "admin-settings":
-        return (
-          <AdminSettings
-            onBackToApp={handleBackToApp}
-            onSignOut={handleAdminSignOut}
-          />
-        );
-      
-      default:
-        return null;
+          );
+        
+        case "admin-auth":
+          return (
+            <AdminAuth
+              onAdminAuthenticated={handleAdminAuthenticated}
+              onBackToApp={handleBackToApp}
+            />
+          );
+        
+        case "admin-settings":
+          return (
+            <AdminSettings
+              onBackToApp={handleBackToApp}
+              onSignOut={handleAdminSignOut}
+            />
+          );
+        
+        default:
+          return null;
+      }
+    })();
+
+    // Don't wrap admin settings and auth in mobile frame
+    if (currentState === "admin-auth" || currentState === "admin-settings") {
+      return content;
     }
+
+    // Wrap other views in mobile frame
+    return (
+      <MobileFrame>
+        {content}
+      </MobileFrame>
+    );
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {renderCurrentView()}
     </div>
   );

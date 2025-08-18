@@ -96,13 +96,26 @@ export const TranslationInterface = ({
       <div className="p-4 space-y-3">
         <div className="flex items-center justify-between">
           <StatusIndicator isOnline={isOnline} volume={volume} />
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onOpenSettings}
-          >
-            <Settings size={20} />
-          </Button>
+          <div className="flex items-center gap-2">
+            {onOpenAdminSettings && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onOpenAdminSettings}
+                className="h-8 w-8 p-0"
+              >
+                <Settings size={16} className="text-muted-foreground" />
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onOpenSettings}
+              className="h-8 w-8 p-0"
+            >
+              <Settings size={16} />
+            </Button>
+          </div>
         </div>
         
         {isListening && (
