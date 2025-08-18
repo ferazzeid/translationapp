@@ -1,4 +1,4 @@
-import { Volume2, Settings, Wifi, WifiOff, Shield, Mic2, Sun, Moon } from "lucide-react";
+import { Volume2, Settings, Wifi, WifiOff, Shield, Mic2, Sun, Moon, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,8 @@ interface CentralVolumeControlProps {
   onOpenVoiceSelection: () => void;
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
+  isSpeakerEnabled: boolean;
+  onToggleSpeaker: () => void;
 }
 
 export const CentralVolumeControl = ({
@@ -22,9 +24,12 @@ export const CentralVolumeControl = ({
   onOpenAdminSettings,
   onOpenVoiceSelection,
   isDarkMode,
-  onToggleDarkMode
+  onToggleDarkMode,
+  isSpeakerEnabled,
+  onToggleSpeaker
 }: CentralVolumeControlProps) => {
   const ConnectionIcon = isOnline ? Wifi : WifiOff;
+  const SpeakerIcon = isSpeakerEnabled ? Volume2 : VolumeX;
 
   return (
     <div className="flex items-center gap-6 w-full max-w-md">
@@ -42,9 +47,20 @@ export const CentralVolumeControl = ({
         />
       </div>
 
-      {/* Horizontal Volume Slider */}
+      {/* Volume Control Section */}
       <div className="flex items-center gap-3 flex-1">
-        <Volume2 className="h-4 w-4 text-muted-foreground" />
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggleSpeaker}
+          className={cn(
+            "h-8 w-8 rounded-full",
+            isSpeakerEnabled ? "text-foreground" : "text-muted-foreground"
+          )}
+          title={isSpeakerEnabled ? "Disable Speaker" : "Enable Speaker"}
+        >
+          <SpeakerIcon className="h-4 w-4" />
+        </Button>
         <Slider
           value={[Math.round(volume * 100)]}
           onValueChange={(value) => onVolumeChange(value[0] / 100)}
@@ -52,9 +68,10 @@ export const CentralVolumeControl = ({
           step={5}
           orientation="horizontal"
           className="flex-1"
+          disabled={!isSpeakerEnabled}
         />
         <span className="text-sm text-muted-foreground min-w-8">
-          {Math.round(volume * 100)}%
+          {isSpeakerEnabled ? Math.round(volume * 100) : 0}%
         </span>
       </div>
 

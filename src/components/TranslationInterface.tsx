@@ -38,6 +38,7 @@ export const TranslationInterface = ({
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isSpeakerEnabled, setIsSpeakerEnabled] = useState(true);
   const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
   const audioRecorderA = useAudioRecorder();
@@ -259,6 +260,11 @@ export const TranslationInterface = ({
   };
 
   const playAudio = (audioBase64: string) => {
+    if (!isSpeakerEnabled) {
+      console.log('Speaker is disabled, skipping audio playback');
+      return;
+    }
+    
     try {
       const audio = new Audio(`data:audio/mp3;base64,${audioBase64}`);
       audio.volume = volume;
@@ -341,6 +347,8 @@ export const TranslationInterface = ({
           onOpenVoiceSelection={() => setIsVoiceModalOpen(true)}
           isDarkMode={isDarkMode}
           onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
+          isSpeakerEnabled={isSpeakerEnabled}
+          onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
         />
       </div>
 
