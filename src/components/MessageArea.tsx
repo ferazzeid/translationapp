@@ -8,12 +8,10 @@ interface MessageAreaProps {
 }
 
 export const MessageArea = ({ children, speaker, className }: MessageAreaProps) => {
-  const isTop = speaker === "A";
-  
+  // Both speakers see messages from bottom up (newest at bottom, pushing older ones up)
   return (
     <div className={cn(
-      "flex-1 p-4 overflow-y-auto",
-      isTop ? "flex flex-col-reverse" : "flex flex-col",
+      "flex-1 p-4 overflow-y-auto flex flex-col-reverse",
       className
     )}>
       <div className="space-y-3 min-h-0">
