@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Mic, MicOff, RotateCcw, Volume2, Settings } from "lucide-react";
+import { Mic, MicOff, RotateCcw, Volume2, Settings, Wifi } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { StatusIndicator } from "./StatusIndicator";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
+import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 
 interface Message {
@@ -206,67 +207,52 @@ export const TranslationInterface = ({
         </ResizablePanelGroup>
       </div>
 
-      {/* Right Side Controls */}
-      <div className="w-20 bg-card/50 border-l border-border flex flex-col justify-between p-3">
-        {/* Top Controls */}
-        <div className="space-y-3">
-          <StatusIndicator 
-            isOnline={isOnline} 
-            volume={volume} 
-            className="flex-col items-center text-center p-2"
+      {/* Floating Controls */}
+      {/* Volume Control - Large and prominent on right edge */}
+      <div className="fixed right-2 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-3 bg-card/80 backdrop-blur-sm rounded-lg p-3 border border-border/50 shadow-lg">
+        <Volume2 className="h-5 w-5 text-muted-foreground" />
+        <div className="h-32 flex items-center">
+          <Slider
+            value={[Math.round(volume * 100)]}
+            onValueChange={(value) => setVolume(value[0] / 100)}
+            max={100}
+            step={1}
+            orientation="vertical"
+            className="h-28"
           />
-          
-          {onOpenAdminSettings && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onOpenAdminSettings}
-              className="w-full h-12 flex flex-col items-center gap-1 p-1"
-            >
-              <Settings size={18} className="text-muted-foreground" />
-              <span className="text-xs">Admin</span>
-            </Button>
-          )}
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onOpenSettings}
-            className="w-full h-12 flex flex-col items-center gap-1 p-1"
-          >
-            <Settings size={18} />
-            <span className="text-xs">Settings</span>
-          </Button>
         </div>
+        <span className="text-xs font-medium text-muted-foreground">{Math.round(volume * 100)}%</span>
+      </div>
 
-        {/* Bottom Controls */}
-        <div className="space-y-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={repeatLastMessage}
-            disabled={!lastMessage}
-            className="w-full h-12 flex flex-col items-center gap-1 p-1"
-          >
-            <RotateCcw size={18} />
-            <span className="text-xs">Repeat</span>
-          </Button>
-          
-          <div className="flex flex-col items-center gap-2">
-            <Volume2 size={18} className="text-muted-foreground" />
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.1"
-              value={volume}
-              onChange={(e) => setVolume(parseFloat(e.target.value))}
-              className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer transform -rotate-90 origin-center scale-75"
-              style={{ width: '60px', height: '4px' }}
-            />
-            <span className="text-xs text-muted-foreground">{Math.round(volume * 100)}%</span>
-          </div>
+      {/* Top Right Controls */}
+      <div className="fixed top-4 right-4 z-20 flex flex-col gap-2">
+        {/* Connection Status */}
+        <div className="bg-card/80 backdrop-blur-sm rounded-full p-2 border border-border/50 shadow-lg">
+          <Wifi className={cn("h-4 w-4", isOnline ? "text-green-500" : "text-red-500")} />
         </div>
+        
+        {/* Combined Settings/Admin Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onOpenSettings}
+          className="w-10 h-10 rounded-full bg-card/80 backdrop-blur-sm border border-border/50 shadow-lg hover:bg-accent/80"
+        >
+          <Settings className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Repeat Button - Bottom Right */}
+      <div className="fixed bottom-4 right-4 z-20">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={repeatLastMessage}
+          disabled={!lastMessage}
+          className="w-12 h-12 rounded-full bg-card/80 backdrop-blur-sm border border-border/50 shadow-lg hover:bg-accent/80 disabled:opacity-50"
+        >
+          <RotateCcw className="h-5 w-5" />
+        </Button>
       </div>
     </div>
   );
