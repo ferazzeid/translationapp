@@ -69,6 +69,7 @@ const Index = () => {
               selectedLanguages={selectedLanguages}
               onLanguageChange={handleLanguageChange}
               onContinue={handleSetupComplete}
+              onOpenSettings={handleOpenSettings}
             />
           );
         
@@ -77,6 +78,7 @@ const Index = () => {
             <IntroductionMode
               targetLanguage={selectedLanguages.speakerB}
               onContinueToTranslation={handleContinueToTranslation}
+              onOpenSettings={handleOpenSettings}
             />
           );
         
