@@ -245,78 +245,88 @@ export const TranslationInterface = ({
 
   return (
     <div className="h-full w-full relative bg-background overflow-hidden">
-      {/* Speaker A Half - Top (Rotated 180°) */}
+      {/* Speaker A Half - Top (Rotated 180°) - Hungarian */}
       <div className="absolute inset-x-0 top-0 h-1/2 rotate-180">
-        {/* Speaker A Microphone Button */}
-        <div className="absolute left-1/2 bottom-4 -translate-x-1/2 z-20">
+        {/* Speaker A Microphone Button - Moved to edge */}
+        <div className="absolute right-4 bottom-4 z-20">
           <SpeakerButton
             speaker="A"
             isListening={isListeningA}
             onStart={() => startListening("A")}
             onStop={() => stopListening("A")}
-            language={speakerALanguage}
-            flag={getLanguageFlag(speakerALanguage)}
+            language="hu"
+            flag="🇭🇺"
+            size="sm"
           />
         </div>
 
-        {/* Speaker A Placeholder Bubbles */}
-        <div className="absolute inset-4 bottom-20 pointer-events-none flex flex-col gap-4">
-          <div className="w-48 h-12 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Sample message 1</span>
+        {/* Speaker A Speech Bubbles - Progressive sizing, alternating alignment */}
+        <div className="absolute inset-4 bottom-20 pointer-events-none flex flex-col gap-3">
+          {/* Oldest message - smallest, left aligned */}
+          <div className="w-36 h-8 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center self-start">
+            <span className="text-xs text-muted-foreground">Message 1</span>
           </div>
-          <div className="w-40 h-12 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Sample message 2</span>
+          {/* Middle message - medium, right aligned */}
+          <div className="w-44 h-10 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center self-end">
+            <span className="text-sm text-muted-foreground">Message 2</span>
           </div>
-          <div className="w-52 h-12 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Sample message 3</span>
+          {/* Most recent - largest, left aligned */}
+          <div className="w-56 h-12 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center self-start">
+            <span className="text-sm text-muted-foreground">Latest message</span>
           </div>
         </div>
       </div>
 
-      {/* Horizontal Volume Control */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-12 z-30 flex items-center justify-center px-8">
-        <CentralVolumeControl
-          volume={volume}
-          onVolumeChange={setVolume}
-          isOnline={isOnline}
-          onOpenSettings={onOpenSettings}
-        />
+      {/* Central Toolbar - Enhanced with background */}
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-16 z-30 flex items-center justify-center px-8">
+        <div className="bg-card/90 backdrop-blur-sm border border-border rounded-lg px-6 py-3 shadow-lg">
+          <CentralVolumeControl
+            volume={volume}
+            onVolumeChange={setVolume}
+            isOnline={isOnline}
+            onOpenSettings={onOpenSettings}
+          />
+        </div>
       </div>
 
-      {/* Speaker B Half - Bottom (Normal) */}
+      {/* Speaker B Half - Bottom (Normal) - English */}
       <div className="absolute inset-x-0 bottom-0 h-1/2">
-        {/* Speaker B Microphone Button */}
-        <div className="absolute left-1/2 bottom-4 -translate-x-1/2 z-20">
+        {/* Speaker B Microphone Button - Moved to edge */}
+        <div className="absolute left-4 bottom-4 z-20">
           <SpeakerButton
             speaker="B"
             isListening={isListeningB}
             onStart={() => startListening("B")}
             onStop={() => stopListening("B")}
-            language={speakerBLanguage}
-            flag={getLanguageFlag(speakerBLanguage)}
+            language="en"
+            flag="🇺🇸"
+            size="sm"
           />
         </div>
 
-        {/* Speaker B Placeholder Bubbles */}
-        <div className="absolute inset-4 top-16 pointer-events-none flex flex-col gap-4">
-          <div className="w-48 h-12 bg-accent/10 rounded-2xl border border-accent/20 flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Sample message 1</span>
+        {/* Speaker B Speech Bubbles - Progressive sizing, alternating alignment */}
+        <div className="absolute inset-4 top-20 pointer-events-none flex flex-col gap-3 justify-end">
+          {/* Oldest message - smallest, right aligned */}
+          <div className="w-36 h-8 bg-accent/10 rounded-2xl border border-accent/20 flex items-center justify-center self-end">
+            <span className="text-xs text-muted-foreground">Message 1</span>
           </div>
-          <div className="w-40 h-12 bg-accent/10 rounded-2xl border border-accent/20 flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Sample message 2</span>
+          {/* Middle message - medium, left aligned */}
+          <div className="w-44 h-10 bg-accent/10 rounded-2xl border border-accent/20 flex items-center justify-center self-start">
+            <span className="text-sm text-muted-foreground">Message 2</span>
           </div>
-          <div className="w-52 h-12 bg-accent/10 rounded-2xl border border-accent/20 flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Sample message 3</span>
+          {/* Most recent - largest, right aligned */}
+          <div className="w-56 h-12 bg-accent/10 rounded-2xl border border-accent/20 flex items-center justify-center self-end">
+            <span className="text-sm text-muted-foreground">Latest message</span>
           </div>
         </div>
       </div>
 
       {/* Visual feedback for listening states */}
       {isListeningA && (
-        <div className="absolute inset-x-0 top-0 h-1/2 bg-speaker-a/5 animate-pulse pointer-events-none z-10" />
+        <div className="absolute inset-x-0 top-0 h-1/2 bg-primary/5 animate-pulse pointer-events-none z-10" />
       )}
       {isListeningB && (
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-speaker-b/5 animate-pulse pointer-events-none z-10" />
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-accent/5 animate-pulse pointer-events-none z-10" />
       )}
     </div>
   );

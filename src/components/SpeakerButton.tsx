@@ -9,6 +9,7 @@ interface SpeakerButtonProps {
   onStop: () => void;
   language: string;
   flag: string;
+  size?: "sm" | "lg";
   className?: string;
 }
 
@@ -19,16 +20,20 @@ export const SpeakerButton = ({
   onStop,
   language,
   flag,
+  size = "lg",
   className
 }: SpeakerButtonProps) => {
+  const buttonSize = size === "sm" ? "h-16 w-16" : "h-24 w-24";
+  const micSize = size === "sm" ? "h-6 w-6" : "h-10 w-10";
+  
   return (
-    <div className={cn("flex flex-col items-center gap-3", className)}>
-      {/* Simple microphone button */}
+    <div className={cn("flex flex-col items-center gap-2", className)}>
+      {/* Microphone button */}
       <Button
-        size="lg"
         variant="outline"
         className={cn(
-          "h-24 w-24 rounded-full border-2 transition-all duration-200",
+          buttonSize,
+          "rounded-full border-2 transition-all duration-200",
           "bg-background hover:scale-105 active:scale-95",
           isListening && [
             speaker === "A" 
@@ -42,13 +47,13 @@ export const SpeakerButton = ({
         onTouchStart={onStart}
         onTouchEnd={onStop}
       >
-        <Mic className="h-10 w-10" />
+        <Mic className={micSize} />
       </Button>
 
       {/* Language abbreviation with flag */}
       <div className="flex items-center gap-1">
         <span className="text-sm">{flag}</span>
-        <span className="text-sm font-medium text-muted-foreground">
+        <span className="text-xs font-medium text-muted-foreground">
           {language.toUpperCase()}
         </span>
       </div>
