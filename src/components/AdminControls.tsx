@@ -14,7 +14,7 @@ export const AdminControls = ({
         variant="outline"
         size="icon"
         onClick={onOpenAdminSettings}
-        className="h-10 w-10 rounded-full bg-background/90 border border-primary/50 hover:border-primary shadow-sm"
+        className="h-10 w-10 rounded-full bg-background/90 border border-primary/50 hover:bg-foreground hover:text-background hover:border-foreground shadow-sm"
         title="Admin Settings"
       >
         <Settings className="h-4 w-4" />

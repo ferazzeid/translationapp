@@ -1,4 +1,4 @@
-import { Mic2, Sun, Moon } from "lucide-react";
+import { MessageCircle, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -28,10 +28,10 @@ export const SpeakerControls = ({
           variant="ghost"
           size="icon"
           onClick={onOpenVoiceSelection}
-          className="h-10 w-10 rounded-full bg-background/90 border border-border shadow-sm hover:bg-accent"
+          className="h-10 w-10 rounded-full bg-background/90 border border-border shadow-sm hover:bg-foreground hover:text-background"
           title={`Voice Selection for Speaker ${speaker}`}
         >
-          <Mic2 className="h-4 w-4" />
+          <MessageCircle className="h-4 w-4" />
         </Button>
       </div>
       
@@ -44,7 +44,7 @@ export const SpeakerControls = ({
           variant="ghost"
           size="icon"
           onClick={onToggleDarkMode}
-          className="h-10 w-10 rounded-full bg-background/90 border border-border shadow-sm hover:bg-accent"
+          className="h-10 w-10 rounded-full bg-background/90 border border-border shadow-sm hover:bg-foreground hover:text-background"
           title={isDarkMode ? "Switch to Light Bubbles" : "Switch to Dark Bubbles"}
         >
           {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}

@@ -31,10 +31,10 @@ export const SpeakerButton = ({
           "hover:scale-105",
           isListening ? [
             "bg-destructive text-destructive-foreground border-0",
-            "hover:bg-destructive", // Prevent green hover when recording
+            "hover:bg-destructive", // Prevent hover changes when recording
             "recording-pulse" // Use our custom slow pulse animation
           ] : [
-            "bg-transparent hover:bg-accent hover:text-accent-foreground border border-border"
+            "bg-foreground text-background hover:bg-foreground/80 border border-border"
           ]
         )}
         onClick={isListening ? onStop : onStart}
