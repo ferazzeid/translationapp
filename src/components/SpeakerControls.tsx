@@ -18,11 +18,11 @@ export const SpeakerControls = ({
   isTop = false
 }: SpeakerControlsProps) => {
   return (
-    <>
+    <div className="absolute inset-0 pointer-events-none z-30">
       {/* Left Control - Voice Selection */}
       <div className={cn(
-        "absolute z-20",
-        isTop ? "bottom-4 left-1/2 -translate-x-[calc(100%+60px)]" : "bottom-4 left-1/2 -translate-x-[calc(100%+60px)]"
+        "absolute pointer-events-auto",
+        isTop ? "top-4 left-4" : "bottom-4 left-4"
       )}>
         <Button
           variant="ghost"
@@ -37,8 +37,8 @@ export const SpeakerControls = ({
       
       {/* Right Control - Dark/Light Mode */}
       <div className={cn(
-        "absolute z-20",
-        isTop ? "bottom-4 left-1/2 translate-x-[60px]" : "bottom-4 left-1/2 translate-x-[60px]"
+        "absolute pointer-events-auto",
+        isTop ? "top-4 right-4" : "bottom-4 right-4"
       )}>
         <Button
           variant="ghost"
@@ -50,6 +50,6 @@ export const SpeakerControls = ({
           {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </Button>
       </div>
-    </>
+    </div>
   );
 };
