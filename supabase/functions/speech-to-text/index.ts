@@ -86,61 +86,25 @@ serve(async (req) => {
         }
       );
     }
-    
 
-    console.log(`Sending audio to OpenAI GPT-4o: ${binaryAudio.length} bytes`);
+    console.log(`Processing audio: ${binaryAudio.length} bytes`);
 
-    // Enhanced base64 conversion with proper chunking to prevent stack overflow
-    let audioBase64 = '';
-    const chunkSize = 4096; // Smaller chunks for better reliability
-    
-    try {
-      for (let i = 0; i < binaryAudio.length; i += chunkSize) {
-        const chunk = binaryAudio.slice(i, i + chunkSize);
-        // Convert chunk to string array first, then join to avoid apply limit
-        const charArray = Array.from(chunk, byte => String.fromCharCode(byte));
-        audioBase64 += btoa(charArray.join(''));
-      }
-    } catch (chunkError) {
-      console.error('Base64 chunking error:', chunkError);
-      return new Response(
-        JSON.stringify({ error: 'Audio processing failed - please try a shorter recording' }),
-        { 
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
+    // Create FormData for Whisper API (which supports webm)
+    const formData = new FormData();
+    const audioBlob = new Blob([binaryAudio], { type: 'audio/webm' });
+    formData.append('file', audioBlob, 'audio.webm');
+    formData.append('model', 'whisper-1');
+    if (language && language !== 'auto-detect') {
+      formData.append('language', language);
     }
 
-    // Send to OpenAI GPT-4o for audio transcription
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // Send to OpenAI Whisper API instead of GPT-4o
+    const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${openaiApiKey}`,
-        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          {
-            role: 'user',
-            content: [
-              {
-                type: 'text',
-                text: `Please transcribe this audio to text. Respond only with the transcribed text, no additional formatting or explanation. Language: ${language || 'auto-detect'}`
-              },
-              {
-                type: 'input_audio',
-                input_audio: {
-                  data: audioBase64,
-                  format: 'webm'
-                }
-              }
-            ]
-          }
-        ],
-        max_completion_tokens: 1000
-      }),
+      body: formData,
     });
 
     if (!response.ok) {
@@ -156,10 +120,10 @@ serve(async (req) => {
     }
 
     const result = await response.json();
-    console.log('Transcription result:', result);
+    console.log('Whisper transcription result:', result);
 
-    // Extract text from GPT-4o response
-    const transcribedText = result.choices?.[0]?.message?.content || '';
+    // Extract text from Whisper response
+    const transcribedText = result.text || '';
 
     return new Response(
       JSON.stringify({ 
