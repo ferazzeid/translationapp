@@ -5,7 +5,9 @@ import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import { useToast } from "@/hooks/use-toast";
 import { SpeechBubble } from "./SpeechBubble";
 import { CentralVolumeControl } from "./CentralVolumeControl";
-import { VerticalVolumeControl } from "./VerticalVolumeControl";
+import { HorizontalVolumeControl } from "./HorizontalVolumeControl";
+import { AdminControls } from "./AdminControls";
+import { LanguageSettings } from "./LanguageSettings";
 import { ConnectionStatus } from "./ConnectionStatus";
 import { SpeakerButton } from "./SpeakerButton";
 import { SpeakerControls } from "./SpeakerControls";
@@ -354,13 +356,25 @@ export const TranslationInterface = ({
           onToggleDarkMode={() => setSpeakerADarkMode(!speakerADarkMode)}
           isTop={true}
         />
-      </div>
-      {/* Horizontal Volume Control */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-20 z-30 flex items-center justify-center px-8">
-        <CentralVolumeControl
-          onOpenSettings={onOpenSettings}
+        
+        {/* Admin Controls for Speaker A */}
+        <AdminControls
           onOpenAdminSettings={onOpenAdminSettings}
+          speaker="A"
+          isTop={true}
         />
+      </div>
+      {/* Horizontal Volume Control - Center Divider */}
+      <HorizontalVolumeControl
+        volume={volume}
+        onVolumeChange={setVolume}
+        isSpeakerEnabled={isSpeakerEnabled}
+        onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
+      />
+      
+      {/* Central Connection Status */}
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-20 z-20 flex items-center justify-center">
+        <CentralVolumeControl isOnline={isOnline} />
       </div>
 
       {/* Speaker B Half - Bottom (Normal) */}
@@ -403,6 +417,13 @@ export const TranslationInterface = ({
           onToggleDarkMode={() => setSpeakerBDarkMode(!speakerBDarkMode)}
           isTop={false}
         />
+        
+        {/* Admin Controls for Speaker B */}
+        <AdminControls
+          onOpenAdminSettings={onOpenAdminSettings}
+          speaker="B"
+          isTop={false}
+        />
       </div>
 
       {/* Visual feedback for listening states */}
@@ -413,16 +434,14 @@ export const TranslationInterface = ({
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-speaker-b/5 animate-pulse pointer-events-none z-10" />
       )}
 
+      {/* Language Settings - Bottom Right */}
+      <LanguageSettings onOpenSettings={onOpenSettings} />
+
       {/* Vertical Volume Control - Left Side */}
-      <VerticalVolumeControl
-        volume={volume}
-        onVolumeChange={setVolume}
-        isSpeakerEnabled={isSpeakerEnabled}
-        onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
-      />
+      {/* Removed - now using horizontal control */}
 
       {/* Connection Status - Bottom Left */}
-      <ConnectionStatus isOnline={isOnline} />
+      {/* Moved to center */}
 
       <VoiceSelectionModal
         isOpen={activeVoiceModal !== null}
