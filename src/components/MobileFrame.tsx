@@ -15,17 +15,14 @@ export const MobileFrame = ({ children, className }: MobileFrameProps) => {
         "h-[800px]", // Fixed mobile height
         "bg-background",
         "rounded-[2.5rem]", // Large border radius for phone-like appearance
-        "border-8 border-gray-800", // Phone bezel
+        "border-8 border-gray-800", // Phone bezel - uniform all around
         "shadow-2xl",
         "overflow-hidden",
         "mx-auto",
         className
       )}>
-        {/* Phone speaker/notch area */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-gray-800 rounded-b-xl z-10"></div>
-        
-        {/* App content */}
-        <div className="h-full w-full relative z-0">
+        {/* App content - no notch interference */}
+        <div className="h-full w-full relative">
           {children}
         </div>
       </div>
