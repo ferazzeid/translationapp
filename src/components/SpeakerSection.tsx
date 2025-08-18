@@ -41,12 +41,14 @@ export const SpeakerSection = ({
         />
       </div>
 
-      {/* Speech Bubbles Area */}
+      {/* Speech Bubbles Area - Chat Style */}
       <div className={cn(
-        "absolute inset-4 pointer-events-none",
-        isTop ? "bottom-20" : "top-20"
+        "absolute inset-x-0 overflow-y-auto",
+        isTop ? "top-0 bottom-20 flex flex-col-reverse" : "bottom-0 top-20 flex flex-col"
       )}>
-        {messages}
+        <div className="flex-1 py-4">
+          {messages}
+        </div>
       </div>
 
       {/* Listening feedback overlay */}
