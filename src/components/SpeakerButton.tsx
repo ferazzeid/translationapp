@@ -23,27 +23,55 @@ export const SpeakerButton = ({
 }: SpeakerButtonProps) => {
   return (
     <div className={cn("flex flex-col items-center gap-3", className)}>
-      {/* Simple microphone button */}
-      <Button
-        size="lg"
-        variant="outline"
-        className={cn(
-          "h-24 w-24 rounded-full border-2 transition-all duration-200",
-          "bg-background hover:scale-105 active:scale-95",
-          isListening && [
-            speaker === "A" 
-              ? "border-primary bg-primary/5 text-primary" 
-              : "border-accent bg-accent/5 text-accent"
-          ],
-          !isListening && "border-border hover:border-muted-foreground"
+      {/* Microphone button with recording feedback */}
+      <div className="relative">
+        {/* Pulsing ring for recording state */}
+        {isListening && (
+          <div className={cn(
+            "absolute inset-0 rounded-full border-4 animate-ping",
+            speaker === "A" ? "border-red-500" : "border-orange-500"
+          )} />
         )}
-        onMouseDown={onStart}
-        onMouseUp={onStop}
-        onTouchStart={onStart}
-        onTouchEnd={onStop}
-      >
-        <Mic className="h-10 w-10" />
-      </Button>
+        
+        <Button
+          size="lg"
+          variant="outline"
+          className={cn(
+            "h-24 w-24 rounded-full border-2 transition-all duration-200 relative z-10",
+            "hover:scale-105 active:scale-95",
+            isListening ? [
+              "border-red-500 bg-red-500 text-white shadow-lg shadow-red-500/25",
+              "animate-pulse",
+              speaker === "B" && "border-orange-500 bg-orange-500 shadow-orange-500/25"
+            ] : [
+              "bg-background border-border hover:border-muted-foreground",
+              "hover:bg-muted/50"
+            ]
+          )}
+          onMouseDown={onStart}
+          onMouseUp={onStop}
+          onTouchStart={onStart}
+          onTouchEnd={onStop}
+        >
+          <Mic className={cn(
+            "h-10 w-10 transition-all duration-200",
+            isListening && "animate-pulse"
+          )} />
+        </Button>
+      </div>
+
+      {/* Recording status indicator */}
+      {isListening && (
+        <div className="flex items-center gap-2 animate-fade-in">
+          <div className={cn(
+            "h-2 w-2 rounded-full animate-pulse",
+            speaker === "A" ? "bg-red-500" : "bg-orange-500"
+          )} />
+          <span className="text-xs font-medium text-foreground">
+            Recording...
+          </span>
+        </div>
+      )}
 
       {/* Language abbreviation with flag */}
       <div className="flex items-center gap-1">
@@ -52,6 +80,13 @@ export const SpeakerButton = ({
           {language.toUpperCase()}
         </span>
       </div>
+
+      {/* Instruction text */}
+      {!isListening && (
+        <span className="text-xs text-muted-foreground text-center max-w-20">
+          Hold to speak
+        </span>
+      )}
     </div>
   );
 };
