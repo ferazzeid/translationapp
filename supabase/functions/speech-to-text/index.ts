@@ -112,7 +112,7 @@ serve(async (req) => {
       );
     }
 
-    // Send to OpenAI GPT-4o
+    // Send to OpenAI GPT-4o for audio transcription
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -130,16 +130,16 @@ serve(async (req) => {
                 text: `Please transcribe this audio to text. Respond only with the transcribed text, no additional formatting or explanation. Language: ${language || 'auto-detect'}`
               },
               {
-                  type: 'input_audio',
-                  input_audio: {
-                    data: audioBase64,
-                    format: 'wav' // GPT-4o requires wav or mp3 format
-                  }
+                type: 'input_audio',
+                input_audio: {
+                  data: audioBase64,
+                  format: 'webm'
+                }
               }
             ]
           }
         ],
-        max_tokens: 1000
+        max_completion_tokens: 1000
       }),
     });
 
