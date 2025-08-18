@@ -281,6 +281,7 @@ export const TranslationInterface = ({
           onVolumeChange={setVolume}
           isOnline={isOnline}
           onOpenSettings={onOpenSettings}
+          onOpenAdminSettings={onOpenAdminSettings}
         />
       </div>
 

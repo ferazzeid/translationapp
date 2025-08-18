@@ -1,4 +1,4 @@
-import { Volume2, Settings, Wifi, WifiOff } from "lucide-react";
+import { Volume2, Settings, Wifi, WifiOff, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -8,13 +8,15 @@ interface CentralVolumeControlProps {
   onVolumeChange: (volume: number) => void;
   isOnline: boolean;
   onOpenSettings: () => void;
+  onOpenAdminSettings?: () => void;
 }
 
 export const CentralVolumeControl = ({
   volume,
   onVolumeChange,
   isOnline,
-  onOpenSettings
+  onOpenSettings,
+  onOpenAdminSettings
 }: CentralVolumeControlProps) => {
   const ConnectionIcon = isOnline ? Wifi : WifiOff;
 
@@ -50,15 +52,27 @@ export const CentralVolumeControl = ({
         </span>
       </div>
 
-      {/* Settings Button */}
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={onOpenSettings}
-        className="h-8 w-8 rounded-full"
-      >
-        <Settings className="h-4 w-4" />
-      </Button>
+      {/* Settings Buttons */}
+      <div className="flex gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={onOpenSettings}
+          className="h-8 w-8 rounded-full"
+        >
+          <Settings className="h-4 w-4" />
+        </Button>
+        {onOpenAdminSettings && (
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onOpenAdminSettings}
+            className="h-8 w-8 rounded-full border-primary/50 hover:border-primary"
+          >
+            <Shield className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
