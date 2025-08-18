@@ -246,7 +246,7 @@ export const TranslationInterface = ({
   return (
     <div className="h-full w-full relative bg-background overflow-hidden">
       {/* Speaker A Half - Top (Rotated 180°) */}
-      <div className="absolute inset-x-0 top-0 h-1/2 rotate-180 border-b border-border">
+      <div className="absolute inset-x-0 top-0 h-1/2 rotate-180">
         {/* Speaker A Microphone Button */}
         <div className="absolute left-1/2 bottom-4 -translate-x-1/2 z-20">
           <SpeakerButton
@@ -259,35 +259,22 @@ export const TranslationInterface = ({
           />
         </div>
 
-        {/* Speaker A Speech Bubbles Area */}
-        <div className="absolute inset-4 bottom-20 pointer-events-none">
-          {messages.filter(msg => msg.speaker === "A").slice(0, 3).map((message, index) => (
-            <div key={message.id} className="mb-2">
-              <SpeechBubble
-                text={message.originalText}
-                isOriginal={true}
-                index={index}
-                speaker="A"
-                isNew={index === 0}
-              />
-            </div>
-          ))}
-          {messages.filter(msg => msg.speaker === "B").slice(0, 3).map((message, index) => (
-            <div key={`translated-${message.id}`} className="mb-2">
-              <SpeechBubble
-                text={message.translatedText}
-                isOriginal={false}
-                index={index}
-                speaker="A"
-                isNew={index === 0}
-              />
-            </div>
-          ))}
+        {/* Speaker A Placeholder Bubbles */}
+        <div className="absolute inset-4 bottom-20 pointer-events-none flex flex-col gap-4">
+          <div className="w-48 h-12 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center">
+            <span className="text-sm text-muted-foreground">Sample message 1</span>
+          </div>
+          <div className="w-40 h-12 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center">
+            <span className="text-sm text-muted-foreground">Sample message 2</span>
+          </div>
+          <div className="w-52 h-12 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center">
+            <span className="text-sm text-muted-foreground">Sample message 3</span>
+          </div>
         </div>
       </div>
 
-      {/* Central Control Strip */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-16 bg-muted border-t border-b border-border z-30 flex items-center justify-center">
+      {/* Horizontal Volume Control */}
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-12 z-30 flex items-center justify-center px-8">
         <CentralVolumeControl
           volume={volume}
           onVolumeChange={setVolume}
@@ -297,9 +284,9 @@ export const TranslationInterface = ({
       </div>
 
       {/* Speaker B Half - Bottom (Normal) */}
-      <div className="absolute inset-x-0 bottom-0 h-1/2 border-t border-border">
+      <div className="absolute inset-x-0 bottom-0 h-1/2">
         {/* Speaker B Microphone Button */}
-        <div className="absolute left-1/2 top-4 -translate-x-1/2 z-20">
+        <div className="absolute left-1/2 bottom-4 -translate-x-1/2 z-20">
           <SpeakerButton
             speaker="B"
             isListening={isListeningB}
@@ -310,30 +297,17 @@ export const TranslationInterface = ({
           />
         </div>
 
-        {/* Speaker B Speech Bubbles Area */}
-        <div className="absolute inset-4 top-20 pointer-events-none">
-          {messages.filter(msg => msg.speaker === "B").slice(0, 3).map((message, index) => (
-            <div key={message.id} className="mb-2">
-              <SpeechBubble
-                text={message.originalText}
-                isOriginal={true}
-                index={index}
-                speaker="B"
-                isNew={index === 0}
-              />
-            </div>
-          ))}
-          {messages.filter(msg => msg.speaker === "A").slice(0, 3).map((message, index) => (
-            <div key={`translated-${message.id}`} className="mb-2">
-              <SpeechBubble
-                text={message.translatedText}
-                isOriginal={false}
-                index={index}
-                speaker="B"
-                isNew={index === 0}
-              />
-            </div>
-          ))}
+        {/* Speaker B Placeholder Bubbles */}
+        <div className="absolute inset-4 top-16 pointer-events-none flex flex-col gap-4">
+          <div className="w-48 h-12 bg-accent/10 rounded-2xl border border-accent/20 flex items-center justify-center">
+            <span className="text-sm text-muted-foreground">Sample message 1</span>
+          </div>
+          <div className="w-40 h-12 bg-accent/10 rounded-2xl border border-accent/20 flex items-center justify-center">
+            <span className="text-sm text-muted-foreground">Sample message 2</span>
+          </div>
+          <div className="w-52 h-12 bg-accent/10 rounded-2xl border border-accent/20 flex items-center justify-center">
+            <span className="text-sm text-muted-foreground">Sample message 3</span>
+          </div>
         </div>
       </div>
 
