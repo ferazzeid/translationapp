@@ -176,4 +176,3 @@ All colors MUST be HSL for maximum compatibility and theming.
   animation: recording-pulse var(--pulse-duration) ease-in-out infinite, 
              recording-glow var(--pulse-duration) ease-in-out infinite;
 }
-}

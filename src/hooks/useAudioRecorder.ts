@@ -9,21 +9,28 @@ export interface AudioRecorderHook {
 
 // Utility function to detect best audio format for the browser
 const getSupportedAudioFormat = (): { mimeType: string; extension: string } => {
+  // Test formats in order of preference for speech-to-text compatibility
   const formats = [
     { mimeType: 'audio/webm;codecs=opus', extension: 'webm' },
-    { mimeType: 'audio/wav', extension: 'wav' },
+    { mimeType: 'audio/webm', extension: 'webm' },
     { mimeType: 'audio/mp4', extension: 'm4a' },
-    { mimeType: 'audio/ogg;codecs=opus', extension: 'ogg' }
+    { mimeType: 'audio/ogg;codecs=opus', extension: 'ogg' },
+    { mimeType: 'audio/wav', extension: 'wav' }
   ];
 
+  console.log('Testing MediaRecorder format support...');
   for (const format of formats) {
-    if (MediaRecorder.isTypeSupported(format.mimeType)) {
+    const isSupported = MediaRecorder.isTypeSupported(format.mimeType);
+    console.log(`${format.mimeType}: ${isSupported ? 'SUPPORTED' : 'NOT SUPPORTED'}`);
+    if (isSupported) {
+      console.log(`Selected format: ${format.mimeType}`);
       return format;
     }
   }
   
-  // Fallback to basic webm if nothing else is supported
-  return { mimeType: 'audio/webm', extension: 'webm' };
+  // If no specific format is supported, return empty to let browser choose
+  console.log('No specific format supported, using browser default');
+  return { mimeType: '', extension: 'webm' };
 };
 
 // Enhanced base64 conversion with chunking to prevent stack overflow
@@ -78,14 +85,22 @@ export const useAudioRecorder = (): AudioRecorderHook => {
       console.log('Using audio format:', audioFormat);
 
       let mediaRecorder: MediaRecorder;
-      try {
-        mediaRecorder = new MediaRecorder(stream, {
-          mimeType: audioFormat.mimeType
-        });
-      } catch (formatError) {
-        // Fallback to no mimeType specified (let browser choose)
-        console.log('Falling back to browser default format');
+      
+      // Create MediaRecorder with or without mimeType based on support
+      if (audioFormat.mimeType) {
+        try {
+          mediaRecorder = new MediaRecorder(stream, {
+            mimeType: audioFormat.mimeType
+          });
+          console.log(`MediaRecorder created with ${audioFormat.mimeType}`);
+        } catch (formatError) {
+          console.log(`Failed with ${audioFormat.mimeType}, trying without mimeType:`, formatError);
+          mediaRecorder = new MediaRecorder(stream);
+        }
+      } else {
+        // No mimeType - let browser choose
         mediaRecorder = new MediaRecorder(stream);
+        console.log('MediaRecorder created with browser default format');
       }
 
       chunksRef.current = [];
