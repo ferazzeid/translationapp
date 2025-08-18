@@ -9,7 +9,7 @@ export const LanguageSettings = ({
   onOpenSettings
 }: LanguageSettingsProps) => {
   return (
-    <div className="absolute bottom-4 right-4 z-40">
+    <div className="absolute bottom-20 right-4 z-40">
       <Button
         variant="outline"
         size="icon"
