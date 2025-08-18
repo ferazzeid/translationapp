@@ -45,8 +45,8 @@ export const AdminAuth = ({ onAdminAuthenticated, onBackToApp }: AdminAuthProps)
     setLoading(true);
 
     try {
-      // Development bypass for admin/admin
-      if (email === "admin" && password === "admin") {
+      // Development bypass for admin@admin
+      if (email === "admin@admin" && password === "admin") {
         // Create a mock user object for development
         const mockUser = {
           id: "dev-admin-user",
@@ -153,7 +153,7 @@ export const AdminAuth = ({ onAdminAuthenticated, onBackToApp }: AdminAuthProps)
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="Use 'admin' for dev access"
+                  placeholder="Use 'admin@admin' for dev access"
                 />
               </div>
               <div className="space-y-2">
