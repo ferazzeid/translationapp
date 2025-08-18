@@ -8,6 +8,7 @@ import { CentralVolumeControl } from "./CentralVolumeControl";
 import { VerticalVolumeControl } from "./VerticalVolumeControl";
 import { ConnectionStatus } from "./ConnectionStatus";
 import { SpeakerButton } from "./SpeakerButton";
+import { SpeakerControls } from "./SpeakerControls";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
 
 interface Message {
@@ -41,6 +42,14 @@ export const TranslationInterface = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isSpeakerEnabled, setIsSpeakerEnabled] = useState(true);
+  
+  // Individual settings for each speaker
+  const [speakerAVoice, setSpeakerAVoice] = useState("alloy");
+  const [speakerBVoice, setSpeakerBVoice] = useState("nova");
+  const [speakerADarkMode, setSpeakerADarkMode] = useState(false);
+  const [speakerBDarkMode, setSpeakerBDarkMode] = useState(false);
+  const [activeVoiceModal, setActiveVoiceModal] = useState<"A" | "B" | null>(null);
+  
   const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
   const audioRecorderA = useAudioRecorder();
@@ -330,22 +339,27 @@ export const TranslationInterface = ({
                   index={index}
                   speaker={message.speaker}
                   isNew={index === 0}
-                  isDarkMode={isDarkMode}
+                  isDarkMode={message.speaker === "A" ? speakerADarkMode : speakerBDarkMode}
                 />
               </div>
             ))}
           </div>
         </div>
+        
+        {/* Speaker A Controls */}
+        <SpeakerControls
+          speaker="A"
+          onOpenVoiceSelection={() => setActiveVoiceModal("A")}
+          isDarkMode={speakerADarkMode}
+          onToggleDarkMode={() => setSpeakerADarkMode(!speakerADarkMode)}
+          isTop={true}
+        />
       </div>
-
       {/* Horizontal Volume Control */}
       <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-20 z-30 flex items-center justify-center px-8">
         <CentralVolumeControl
           onOpenSettings={onOpenSettings}
           onOpenAdminSettings={onOpenAdminSettings}
-          onOpenVoiceSelection={() => setIsVoiceModalOpen(true)}
-          isDarkMode={isDarkMode}
-          onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
         />
       </div>
 
@@ -374,12 +388,21 @@ export const TranslationInterface = ({
                   index={index}
                   speaker={message.speaker}
                   isNew={index === 0}
-                  isDarkMode={isDarkMode}
+                  isDarkMode={message.speaker === "A" ? speakerADarkMode : speakerBDarkMode}
                 />
               </div>
             ))}
           </div>
         </div>
+        
+        {/* Speaker B Controls */}
+        <SpeakerControls
+          speaker="B"
+          onOpenVoiceSelection={() => setActiveVoiceModal("B")}
+          isDarkMode={speakerBDarkMode}
+          onToggleDarkMode={() => setSpeakerBDarkMode(!speakerBDarkMode)}
+          isTop={false}
+        />
       </div>
 
       {/* Visual feedback for listening states */}
@@ -402,10 +425,17 @@ export const TranslationInterface = ({
       <ConnectionStatus isOnline={isOnline} />
 
       <VoiceSelectionModal
-        isOpen={isVoiceModalOpen}
-        onClose={() => setIsVoiceModalOpen(false)}
-        selectedVoice={selectedVoice}
-        onVoiceSelect={setSelectedVoice}
+        isOpen={activeVoiceModal !== null}
+        onClose={() => setActiveVoiceModal(null)}
+        selectedVoice={activeVoiceModal === "A" ? speakerAVoice : speakerBVoice}
+        onVoiceSelect={(voice) => {
+          if (activeVoiceModal === "A") {
+            setSpeakerAVoice(voice);
+          } else if (activeVoiceModal === "B") {
+            setSpeakerBVoice(voice);
+          }
+          setActiveVoiceModal(null);
+        }}
       />
     </div>
   );
