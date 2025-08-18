@@ -3,42 +3,21 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Settings, Key, Volume2, Users } from "lucide-react";
+import { Eye, EyeOff, Settings, X } from "lucide-react";
+import { MobileFrame } from "./MobileFrame";
 
 interface AdminSettingsProps {
   onBackToApp: () => void;
   onSignOut: () => void;
 }
 
-interface AdminSetting {
-  setting_key: string;
-  setting_value: string | null;
-  description: string;
-}
-
 export const AdminSettings = ({ onBackToApp, onSignOut }: AdminSettingsProps) => {
-  const [settings, setSettings] = useState<AdminSetting[]>([]);
   const [openaiKey, setOpenaiKey] = useState("");
   const [showKey, setShowKey] = useState(false);
   const [loading, setLoading] = useState(false);
   const [testingKey, setTestingKey] = useState(false);
-  const [voiceModel, setVoiceModel] = useState("alloy");
-  const [voiceSpeed, setVoiceSpeed] = useState("1.0");
-  const [gptModel, setGptModel] = useState("gpt-4o");
   const { toast } = useToast();
-
-  const voiceOptions = [
-    { value: "alloy", label: "Alloy (Neutral)" },
-    { value: "echo", label: "Echo (Masculine)" },
-    { value: "fable", label: "Fable (British)" },
-    { value: "onyx", label: "Onyx (Deep)" },
-    { value: "nova", label: "Nova (Young)" },
-    { value: "shimmer", label: "Shimmer (Soft)" },
-  ];
 
   useEffect(() => {
     loadSettings();
@@ -48,29 +27,14 @@ export const AdminSettings = ({ onBackToApp, onSignOut }: AdminSettingsProps) =>
     try {
       const { data, error } = await supabase
         .from("admin_settings")
-        .select("setting_key, setting_value, description")
-        .order("setting_key");
+        .select("setting_value")
+        .eq("setting_key", "openai_api_key")
+        .single();
 
-      if (error) throw error;
-
-      setSettings(data || []);
-      
-      // Set individual state values
-      const keyData = data?.find(s => s.setting_key === "openai_api_key");
-      const voiceData = data?.find(s => s.setting_key === "voice_model");
-      const speedData = data?.find(s => s.setting_key === "voice_speed");
-      const modelData = data?.find(s => s.setting_key === "openai_model");
-      
-      setOpenaiKey(keyData?.setting_value || "");
-      setVoiceModel(voiceData?.setting_value || "alloy");
-      setVoiceSpeed(speedData?.setting_value || "1.0");
-      setGptModel(modelData?.setting_value || "gpt-4o");
+      if (error && error.code !== 'PGRST116') throw error;
+      setOpenaiKey(data?.setting_value || "");
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: "Failed to load settings: " + error.message,
-        variant: "destructive",
-      });
+      console.error('Error loading settings:', error);
     }
   };
 
@@ -79,21 +43,21 @@ export const AdminSettings = ({ onBackToApp, onSignOut }: AdminSettingsProps) =>
       const { error } = await supabase.rpc("set_admin_setting", {
         key_name: key,
         value: value,
-        encrypted: key === "openai_api_key"
+        encrypted: true
       });
 
       if (error) throw error;
 
       toast({
         title: "Success",
-        description: "Setting updated successfully",
+        description: "API key saved successfully",
       });
 
       await loadSettings();
     } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to update setting: " + error.message,
+        description: "Failed to save API key: " + error.message,
         variant: "destructive",
       });
     }
@@ -163,201 +127,103 @@ export const AdminSettings = ({ onBackToApp, onSignOut }: AdminSettingsProps) =>
   const maskedKey = openaiKey ? `${"*".repeat(Math.max(0, openaiKey.length - 4))}${openaiKey.slice(-4)}` : "";
 
   return (
-    <div className="min-h-screen bg-gradient-surface p-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
-              <Settings className="h-8 w-8" />
-              Admin Settings
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              Configure your translation app settings
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={onBackToApp}>
-              Back to App
-            </Button>
-            <Button variant="destructive" onClick={handleSignOut}>
-              Sign Out
+    <MobileFrame>
+      <div className="h-full bg-background text-foreground flex flex-col">
+        {/* Header */}
+        <div className="flex-shrink-0 p-4 border-b border-border bg-background">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Settings className="h-5 w-5 text-foreground" />
+              <h1 className="text-lg font-semibold text-foreground">Settings</h1>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onBackToApp}
+              className="h-8 w-8 text-foreground hover:bg-muted"
+            >
+              <X className="h-4 w-4" />
             </Button>
           </div>
         </div>
 
-        <Tabs defaultValue="api" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="api" className="flex items-center gap-2">
-              <Key className="h-4 w-4" />
-              API Keys
-            </TabsTrigger>
-            <TabsTrigger value="voice" className="flex items-center gap-2">
-              <Volume2 className="h-4 w-4" />
-              Voice Settings
-            </TabsTrigger>
-            <TabsTrigger value="general" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              General
-            </TabsTrigger>
-          </TabsList>
+        {/* Content */}
+        <div className="flex-1 p-4 space-y-6 overflow-y-auto">
+          {/* OpenAI API Key Section */}
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-base font-medium text-foreground mb-1">OpenAI API Key</h2>
+              <p className="text-sm text-muted-foreground">
+                Required for translation and speech services
+              </p>
+            </div>
 
-          <TabsContent value="api">
-            <Card>
-              <CardHeader>
-                <CardTitle>OpenAI API Configuration</CardTitle>
-                <CardDescription>
-                  Configure your OpenAI API key for translation and text-to-speech services
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="openai-key">OpenAI API Key</Label>
-                  <div className="flex gap-2">
-                    <div className="relative flex-1">
-                      <Input
-                        id="openai-key"
-                        type={showKey ? "text" : "password"}
-                        value={openaiKey}
-                        onChange={(e) => setOpenaiKey(e.target.value)}
-                        placeholder="sk-..."
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0"
-                        onClick={() => setShowKey(!showKey)}
-                      >
-                        {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </Button>
-                    </div>
-                    <Button onClick={testOpenAIKey} disabled={testingKey} variant="outline">
-                      {testingKey ? "Testing..." : "Test Key"}
+            <div className="space-y-3">
+              <div className="space-y-2">
+                <Label htmlFor="openai-key" className="text-sm text-foreground">API Key</Label>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Input
+                      id="openai-key"
+                      type={showKey ? "text" : "password"}
+                      value={openaiKey}
+                      onChange={(e) => setOpenaiKey(e.target.value)}
+                      placeholder="sk-..."
+                      className="bg-background text-foreground border-border pr-10"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                      onClick={() => setShowKey(!showKey)}
+                    >
+                      {showKey ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                     </Button>
                   </div>
-                  {openaiKey && !showKey && (
-                    <p className="text-sm text-muted-foreground">
-                      Current key: {maskedKey}
-                    </p>
-                  )}
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="gpt-model">GPT Model</Label>
-                  <Select value={gptModel} onValueChange={setGptModel}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="gpt-4o">GPT-4o (Best Performance)</SelectItem>
-                      <SelectItem value="gpt-4o-mini">GPT-4o Mini</SelectItem>
-                      <SelectItem value="gpt-4-turbo">GPT-4 Turbo</SelectItem>
-                      <SelectItem value="gpt-3.5-turbo">GPT-3.5 Turbo</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button onClick={handleSaveOpenAIKey} disabled={loading}>
-                    {loading ? "Saving..." : "Save API Key"}
-                  </Button>
-                  <Button onClick={() => updateSetting("openai_model", gptModel)} variant="outline">
-                    Save Model
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="voice">
-            <Card>
-              <CardHeader>
-                <CardTitle>Voice Configuration</CardTitle>
-                <CardDescription>
-                  Configure text-to-speech settings for translations
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="voice-model">Voice Model</Label>
-                  <Select value={voiceModel} onValueChange={setVoiceModel}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {voiceOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="voice-speed">Voice Speed</Label>
-                  <Select value={voiceSpeed} onValueChange={setVoiceSpeed}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0.5">0.5x (Slow)</SelectItem>
-                      <SelectItem value="0.75">0.75x</SelectItem>
-                      <SelectItem value="1.0">1.0x (Normal)</SelectItem>
-                      <SelectItem value="1.25">1.25x</SelectItem>
-                      <SelectItem value="1.5">1.5x (Fast)</SelectItem>
-                      <SelectItem value="2.0">2.0x (Very Fast)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button onClick={() => updateSetting("voice_model", voiceModel)}>
-                    Save Voice Model
-                  </Button>
-                  <Button onClick={() => updateSetting("voice_speed", voiceSpeed)} variant="outline">
-                    Save Speed
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="general">
-            <Card>
-              <CardHeader>
-                <CardTitle>General Settings</CardTitle>
-                <CardDescription>
-                  Configure general application settings
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <p className="text-sm text-muted-foreground">
-                    General settings coming soon...
+                {openaiKey && !showKey && (
+                  <p className="text-xs text-muted-foreground">
+                    Current: {maskedKey}
                   </p>
-                  
-                  <div className="space-y-2">
-                    <h4 className="font-medium">Current Settings</h4>
-                    <div className="grid gap-2 text-sm">
-                      {settings.map((setting) => (
-                        <div key={setting.setting_key} className="flex justify-between">
-                          <span className="text-muted-foreground">{setting.setting_key}:</span>
-                          <span className="font-mono">
-                            {setting.setting_key === "openai_api_key" && setting.setting_value
-                              ? `${"*".repeat(Math.max(0, setting.setting_value.length - 4))}${setting.setting_value.slice(-4)}`
-                              : setting.setting_value || "Not set"}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                )}
+              </div>
+
+              <div className="flex gap-2">
+                <Button 
+                  onClick={handleSaveOpenAIKey} 
+                  disabled={loading}
+                  size="sm"
+                  className="flex-1 bg-foreground text-background hover:bg-foreground/90"
+                >
+                  {loading ? "Saving..." : "Save"}
+                </Button>
+                <Button 
+                  onClick={testOpenAIKey} 
+                  disabled={testingKey} 
+                  variant="outline"
+                  size="sm"
+                  className="border-border text-foreground hover:bg-muted"
+                >
+                  {testingKey ? "Testing..." : "Test"}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex-shrink-0 p-4 border-t border-border bg-background">
+          <Button 
+            onClick={handleSignOut}
+            variant="outline"
+            size="sm"
+            className="w-full border-border text-foreground hover:bg-muted"
+          >
+            Sign Out
+          </Button>
+        </div>
       </div>
-    </div>
+    </MobileFrame>
   );
 };

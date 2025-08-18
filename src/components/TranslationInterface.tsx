@@ -243,7 +243,7 @@ export const TranslationInterface = ({
       console.log('Adding new message:', newMessage);
 
       setMessages(prev => {
-        const updated = [newMessage, ...prev.slice(0, 4)];
+        const updated = [newMessage, ...prev];
         console.log('Updated messages:', updated);
         return updated;
       });
