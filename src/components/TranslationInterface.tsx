@@ -359,16 +359,18 @@ export const TranslationInterface = ({
             ] : []
           )}
         />
-        
-        {/* Speaker A Controls */}
-        <SpeakerControls
-          speaker="A"
-          onOpenVoiceSelection={() => setActiveVoiceModal("A")}
-          isDarkMode={speakerADarkMode}
-          onToggleDarkMode={() => setSpeakerADarkMode(!speakerADarkMode)}
-          isTop={true}
-        />
+         
+        {/* Speaker A Controls - OUTSIDE rotation */}
       </div>
+      
+      {/* Speaker A Controls - Positioned outside rotated section */}
+      <SpeakerControls
+        speaker="A"
+        onOpenVoiceSelection={() => setActiveVoiceModal("A")}
+        isDarkMode={speakerADarkMode}
+        onToggleDarkMode={() => setSpeakerADarkMode(!speakerADarkMode)}
+        isTop={true}
+      />
 
       {/* Central Controls Strip */}
       <div className="flex-shrink-0 h-20 bg-background z-30 flex items-center justify-center relative">
@@ -388,7 +390,7 @@ export const TranslationInterface = ({
       </div>
 
       {/* Speaker B Half - Bottom (Normal) */}
-      <div className="h-1/2 border-t border-border">
+      <div className="h-1/2">
         <SpeakerSection
           speaker="B"
           isListening={isListeningB}
@@ -418,15 +420,16 @@ export const TranslationInterface = ({
           )}
         />
         
-        {/* Speaker B Controls */}
-        <SpeakerControls
-          speaker="B"
-          onOpenVoiceSelection={() => setActiveVoiceModal("B")}
-          isDarkMode={speakerBDarkMode}
-          onToggleDarkMode={() => setSpeakerBDarkMode(!speakerBDarkMode)}
-          isTop={false}
-        />
       </div>
+      
+      {/* Speaker B Controls - Positioned outside rotated section */}
+      <SpeakerControls
+        speaker="B"
+        onOpenVoiceSelection={() => setActiveVoiceModal("B")}
+        isDarkMode={speakerBDarkMode}
+        onToggleDarkMode={() => setSpeakerBDarkMode(!speakerBDarkMode)}
+        isTop={false}
+      />
 
       {/* Admin Settings - Bottom Left */}
       {onOpenAdminSettings && (
