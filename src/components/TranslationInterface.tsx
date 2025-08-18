@@ -150,12 +150,17 @@ export const TranslationInterface = ({
   };
 
   const processAudioData = async (audioData: string, speaker: "A" | "B") => {
+    console.log('Processing audio data for speaker:', speaker);
+    
     try {
       const isFromA = speaker === "A";
       const originalLang = isFromA ? speakerALanguage : speakerBLanguage;
       const targetLang = isFromA ? speakerBLanguage : speakerALanguage;
 
-      // Step 1: Speech to text
+      console.log('Languages:', { originalLang, targetLang });
+
+      // Step 1: Speech to text using Whisper API
+      console.log('Step 1: Calling speech-to-text...');
       const { data: sttResponse, error: sttError } = await supabase.functions.invoke('speech-to-text', {
         body: {
           audio: audioData,
@@ -163,13 +168,23 @@ export const TranslationInterface = ({
         }
       });
 
-      if (sttError || !sttResponse?.text) {
-        throw new Error('Failed to transcribe audio');
+      console.log('Speech-to-text response:', { sttResponse, sttError });
+
+      if (sttError) {
+        console.error('Speech-to-text error:', sttError);
+        throw new Error(`Speech-to-text failed: ${sttError.message || 'Unknown error'}`);
       }
 
-      const originalText = sttResponse.text;
+      if (!sttResponse?.text) {
+        console.error('No text returned from speech-to-text');
+        throw new Error('Failed to transcribe audio - no text returned');
+      }
 
-      // Step 2: Translate text
+      const originalText = sttResponse.text.trim();
+      console.log('Transcribed text:', originalText);
+
+      // Step 2: Translate text using GPT-4o
+      console.log('Step 2: Calling translate-text...');
       const { data: translateResponse, error: translateError } = await supabase.functions.invoke('translate-text', {
         body: {
           text: originalText,
@@ -178,11 +193,20 @@ export const TranslationInterface = ({
         }
       });
 
-      if (translateError || !translateResponse?.translatedText) {
-        throw new Error('Failed to translate text');
+      console.log('Translation response:', { translateResponse, translateError });
+
+      if (translateError) {
+        console.error('Translation error:', translateError);
+        throw new Error(`Translation failed: ${translateError.message || 'Unknown error'}`);
       }
 
-      const translatedText = translateResponse.translatedText;
+      if (!translateResponse?.translatedText) {
+        console.error('No translated text returned');
+        throw new Error('Failed to translate text - no translation returned');
+      }
+
+      const translatedText = translateResponse.translatedText.trim();
+      console.log('Translated text:', translatedText);
 
       // Step 3: Add message to conversation
       const newMessage: Message = {
@@ -193,9 +217,23 @@ export const TranslationInterface = ({
         timestamp: new Date()
       };
 
-      setMessages(prev => [newMessage, ...prev.slice(0, 4)]);
+      console.log('Adding new message:', newMessage);
+
+      setMessages(prev => {
+        const updated = [newMessage, ...prev.slice(0, 4)];
+        console.log('Updated messages:', updated);
+        return updated;
+      });
+
+      // Show success toast
+      toast({
+        title: "Translation Complete",
+        description: `${originalText} → ${translatedText}`,
+        duration: 3000
+      });
 
       // Step 4: Text to speech for the translation
+      console.log('Step 3: Calling text-to-speech...');
       const { data: ttsResponse, error: ttsError } = await supabase.functions.invoke('text-to-speech', {
         body: {
           text: translatedText,
@@ -203,15 +241,19 @@ export const TranslationInterface = ({
         }
       });
 
+      console.log('Text-to-speech response:', { ttsResponse, ttsError });
+
       if (!ttsError && ttsResponse?.audioData) {
         playAudio(ttsResponse.audioData);
+      } else if (ttsError) {
+        console.warn('Text-to-speech failed:', ttsError);
       }
 
     } catch (error) {
       console.error('Error processing audio:', error);
       toast({
         title: "Translation Error",
-        description: "Failed to process audio. Please try again.",
+        description: error.message || "Failed to process audio. Please try again.",
         variant: "destructive"
       });
     }
