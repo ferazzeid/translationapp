@@ -114,7 +114,7 @@ serve(async (req) => {
                 type: 'input_audio',
                 input_audio: {
                   data: audioBase64,
-                  format: 'webm'
+                  format: 'wav'
                 }
               }
             ]

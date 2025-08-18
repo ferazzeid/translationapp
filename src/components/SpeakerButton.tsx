@@ -25,16 +25,16 @@ export const SpeakerButton = ({
     <div className={cn("flex flex-col items-center", className)}>
       <Button
         size="lg"
-        variant="outline"
+        variant="ghost"
         className={cn(
           "h-20 w-20 rounded-full transition-all duration-300 border-0",
           "hover:scale-105",
           isListening ? [
             "bg-red-500 text-white",
-            "animate-[pulse_2s_ease-in-out_infinite]",
+            "animate-[pulse_4s_ease-in-out_infinite]",
             speaker === "B" && "bg-orange-500"
           ] : [
-            "bg-background border border-border hover:bg-muted/50"
+            "bg-transparent hover:bg-green-500 hover:text-white"
           ]
         )}
         onClick={isListening ? onStop : onStart}
