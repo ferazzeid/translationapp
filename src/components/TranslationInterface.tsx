@@ -237,10 +237,9 @@ export const TranslationInterface = ({
     }
   };
 
-  const getRecentMessages = (speaker: "A" | "B") => {
-    return messages
-      .filter(msg => msg.speaker === speaker)
-      .slice(0, 3);
+  const getRecentMessages = (viewerSpeaker: "A" | "B") => {
+    // Each speaker sees ALL recent messages (both their own and translated from other speaker)
+    return messages.slice(0, 3);
   };
 
   return (
@@ -259,15 +258,15 @@ export const TranslationInterface = ({
           />
         </div>
 
-        {/* Speaker A Speech Bubbles */}
+        {/* Speaker A Speech Bubbles - Shows original A messages and translated B messages */}
         <div className="absolute inset-4 bottom-20 pointer-events-none">
           {getRecentMessages("A").map((message, index) => (
             <SpeechBubble
               key={message.id}
-              text={message.originalText}
-              isOriginal={true}
+              text={message.speaker === "A" ? message.originalText : message.translatedText}
+              isOriginal={message.speaker === "A"}
               index={index}
-              speaker="A"
+              speaker={message.speaker}
               isNew={index === 0}
             />
           ))}
@@ -299,15 +298,15 @@ export const TranslationInterface = ({
           />
         </div>
 
-        {/* Speaker B Speech Bubbles */}
+        {/* Speaker B Speech Bubbles - Shows original B messages and translated A messages */}
         <div className="absolute inset-4 top-16 pointer-events-none">
           {getRecentMessages("B").map((message, index) => (
             <SpeechBubble
               key={message.id}
-              text={message.originalText}
-              isOriginal={true}
+              text={message.speaker === "B" ? message.originalText : message.translatedText}
+              isOriginal={message.speaker === "B"}
               index={index}
-              speaker="B"
+              speaker={message.speaker}
               isNew={index === 0}
             />
           ))}
