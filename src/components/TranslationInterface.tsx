@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useAudioRecorder } from "@/hooks/useAudioRecorder";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Message {
   id: string;
@@ -31,6 +34,9 @@ export const TranslationInterface = ({
   const [messages, setMessages] = useState<Message[]>([]);
   const [volume, setVolume] = useState(0.8);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const { toast } = useToast();
+  const audioRecorderA = useAudioRecorder();
+  const audioRecorderB = useAudioRecorder();
 
   // Language code to name mapping
   const getLanguageName = (code: string) => {
@@ -80,34 +86,94 @@ export const TranslationInterface = ({
     };
   }, []);
 
-  const startListening = (speaker: "A" | "B") => {
-    // Stop other speaker if listening
-    if (speaker === "A") {
-      setIsListeningB(false);
-      setIsListeningA(true);
-    } else {
+  const startListening = async (speaker: "A" | "B") => {
+    try {
+      // Stop other speaker if listening
+      if (speaker === "A") {
+        if (audioRecorderB.isRecording) {
+          await audioRecorderB.stopRecording();
+        }
+        setIsListeningB(false);
+        setIsListeningA(true);
+        await audioRecorderA.startRecording();
+      } else {
+        if (audioRecorderA.isRecording) {
+          await audioRecorderA.stopRecording();
+        }
+        setIsListeningA(false);
+        setIsListeningB(true);
+        await audioRecorderB.startRecording();
+      }
+    } catch (error) {
+      console.error('Error starting recording:', error);
+      toast({
+        title: "Recording Error",
+        description: "Failed to start recording. Please check microphone permissions.",
+        variant: "destructive"
+      });
       setIsListeningA(false);
-      setIsListeningB(true);
+      setIsListeningB(false);
     }
+  };
 
-    // Simulate speech recognition and translation
-    setTimeout(() => {
+  const stopListening = async (speaker: "A" | "B") => {
+    try {
+      let audioData: string | null = null;
+      
+      if (speaker === "A" && audioRecorderA.isRecording) {
+        audioData = await audioRecorderA.stopRecording();
+        setIsListeningA(false);
+      } else if (speaker === "B" && audioRecorderB.isRecording) {
+        audioData = await audioRecorderB.stopRecording();
+        setIsListeningB(false);
+      }
+
+      if (audioData) {
+        await processAudioData(audioData, speaker);
+      }
+    } catch (error) {
+      console.error('Error stopping recording:', error);
+      setIsListeningA(false);
+      setIsListeningB(false);
+    }
+  };
+
+  const processAudioData = async (audioData: string, speaker: "A" | "B") => {
+    try {
       const isFromA = speaker === "A";
       const originalLang = isFromA ? speakerALanguage : speakerBLanguage;
       const targetLang = isFromA ? speakerBLanguage : speakerALanguage;
-      
-      const sampleTexts = {
-        en: ["Hello, how are you?", "Nice to meet you", "Thank you very much"],
-        hu: ["Szia, hogy vagy?", "Örülök, hogy megismerlek", "Nagyon köszönöm"]
-      };
-      
-      const texts = sampleTexts[originalLang as keyof typeof sampleTexts] || ["Sample text"];
-      const originalText = texts[Math.floor(Math.random() * texts.length)];
-      
-      const translatedText = originalLang === "en" && targetLang === "hu" 
-        ? "Szia, hogy vagy?" 
-        : "Hello, how are you?";
 
+      // Step 1: Speech to text
+      const { data: sttResponse, error: sttError } = await supabase.functions.invoke('speech-to-text', {
+        body: {
+          audio: audioData,
+          language: originalLang
+        }
+      });
+
+      if (sttError || !sttResponse?.text) {
+        throw new Error('Failed to transcribe audio');
+      }
+
+      const originalText = sttResponse.text;
+
+      // Step 2: Translate text
+      const { data: translateResponse, error: translateError } = await supabase.functions.invoke('translate-text', {
+        body: {
+          text: originalText,
+          fromLanguage: originalLang,
+          toLanguage: targetLang
+        }
+      });
+
+      if (translateError || !translateResponse?.translatedText) {
+        throw new Error('Failed to translate text');
+      }
+
+      const translatedText = translateResponse.translatedText;
+
+      // Step 3: Add message to conversation
       const newMessage: Message = {
         id: Date.now().toString(),
         speaker,
@@ -117,28 +183,58 @@ export const TranslationInterface = ({
       };
 
       setMessages(prev => [newMessage, ...prev.slice(0, 4)]);
-      
-      if (speaker === "A") {
-        setIsListeningA(false);
-      } else {
-        setIsListeningB(false);
-      }
-    }, 2000);
-  };
 
-  const stopListening = (speaker: "A" | "B") => {
-    if (speaker === "A") {
-      setIsListeningA(false);
-    } else {
-      setIsListeningB(false);
+      // Step 4: Text to speech for the translation
+      const { data: ttsResponse, error: ttsError } = await supabase.functions.invoke('text-to-speech', {
+        body: {
+          text: translatedText,
+          language: targetLang
+        }
+      });
+
+      if (!ttsError && ttsResponse?.audioData) {
+        playAudio(ttsResponse.audioData);
+      }
+
+    } catch (error) {
+      console.error('Error processing audio:', error);
+      toast({
+        title: "Translation Error",
+        description: "Failed to process audio. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
-  const repeatLastMessage = () => {
+  const playAudio = (audioBase64: string) => {
+    try {
+      const audio = new Audio(`data:audio/mp3;base64,${audioBase64}`);
+      audio.volume = volume;
+      audio.play().catch(error => {
+        console.error('Error playing audio:', error);
+      });
+    } catch (error) {
+      console.error('Error creating audio:', error);
+    }
+  };
+
+  const repeatLastMessage = async () => {
     const lastMessage = messages[0];
     if (lastMessage) {
-      // Simulate TTS for the last message
-      console.log(`Playing: ${lastMessage.originalText} -> ${lastMessage.translatedText}`);
+      try {
+        const { data: ttsResponse, error: ttsError } = await supabase.functions.invoke('text-to-speech', {
+          body: {
+            text: lastMessage.translatedText,
+            language: lastMessage.speaker === "A" ? speakerBLanguage : speakerALanguage
+          }
+        });
+
+        if (!ttsError && ttsResponse?.audioData) {
+          playAudio(ttsResponse.audioData);
+        }
+      } catch (error) {
+        console.error('Error repeating message:', error);
+      }
     }
   };
 
