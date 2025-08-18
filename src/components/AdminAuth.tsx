@@ -45,6 +45,27 @@ export const AdminAuth = ({ onAdminAuthenticated, onBackToApp }: AdminAuthProps)
     setLoading(true);
 
     try {
+      // Development bypass for admin/admin
+      if (email === "admin" && password === "admin") {
+        // Create a mock user object for development
+        const mockUser = {
+          id: "dev-admin-user",
+          email: "admin@dev.local",
+          user_metadata: { display_name: "admin" },
+          app_metadata: {},
+          aud: "authenticated",
+          created_at: new Date().toISOString()
+        } as unknown as User;
+        
+        onAdminAuthenticated(mockUser);
+        toast({
+          title: "Success",
+          description: "Development admin access granted!",
+        });
+        setLoading(false);
+        return;
+      }
+
       if (isLogin) {
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
@@ -132,7 +153,7 @@ export const AdminAuth = ({ onAdminAuthenticated, onBackToApp }: AdminAuthProps)
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="admin@example.com"
+                  placeholder="Use 'admin' for dev access"
                 />
               </div>
               <div className="space-y-2">
@@ -143,7 +164,7 @@ export const AdminAuth = ({ onAdminAuthenticated, onBackToApp }: AdminAuthProps)
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  placeholder="Enter secure password"
+                  placeholder="Use 'admin' for dev access"
                 />
               </div>
               <Button 
