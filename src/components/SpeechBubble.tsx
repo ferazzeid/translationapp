@@ -65,63 +65,66 @@ export const SpeechBubble = ({
 
   if (shouldRemove) return null;
 
-  // Calculate position and scale based on progress
+  // Simplified positioning for mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 390;
-  const startX = speaker === "A" ? 20 : screenWidth - 20; // Start at edges
+  const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
+  
+  // Simple positioning: start from speaker's side and move toward center
+  const startX = speaker === "A" ? 40 : screenWidth - 40;
   const centerX = screenWidth / 2;
-  const targetX = centerX + (speaker === "A" ? -60 : 60); // Stop before center with gap
+  const targetX = speaker === "A" ? centerX - 80 : centerX + 80;
   
-  // Smooth movement from edge to center
-  const currentX = startX + (targetX - startX) * Math.min(progress / centerReachTime, 1);
+  // Simple linear movement
+  const moveProgress = Math.min(progress / 0.6, 1); // Reach position in first 60% of lifespan
+  const currentX = startX + (targetX - startX) * moveProgress;
   
-  // Dynamic scaling: start large, shrink as it moves to center
-  const currentScale = initialSize * (1 - (progress * 0.6));
+  // Simple scaling
+  const currentScale = Math.max(0.7, 1 - (progress * 0.3));
   
-  // Opacity: fade out in final 30% of lifespan
-  const currentOpacity = progress > 0.7 ? 1 - ((progress - 0.7) / 0.3) : 1;
+  // Fade out in final 20%
+  const currentOpacity = progress > 0.8 ? 1 - ((progress - 0.8) / 0.2) : 1;
   
-  // Vertical position with floating effect
-  const baseY = 120 + (index * 60);
-  const floatOffset = Math.sin(progress * Math.PI * 4) * 10; // Gentle floating
-  const currentY = baseY + floatOffset;
+  // Simple vertical positioning
+  const baseY = isMobile ? 100 + (index * 80) : 120 + (index * 60);
+  const currentY = baseY;
 
-  // Font size scales with bubble size
-  const fontSize = currentScale > 0.9 ? 'text-lg' : currentScale > 0.8 ? 'text-base' : 'text-sm';
+  // Font size 
+  const fontSize = 'text-base';
 
   return (
     <div
-      className="absolute pointer-events-none transition-all duration-100 ease-linear"
+      className="fixed pointer-events-none z-50"
       style={{
         left: `${currentX}px`,
         bottom: `${currentY}px`,
         transform: `translateX(-50%) scale(${currentScale})`,
         opacity: currentOpacity,
-        zIndex: 50 - index
       }}
     >
       <div
         className={cn(
-          "rounded-2xl px-4 py-3 shadow-lg backdrop-blur-md border-2 min-w-max max-w-xs",
+          "rounded-2xl px-4 py-3 shadow-xl border-2 max-w-xs",
           speaker === "A" 
-            ? "bg-primary/95 text-primary-foreground border-primary/30 shadow-primary/20" 
-            : "bg-accent/95 text-accent-foreground border-accent/30 shadow-accent/20",
+            ? "bg-blue-500 text-white border-blue-400" 
+            : "bg-green-500 text-white border-green-400",
           fontSize,
-          isOriginal ? "font-semibold" : "font-medium opacity-90"
+          isOriginal ? "font-semibold" : "font-medium"
         )}
       >
-        <p className="break-words leading-tight">{text}</p>
+        <p className="break-words leading-tight whitespace-pre-wrap">{text}</p>
         {!isOriginal && (
-          <div className="w-1.5 h-1.5 rounded-full bg-current opacity-60 mt-1.5 mx-auto" />
+          <div className="w-2 h-2 rounded-full bg-white/60 mt-2 mx-auto" />
         )}
       </div>
       
-      {/* Enhanced speech bubble tail */}
+      {/* Speech bubble tail */}
       <div
         className={cn(
-          "absolute top-1/2 -translate-y-1/2 w-4 h-4 rotate-45",
+          "absolute top-1/2 -translate-y-1/2 w-3 h-3 rotate-45",
           speaker === "A" 
-            ? "-left-2 bg-primary/95 border-l border-b border-primary/30" 
-            : "-right-2 bg-accent/95 border-r border-t border-accent/30"
+            ? "-left-1 bg-blue-500 border-l border-b border-blue-400" 
+            : "-right-1 bg-green-500 border-r border-t border-green-400"
         )}
       />
     </div>
