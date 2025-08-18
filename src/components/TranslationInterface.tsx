@@ -129,6 +129,8 @@ export const TranslationInterface = ({
 
       if (audioData) {
         await processAudioData(audioData, speaker);
+      } else {
+        console.log('No audio data received - recording might have been too short');
       }
     } catch (error) {
       console.error('Error stopping recording:', error);

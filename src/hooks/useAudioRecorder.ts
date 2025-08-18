@@ -12,6 +12,7 @@ export const useAudioRecorder = (): AudioRecorderHook => {
   const [error, setError] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+  const startTimeRef = useRef<number>(0);
 
   const startRecording = useCallback(async () => {
     try {
@@ -41,6 +42,7 @@ export const useAudioRecorder = (): AudioRecorderHook => {
 
       mediaRecorder.start(250); // Collect data every 250ms
       mediaRecorderRef.current = mediaRecorder;
+      startTimeRef.current = Date.now();
       setIsRecording(true);
 
     } catch (err) {
@@ -62,7 +64,24 @@ export const useAudioRecorder = (): AudioRecorderHook => {
 
       mediaRecorder.onstop = async () => {
         try {
+          // Check if recording was long enough (minimum 500ms for better transcription)
+          const recordingDuration = Date.now() - startTimeRef.current;
+          if (recordingDuration < 500) {
+            console.log('Recording too short:', recordingDuration, 'ms');
+            setIsRecording(false);
+            resolve(null);
+            return;
+          }
+
           const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm' });
+          
+          // Check if blob has content
+          if (audioBlob.size === 0) {
+            console.log('Empty audio blob');
+            setIsRecording(false);
+            resolve(null);
+            return;
+          }
           
           // Convert blob to base64
           const reader = new FileReader();
