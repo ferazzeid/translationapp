@@ -5,6 +5,8 @@ import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import { useToast } from "@/hooks/use-toast";
 import { SpeechBubble } from "./SpeechBubble";
 import { CentralVolumeControl } from "./CentralVolumeControl";
+import { VerticalVolumeControl } from "./VerticalVolumeControl";
+import { ConnectionStatus } from "./ConnectionStatus";
 import { SpeakerButton } from "./SpeakerButton";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
 
@@ -339,16 +341,11 @@ export const TranslationInterface = ({
       {/* Horizontal Volume Control */}
       <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-20 z-30 flex items-center justify-center px-8">
         <CentralVolumeControl
-          volume={volume}
-          onVolumeChange={setVolume}
-          isOnline={isOnline}
           onOpenSettings={onOpenSettings}
           onOpenAdminSettings={onOpenAdminSettings}
           onOpenVoiceSelection={() => setIsVoiceModalOpen(true)}
           isDarkMode={isDarkMode}
           onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
-          isSpeakerEnabled={isSpeakerEnabled}
-          onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
         />
       </div>
 
@@ -392,6 +389,17 @@ export const TranslationInterface = ({
       {isListeningB && (
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-speaker-b/5 animate-pulse pointer-events-none z-10" />
       )}
+
+      {/* Vertical Volume Control - Left Side */}
+      <VerticalVolumeControl
+        volume={volume}
+        onVolumeChange={setVolume}
+        isSpeakerEnabled={isSpeakerEnabled}
+        onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
+      />
+
+      {/* Connection Status - Bottom Left */}
+      <ConnectionStatus isOnline={isOnline} />
 
       <VoiceSelectionModal
         isOpen={isVoiceModalOpen}
