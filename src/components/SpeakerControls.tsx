@@ -19,24 +19,26 @@ export const SpeakerControls = ({
 }: SpeakerControlsProps) => {
   return (
     <div className={cn(
-      "absolute right-2 z-20 flex gap-2",
-      isTop ? "bottom-2" : "top-2"
+      "absolute left-1/2 -translate-x-1/2 z-20 flex items-center gap-3",
+      isTop ? "bottom-16" : "top-16"
     )}>
+      {/* Left Control */}
       <Button
         variant="ghost"
         size="icon"
         onClick={onOpenVoiceSelection}
-        className="h-8 w-8 rounded-full border border-accent/30 bg-background/80"
+        className="h-10 w-10 rounded-full bg-background/90 border border-border shadow-sm hover:bg-accent"
         title={`Voice Selection for Speaker ${speaker}`}
       >
         <Mic2 className="h-4 w-4" />
       </Button>
       
+      {/* Right Control */}
       <Button
         variant="ghost"
         size="icon"
         onClick={onToggleDarkMode}
-        className="h-8 w-8 rounded-full border border-border/30 bg-background/80"
+        className="h-10 w-10 rounded-full bg-background/90 border border-border shadow-sm hover:bg-accent"
         title={isDarkMode ? "Switch to Light Bubbles" : "Switch to Dark Bubbles"}
       >
         {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
