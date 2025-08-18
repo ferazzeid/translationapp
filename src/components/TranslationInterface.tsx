@@ -259,17 +259,18 @@ export const TranslationInterface = ({
           />
         </div>
 
-        {/* Speaker A Placeholder Bubbles */}
-        <div className="absolute inset-4 bottom-20 pointer-events-none flex flex-col gap-4">
-          <div className="w-48 h-12 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Sample message 1</span>
-          </div>
-          <div className="w-40 h-12 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Sample message 2</span>
-          </div>
-          <div className="w-52 h-12 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Sample message 3</span>
-          </div>
+        {/* Speaker A Speech Bubbles */}
+        <div className="absolute inset-4 bottom-20 pointer-events-none">
+          {getRecentMessages("A").map((message, index) => (
+            <SpeechBubble
+              key={message.id}
+              text={message.originalText}
+              isOriginal={true}
+              index={index}
+              speaker="A"
+              isNew={index === 0}
+            />
+          ))}
         </div>
       </div>
 
@@ -297,17 +298,18 @@ export const TranslationInterface = ({
           />
         </div>
 
-        {/* Speaker B Placeholder Bubbles */}
-        <div className="absolute inset-4 top-16 pointer-events-none flex flex-col gap-4">
-          <div className="w-48 h-12 bg-accent/10 rounded-2xl border border-accent/20 flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Sample message 1</span>
-          </div>
-          <div className="w-40 h-12 bg-accent/10 rounded-2xl border border-accent/20 flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Sample message 2</span>
-          </div>
-          <div className="w-52 h-12 bg-accent/10 rounded-2xl border border-accent/20 flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Sample message 3</span>
-          </div>
+        {/* Speaker B Speech Bubbles */}
+        <div className="absolute inset-4 top-16 pointer-events-none">
+          {getRecentMessages("B").map((message, index) => (
+            <SpeechBubble
+              key={message.id}
+              text={message.originalText}
+              isOriginal={true}
+              index={index}
+              speaker="B"
+              isNew={index === 0}
+            />
+          ))}
         </div>
       </div>
 
