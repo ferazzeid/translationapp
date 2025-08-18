@@ -90,8 +90,13 @@ serve(async (req) => {
 
     console.log(`Sending audio to OpenAI GPT-4o: ${binaryAudio.length} bytes`);
 
-    // Convert audio to base64 for GPT-4o
-    const audioBase64 = btoa(String.fromCharCode(...new Uint8Array(binaryAudio)));
+    // Convert audio to base64 for GPT-4o in chunks to avoid stack overflow
+    let audioBase64 = '';
+    const chunkSize = 8192; // Process in smaller chunks
+    for (let i = 0; i < binaryAudio.length; i += chunkSize) {
+      const chunk = binaryAudio.slice(i, i + chunkSize);
+      audioBase64 += btoa(String.fromCharCode.apply(null, Array.from(chunk)));
+    }
 
     // Send to OpenAI GPT-4o
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
