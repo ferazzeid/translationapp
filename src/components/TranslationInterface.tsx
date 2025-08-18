@@ -121,9 +121,14 @@ export const TranslationInterface = ({
       
       if (speaker === "A" && audioRecorderA.isRecording) {
         audioData = await audioRecorderA.stopRecording();
-        setIsListeningA(false);
       } else if (speaker === "B" && audioRecorderB.isRecording) {
         audioData = await audioRecorderB.stopRecording();
+      }
+
+      // Always reset the listening state immediately after stopping recording
+      if (speaker === "A") {
+        setIsListeningA(false);
+      } else {
         setIsListeningB(false);
       }
 
@@ -132,8 +137,14 @@ export const TranslationInterface = ({
       }
     } catch (error) {
       console.error('Error stopping recording:', error);
+      // Ensure states are reset on any error
       setIsListeningA(false);
       setIsListeningB(false);
+      toast({
+        title: "Recording Error", 
+        description: "Failed to stop recording properly.",
+        variant: "destructive"
+      });
     }
   };
 
