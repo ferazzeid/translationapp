@@ -22,7 +22,7 @@ export const SpeakerControls = ({
       {/* Left Control - Voice Selection */}
       <div className={cn(
         "absolute pointer-events-auto",
-        isTop ? "top-4 left-4" : "bottom-4 left-4"
+        isTop ? "bottom-6 left-6" : "bottom-6 left-6"
       )}>
         <Button
           variant="ghost"
@@ -38,7 +38,7 @@ export const SpeakerControls = ({
       {/* Right Control - Dark/Light Mode */}
       <div className={cn(
         "absolute pointer-events-auto",
-        isTop ? "top-4 right-4" : "bottom-4 right-4"
+        isTop ? "bottom-6 right-6" : "bottom-6 right-6"
       )}>
         <Button
           variant="ghost"
