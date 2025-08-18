@@ -11,6 +11,7 @@ import { LanguageSettings } from "./LanguageSettings";
 import { ConnectionStatus } from "./ConnectionStatus";
 import { SpeakerButton } from "./SpeakerButton";
 import { SpeakerControls } from "./SpeakerControls";
+import { SpeakerSection } from "./SpeakerSection";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
 import { SimpleLanguageModal } from "./SimpleLanguageModal";
 
@@ -318,39 +319,29 @@ export const TranslationInterface = ({
   };
 
   return (
-    <div className="h-full w-full relative bg-background overflow-hidden">
+    <div className="h-full w-full flex flex-col bg-background overflow-hidden">
       {/* Speaker A Half - Top (Rotated 180°) */}
-      <div className="absolute inset-x-0 top-0 h-1/2 rotate-180">
-        {/* Speaker A Microphone Button - At Edge */}
-        <div className="absolute left-1/2 bottom-4 -translate-x-1/2 z-20">
-          <SpeakerButton
-            speaker="A"
-            isListening={isListeningA}
-            onStart={() => startListening("A")}
-            onStop={() => stopListening("A")}
-            language={speakerALanguage}
-            flag={getLanguageFlag(speakerALanguage)}
-          />
-        </div>
-
-        {/* Speaker A Speech Bubbles - Shows original A messages and translated B messages */}
-        <div className="absolute inset-x-0 top-12 bottom-48 overflow-hidden px-2">
-          <div className="flex flex-col-reverse py-8 h-full overflow-y-auto scrollbar-hide">
-            {getRecentMessages("A").map((message, index) => (
-              <div key={`${message.id}-${index}`} className="mb-3">
-                <SpeechBubble
-                  text={message.speaker === "A" ? message.originalText : message.translatedText}
-                  isOriginal={message.speaker === "A"}
-                  index={index}
-                  speaker={message.speaker}
-                  isNew={index === 0}
-                  isDarkMode={speakerADarkMode}
-                  totalMessages={getRecentMessages("A").length}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+      <div className="h-1/2 rotate-180 border-b border-border">
+        <SpeakerSection
+          speaker="A"
+          isListening={isListeningA}
+          onStart={() => startListening("A")}
+          onStop={() => stopListening("A")}
+          language={speakerALanguage}
+          flag={getLanguageFlag(speakerALanguage)}
+          isTop={true}
+          messages={getRecentMessages("A").map((message, index) => (
+            <SpeechBubble
+              key={`${message.id}-${index}`}
+              text={message.speaker === "A" ? message.originalText : message.translatedText}
+              isOriginal={message.speaker === "A"}
+              index={index}
+              speaker={message.speaker}
+              isNew={index === 0}
+              isDarkMode={speakerADarkMode}
+            />
+          ))}
+        />
         
         {/* Speaker A Controls */}
         <SpeakerControls
@@ -361,51 +352,42 @@ export const TranslationInterface = ({
           isTop={true}
         />
       </div>
-      {/* Horizontal Volume Control - Center Divider */}
-      <HorizontalVolumeControl
-        volume={volume}
-        onVolumeChange={setVolume}
-        isSpeakerEnabled={isSpeakerEnabled}
-        onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
-      />
-      
-      {/* Central Connection Status */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-20 z-20 flex items-center justify-center">
-        <CentralVolumeControl isOnline={isOnline} />
+
+      {/* Central Controls Strip */}
+      <div className="flex-shrink-0 h-20 bg-muted border-t border-b border-border z-30 flex items-center justify-center relative">
+        <HorizontalVolumeControl
+          volume={volume}
+          onVolumeChange={setVolume}
+          isSpeakerEnabled={isSpeakerEnabled}
+          onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <CentralVolumeControl isOnline={isOnline} />
+        </div>
       </div>
 
       {/* Speaker B Half - Bottom (Normal) */}
-      <div className="absolute inset-x-0 bottom-0 h-1/2">
-        {/* Speaker B Microphone Button */}
-        <div className="absolute left-1/2 bottom-4 -translate-x-1/2 z-20">
-          <SpeakerButton
-            speaker="B"
-            isListening={isListeningB}
-            onStart={() => startListening("B")}
-            onStop={() => stopListening("B")}
-            language={speakerBLanguage}
-            flag={getLanguageFlag(speakerBLanguage)}
-          />
-        </div>
-
-        {/* Speaker B Speech Bubbles - Shows original B messages and translated A messages */}
-        <div className="absolute inset-x-0 bottom-12 top-48 overflow-hidden px-2">
-          <div className="flex flex-col py-8 h-full overflow-y-auto scrollbar-hide">
-            {getRecentMessages("B").map((message, index) => (
-              <div key={`${message.id}-${index}`} className="mb-3">
-                <SpeechBubble
-                  text={message.speaker === "B" ? message.originalText : message.translatedText}
-                  isOriginal={message.speaker === "B"}
-                  index={index}
-                  speaker={message.speaker}
-                  isNew={index === 0}
-                  isDarkMode={speakerBDarkMode}
-                  totalMessages={getRecentMessages("B").length}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+      <div className="h-1/2 border-t border-border">
+        <SpeakerSection
+          speaker="B"
+          isListening={isListeningB}
+          onStart={() => startListening("B")}
+          onStop={() => stopListening("B")}
+          language={speakerBLanguage}
+          flag={getLanguageFlag(speakerBLanguage)}
+          isTop={false}
+          messages={getRecentMessages("B").map((message, index) => (
+            <SpeechBubble
+              key={`${message.id}-${index}`}
+              text={message.speaker === "B" ? message.originalText : message.translatedText}
+              isOriginal={message.speaker === "B"}
+              index={index}
+              speaker={message.speaker}
+              isNew={index === 0}
+              isDarkMode={speakerBDarkMode}
+            />
+          ))}
+        />
         
         {/* Speaker B Controls */}
         <SpeakerControls
@@ -417,14 +399,6 @@ export const TranslationInterface = ({
         />
       </div>
 
-      {/* Visual feedback for listening states */}
-      {isListeningA && (
-        <div className="absolute inset-x-0 top-0 h-1/2 bg-speaker-a/5 animate-pulse pointer-events-none z-10" />
-      )}
-      {isListeningB && (
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-speaker-b/5 animate-pulse pointer-events-none z-10" />
-      )}
-
       {/* Admin Settings - Bottom Left */}
       {onOpenAdminSettings && (
         <AdminControls onOpenAdminSettings={onOpenAdminSettings} />
@@ -433,6 +407,7 @@ export const TranslationInterface = ({
       {/* Language Settings - Bottom Right */}
       <LanguageSettings onOpenSettings={() => setIsLanguageModalOpen(true)} />
 
+      {/* Modals - Outside rotated areas */}
       <VoiceSelectionModal
         isOpen={activeVoiceModal !== null}
         onClose={() => setActiveVoiceModal(null)}
@@ -454,11 +429,9 @@ export const TranslationInterface = ({
         speakerALanguage={speakerALanguage}
         speakerBLanguage={speakerBLanguage}
         onSpeakerALanguageChange={(lang) => {
-          // This would typically update the language in a parent component or context
           console.log('Speaker A language changed to:', lang);
         }}
         onSpeakerBLanguageChange={(lang) => {
-          // This would typically update the language in a parent component or context
           console.log('Speaker B language changed to:', lang);
         }}
       />

@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { SpeakerButton } from "./SpeakerButton";
+import { MessageArea } from "./MessageArea";
 
 interface SpeakerSectionProps {
   speaker: "A" | "B";
@@ -25,12 +26,15 @@ export const SpeakerSection = ({
   isTop = false,
   className
 }: SpeakerSectionProps) => {
-  const buttonPosition = isTop ? "bottom-12" : "top-12";
-  
   return (
-    <div className={cn("relative w-full h-full", className)}>
-      {/* Microphone Button */}
-      <div className={cn("absolute left-1/2 -translate-x-1/2 z-20", buttonPosition)}>
+    <div className={cn("h-full w-full flex flex-col bg-background", className)}>
+      {/* Messages area - fills available space */}
+      <MessageArea speaker={speaker}>
+        {messages}
+      </MessageArea>
+
+      {/* Fixed microphone button at bottom */}
+      <div className="flex justify-center py-4 bg-background border-t border-border">
         <SpeakerButton
           speaker={speaker}
           isListening={isListening}
@@ -39,15 +43,6 @@ export const SpeakerSection = ({
           language={language}
           flag={flag}
         />
-      </div>
-
-      <div className={cn(
-        "absolute inset-x-0 overflow-y-auto px-2",
-        isTop ? "top-20 bottom-20 flex flex-col-reverse" : "bottom-20 top-20 flex flex-col"
-      )}>
-        <div className="flex-1 py-4 space-y-2">
-          {messages}
-        </div>
       </div>
 
       {/* Listening feedback overlay */}

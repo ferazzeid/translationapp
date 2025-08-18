@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Play, Pause, X } from "lucide-react";
+import { Play, Pause } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Voice {
@@ -79,8 +79,9 @@ export const VoiceSelectionModal = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className={cn(
         "max-w-xs bg-background border border-border shadow-lg p-0",
-        speaker === "A" && "rotate-180" // Rotate modal for Speaker A
+        speaker === "A" && "rotate-180"
       )}>
+        <DialogTitle className="sr-only">Voice Selection</DialogTitle>
         {/* Header */}
         <div className="flex items-center justify-center p-4 border-b border-border">
           <span className="text-sm font-medium text-foreground">Voice Selection</span>

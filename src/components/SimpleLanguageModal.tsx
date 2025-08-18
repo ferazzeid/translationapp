@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
@@ -46,6 +46,8 @@ export const SimpleLanguageModal = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-sm bg-background border border-border shadow-lg p-0">
+        <DialogTitle className="sr-only">Language Selection</DialogTitle>
+        
         {/* Single Close Button */}
         <Button
           variant="ghost"

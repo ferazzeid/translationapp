@@ -17,37 +17,23 @@ export const SpeechBubble = ({
   speaker,
   isNew = false,
   isDarkMode = false,
-  totalMessages = 1
 }: SpeechBubbleProps) => {
-  // Simpler, more reliable sizing
-  const getDynamicSizing = () => {
-    // Use consistent width that doesn't cause layout issues
-    const widthPercent = 85;
-    
-    // Use consistent font size that's readable
-    const fontSize = "text-sm";
-    
-    return { widthPercent, fontSize };
-  };
-
-  const { widthPercent, fontSize } = getDynamicSizing();
   const isLeftAligned = speaker === "A";
   
   return (
     <div className={cn(
-      "w-full flex mb-2",
-      isLeftAligned ? "justify-start" : "justify-end"
+      "w-full flex",
+      isLeftAligned ? "justify-start" : "justify-end",
+      isNew && "animate-fade-in"
     )}>
       <div
         className={cn(
-          "rounded-2xl px-4 py-3 shadow-sm transition-all duration-300",
+          "max-w-[85%] rounded-2xl px-4 py-3 shadow-sm border",
           isDarkMode 
-            ? "bg-foreground text-background border border-border/20" 
-            : "bg-background text-foreground border border-border",
-          isNew && "animate-fade-in-up",
-          fontSize
+            ? "bg-foreground text-background border-border/20" 
+            : "bg-background text-foreground border-border",
+          "text-base" // Consistent readable font size
         )}
-        style={{ width: `${widthPercent}%` }}
       >
         <p className="leading-relaxed whitespace-pre-wrap break-words">
           {text}
