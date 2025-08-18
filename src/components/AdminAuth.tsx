@@ -45,54 +45,6 @@ export const AdminAuth = ({ onAdminAuthenticated, onBackToApp }: AdminAuthProps)
     setLoading(true);
 
     try {
-      // Development bypass for admin@admin
-      if (email === "admin@admin" && password === "admin") {
-        // Create a real admin user for development
-        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          email: "devadmin@example.com",
-          password: "devadminpass123",
-          options: {
-            emailRedirectTo: `${window.location.origin}/`,
-            data: {
-              display_name: "admin"
-            }
-          }
-        });
-
-        if (signUpError && !signUpError.message.includes("already registered")) {
-          throw signUpError;
-        }
-
-        // Try to sign in with the dev admin account
-        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-          email: "devadmin@example.com",
-          password: "devadminpass123"
-        });
-
-        if (signInError) throw signInError;
-
-        if (signInData.user) {
-          // Ensure profile exists
-          const { error: profileError } = await supabase
-            .from("profiles")
-            .upsert({
-              user_id: signInData.user.id,
-              display_name: "admin"
-            }, {
-              onConflict: "user_id"
-            });
-
-          if (profileError) console.log("Profile creation error:", profileError);
-
-          onAdminAuthenticated(signInData.user);
-          toast({
-            title: "Success",
-            description: "Development admin access granted!",
-          });
-          setLoading(false);
-          return;
-        }
-      }
 
       if (isLogin) {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -181,7 +133,7 @@ export const AdminAuth = ({ onAdminAuthenticated, onBackToApp }: AdminAuthProps)
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="Use 'admin@admin' for dev access"
+                  placeholder="admin@yourapp.com"
                 />
               </div>
               <div className="space-y-2">
@@ -192,7 +144,7 @@ export const AdminAuth = ({ onAdminAuthenticated, onBackToApp }: AdminAuthProps)
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  placeholder="Use 'admin' for dev access"
+                  placeholder="admin123"
                 />
               </div>
               <Button 
