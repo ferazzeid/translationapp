@@ -19,18 +19,22 @@ export const SpeechBubble = ({
   const [progress, setProgress] = useState(0);
   const [shouldRemove, setShouldRemove] = useState(false);
 
-  // Calculate dynamic sizing based on text length
+  // Enhanced sizing system for better visual hierarchy
   const getInitialSize = () => {
     const textLength = text.length;
-    if (textLength <= 10) return 1.2; // Very large for short text
-    if (textLength <= 30) return 1.0; // Large for medium text
-    if (textLength <= 60) return 0.85; // Medium for longer text
-    return 0.7; // Smaller for very long text
+    if (textLength <= 15) return 2.0; // Very large for short text - fills most of screen
+    if (textLength <= 40) return 1.6; // Large for medium text
+    if (textLength <= 80) return 1.3; // Medium for longer text
+    return 1.1; // Still substantial for very long text
   };
 
   const initialSize = getInitialSize();
-  const lifespan = 8000; // 8 seconds total lifespan
-  const centerReachTime = 0.7; // Reach center at 70% of lifespan
+  const lifespan = 10000; // 10 seconds total lifespan for better readability
+  const shrinkPhases = {
+    initial: 0.3,    // 30% - big and prominent
+    medium: 0.6,     // 60% - medium size, moving to position
+    final: 1.0       // 100% - small, in conversation position
+  };
 
   useEffect(() => {
     let animationFrame: number;
@@ -65,28 +69,41 @@ export const SpeechBubble = ({
 
   if (shouldRemove) return null;
 
-  // Position relative to app container, not screen
-  const appWidth = 390; // Standard mobile app width
-  const appHeight = 800; // Standard mobile app height
+  // Enhanced positioning and animation system
+  const appWidth = 390;
+  const appHeight = 800;
   
-  // Start from app edges and move toward center
-  const startX = speaker === "A" ? 20 : appWidth - 20;
-  const centerX = appWidth / 2;
-  const targetX = speaker === "A" ? centerX - 60 : centerX + 60;
+  // Three-phase movement: center → edge → conversation position
+  let currentX: number, currentY: number, currentScale: number;
   
-  // Simple linear movement within app bounds
-  const moveProgress = Math.min(progress / 0.6, 1);
-  const currentX = startX + (targetX - startX) * moveProgress;
+  if (progress <= shrinkPhases.initial) {
+    // Phase 1: Large bubble in center of screen
+    const phaseProgress = progress / shrinkPhases.initial;
+    currentX = appWidth / 2;
+    currentY = appHeight / 2 + 100; // Center with slight offset
+    currentScale = initialSize * (1 - phaseProgress * 0.2); // Slight shrink
+  } else if (progress <= shrinkPhases.medium) {
+    // Phase 2: Medium bubble moving to conversation area
+    const phaseProgress = (progress - shrinkPhases.initial) / (shrinkPhases.medium - shrinkPhases.initial);
+    const targetX = speaker === "A" ? appWidth * 0.25 : appWidth * 0.75;
+    const targetY = 200 + (index * 60);
+    
+    currentX = (appWidth / 2) + (targetX - appWidth / 2) * phaseProgress;
+    currentY = (appHeight / 2 + 100) + (targetY - (appHeight / 2 + 100)) * phaseProgress;
+    currentScale = initialSize * 0.8 * (1 - phaseProgress * 0.4); // Shrink to medium
+  } else {
+    // Phase 3: Small bubble in conversation position
+    const phaseProgress = (progress - shrinkPhases.medium) / (shrinkPhases.final - shrinkPhases.medium);
+    const finalX = speaker === "A" ? appWidth * 0.25 : appWidth * 0.75;
+    const finalY = 200 + (index * 60);
+    
+    currentX = finalX;
+    currentY = Math.min(finalY, appHeight - 100);
+    currentScale = initialSize * 0.48 * (1 - phaseProgress * 0.1); // Final small size
+  }
   
-  // Simple scaling
-  const currentScale = Math.max(0.8, 1 - (progress * 0.2));
-  
-  // Fade out in final 20%
-  const currentOpacity = progress > 0.8 ? 1 - ((progress - 0.8) / 0.2) : 1;
-  
-  // Vertical positioning within app
-  const baseY = 150 + (index * 80);
-  const currentY = Math.min(baseY, appHeight - 100); // Stay within app bounds
+  // Enhanced fade out - more graceful
+  const currentOpacity = progress > 0.85 ? 1 - ((progress - 0.85) / 0.15) : 1;
 
   // Font size 
   const fontSize = 'text-base';

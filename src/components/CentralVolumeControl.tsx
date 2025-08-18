@@ -1,4 +1,4 @@
-import { Volume2, Settings, Wifi, WifiOff, Shield } from "lucide-react";
+import { Volume2, Settings, Wifi, WifiOff, Shield, Mic2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -9,6 +9,7 @@ interface CentralVolumeControlProps {
   isOnline: boolean;
   onOpenSettings: () => void;
   onOpenAdminSettings?: () => void;
+  onOpenVoiceSelection: () => void;
 }
 
 export const CentralVolumeControl = ({
@@ -16,7 +17,8 @@ export const CentralVolumeControl = ({
   onVolumeChange,
   isOnline,
   onOpenSettings,
-  onOpenAdminSettings
+  onOpenAdminSettings,
+  onOpenVoiceSelection
 }: CentralVolumeControlProps) => {
   const ConnectionIcon = isOnline ? Wifi : WifiOff;
 
@@ -54,6 +56,15 @@ export const CentralVolumeControl = ({
 
       {/* Settings Buttons */}
       <div className="flex gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={onOpenVoiceSelection}
+          className="h-8 w-8 rounded-full border-accent/50 hover:border-accent"
+          title="Voice Selection"
+        >
+          <Mic2 className="h-4 w-4" />
+        </Button>
         <Button
           variant="outline"
           size="icon"

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { SpeechBubble } from "./SpeechBubble";
 import { CentralVolumeControl } from "./CentralVolumeControl";
 import { SpeakerButton } from "./SpeakerButton";
+import { VoiceSelectionModal } from "./VoiceSelectionModal";
 
 interface Message {
   id: string;
@@ -33,6 +34,10 @@ export const TranslationInterface = ({
   const [messages, setMessages] = useState<Message[]>([]);
   const [volume, setVolume] = useState(0.8);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [selectedVoice, setSelectedVoice] = useState("alloy");
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
   const audioRecorderA = useAudioRecorder();
   const audioRecorderB = useAudioRecorder();
@@ -328,6 +333,7 @@ export const TranslationInterface = ({
           isOnline={isOnline}
           onOpenSettings={onOpenSettings}
           onOpenAdminSettings={onOpenAdminSettings}
+          onOpenVoiceSelection={() => setIsVoiceModalOpen(true)}
         />
       </div>
 
@@ -367,6 +373,13 @@ export const TranslationInterface = ({
       {isListeningB && (
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-speaker-b/5 animate-pulse pointer-events-none z-10" />
       )}
+
+      <VoiceSelectionModal
+        isOpen={isVoiceModalOpen}
+        onClose={() => setIsVoiceModalOpen(false)}
+        selectedVoice={selectedVoice}
+        onVoiceSelect={setSelectedVoice}
+      />
     </div>
   );
 };
