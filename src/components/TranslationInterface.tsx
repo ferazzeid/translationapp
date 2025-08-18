@@ -384,6 +384,7 @@ export const TranslationInterface = ({
           isSpeakerEnabled={isSpeakerEnabled}
           onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
           onClearMessages={clearAllMessages}
+          isProcessing={isProcessing}
         />
       </div>
 

@@ -1,5 +1,5 @@
 import { Slider } from "@/components/ui/slider";
-import { VolumeX, Volume1, Volume2, Eraser } from "lucide-react";
+import { VolumeX, Volume1, Volume2, Eraser, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -9,6 +9,7 @@ interface HorizontalVolumeControlProps {
   isSpeakerEnabled: boolean;
   onToggleSpeaker: () => void;
   onClearMessages: () => void;
+  isProcessing?: boolean;
 }
 
 export const HorizontalVolumeControl = ({
@@ -16,7 +17,8 @@ export const HorizontalVolumeControl = ({
   onVolumeChange,
   isSpeakerEnabled,
   onToggleSpeaker,
-  onClearMessages
+  onClearMessages,
+  isProcessing = false
 }: HorizontalVolumeControlProps) => {
   const getVolumeIcon = () => {
     if (!isSpeakerEnabled) return VolumeX;
@@ -28,8 +30,8 @@ export const HorizontalVolumeControl = ({
   const VolumeIcon = getVolumeIcon();
 
   return (
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-full max-w-80 px-4">
-      <div className="flex items-center justify-center gap-6">
+    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-full max-w-96 px-4">
+      <div className="flex items-center justify-center gap-4">
         {/* Speaker Toggle Button */}
         <Button
           variant="ghost"
@@ -57,7 +59,17 @@ export const HorizontalVolumeControl = ({
           />
         </div>
 
-        {/* Clear Messages Button - Centered with proper spacing */}
+        {/* Processing Indicator */}
+        <div className="h-8 w-8 rounded-full flex-shrink-0 flex items-center justify-center bg-muted border border-border">
+          <Brain 
+            className={cn(
+              "h-4 w-4 text-muted-foreground",
+              isProcessing && "animate-pulse text-primary"
+            )} 
+          />
+        </div>
+
+        {/* Clear Messages Button */}
         <Button
           variant="outline"
           size="icon"
