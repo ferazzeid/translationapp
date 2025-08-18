@@ -65,36 +65,35 @@ export const SpeechBubble = ({
 
   if (shouldRemove) return null;
 
-  // Simplified positioning for mobile
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 390;
-  const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
+  // Position relative to app container, not screen
+  const appWidth = 390; // Standard mobile app width
+  const appHeight = 800; // Standard mobile app height
   
-  // Simple positioning: start from speaker's side and move toward center
-  const startX = speaker === "A" ? 40 : screenWidth - 40;
-  const centerX = screenWidth / 2;
-  const targetX = speaker === "A" ? centerX - 80 : centerX + 80;
+  // Start from app edges and move toward center
+  const startX = speaker === "A" ? 20 : appWidth - 20;
+  const centerX = appWidth / 2;
+  const targetX = speaker === "A" ? centerX - 60 : centerX + 60;
   
-  // Simple linear movement
-  const moveProgress = Math.min(progress / 0.6, 1); // Reach position in first 60% of lifespan
+  // Simple linear movement within app bounds
+  const moveProgress = Math.min(progress / 0.6, 1);
   const currentX = startX + (targetX - startX) * moveProgress;
   
   // Simple scaling
-  const currentScale = Math.max(0.7, 1 - (progress * 0.3));
+  const currentScale = Math.max(0.8, 1 - (progress * 0.2));
   
   // Fade out in final 20%
   const currentOpacity = progress > 0.8 ? 1 - ((progress - 0.8) / 0.2) : 1;
   
-  // Simple vertical positioning
-  const baseY = isMobile ? 100 + (index * 80) : 120 + (index * 60);
-  const currentY = baseY;
+  // Vertical positioning within app
+  const baseY = 150 + (index * 80);
+  const currentY = Math.min(baseY, appHeight - 100); // Stay within app bounds
 
   // Font size 
   const fontSize = 'text-base';
 
   return (
     <div
-      className="fixed pointer-events-none z-50"
+      className="absolute pointer-events-none z-50"
       style={{
         left: `${currentX}px`,
         bottom: `${currentY}px`,

@@ -291,13 +291,6 @@ export const TranslationInterface = ({
 
   return (
     <div className="h-full w-full relative bg-background overflow-hidden">
-      {/* Debug Info */}
-      <div className="absolute top-2 left-2 z-50 bg-black/80 text-white p-2 rounded text-sm">
-        Messages: {messages.length}
-        {messages.length > 0 && (
-          <div>Last: {messages[0]?.originalText?.substring(0, 20)}...</div>
-        )}
-      </div>
       {/* Speaker A Half - Top (Rotated 180°) */}
       <div className="absolute inset-x-0 top-0 h-1/2 rotate-180">
         {/* Speaker A Microphone Button - At Edge */}
