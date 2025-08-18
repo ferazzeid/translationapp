@@ -300,7 +300,7 @@ export const TranslationInterface = ({
       {/* Speaker A Half - Top (Rotated 180°) */}
       <div className="absolute inset-x-0 top-0 h-1/2 rotate-180">
         {/* Speaker A Microphone Button - At Edge */}
-        <div className="absolute left-1/2 bottom-4 -translate-x-1/2 z-20">
+        <div className="absolute left-1/2 bottom-12 -translate-x-1/2 z-20">
           <SpeakerButton
             speaker="A"
             isListening={isListeningA}
@@ -312,22 +312,26 @@ export const TranslationInterface = ({
         </div>
 
         {/* Speaker A Speech Bubbles - Shows original A messages and translated B messages */}
-        <div className="absolute inset-4 bottom-20 pointer-events-none">
-          {getRecentMessages("A").map((message, index) => (
-            <SpeechBubble
-              key={message.id}
-              text={message.speaker === "A" ? message.originalText : message.translatedText}
-              isOriginal={message.speaker === "A"}
-              index={index}
-              speaker={message.speaker}
-              isNew={index === 0}
-            />
-          ))}
+        <div className="absolute inset-x-0 top-12 bottom-48 overflow-y-auto px-2">
+          <div className="flex flex-col-reverse py-8">
+            {getRecentMessages("A").map((message, index) => (
+              <div key={`${message.id}-${index}`} className="mb-3">
+                <SpeechBubble
+                  text={message.speaker === "A" ? message.originalText : message.translatedText}
+                  isOriginal={message.speaker === "A"}
+                  index={index}
+                  speaker={message.speaker}
+                  isNew={index === 0}
+                  isDarkMode={isDarkMode}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Horizontal Volume Control */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-12 z-30 flex items-center justify-center px-8">
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-20 z-30 flex items-center justify-center px-8">
         <CentralVolumeControl
           volume={volume}
           onVolumeChange={setVolume}
@@ -343,7 +347,7 @@ export const TranslationInterface = ({
       {/* Speaker B Half - Bottom (Normal) */}
       <div className="absolute inset-x-0 bottom-0 h-1/2">
         {/* Speaker B Microphone Button */}
-        <div className="absolute left-1/2 bottom-4 -translate-x-1/2 z-20">
+        <div className="absolute left-1/2 top-12 -translate-x-1/2 z-20">
           <SpeakerButton
             speaker="B"
             isListening={isListeningB}
@@ -355,17 +359,21 @@ export const TranslationInterface = ({
         </div>
 
         {/* Speaker B Speech Bubbles - Shows original B messages and translated A messages */}
-        <div className="absolute inset-4 top-16 pointer-events-none">
-          {getRecentMessages("B").map((message, index) => (
-            <SpeechBubble
-              key={message.id}
-              text={message.speaker === "B" ? message.originalText : message.translatedText}
-              isOriginal={message.speaker === "B"}
-              index={index}
-              speaker={message.speaker}
-              isNew={index === 0}
-            />
-          ))}
+        <div className="absolute inset-x-0 bottom-12 top-48 overflow-y-auto px-2">
+          <div className="flex flex-col py-8">
+            {getRecentMessages("B").map((message, index) => (
+              <div key={`${message.id}-${index}`} className="mb-3">
+                <SpeechBubble
+                  text={message.speaker === "B" ? message.originalText : message.translatedText}
+                  isOriginal={message.speaker === "B"}
+                  index={index}
+                  speaker={message.speaker}
+                  isNew={index === 0}
+                  isDarkMode={isDarkMode}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
