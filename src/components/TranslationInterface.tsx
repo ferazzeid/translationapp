@@ -344,7 +344,8 @@ export const TranslationInterface = ({
                   index={index}
                   speaker={message.speaker}
                   isNew={index === 0}
-                  isDarkMode={message.speaker === "A" ? speakerADarkMode : speakerBDarkMode}
+                  isDarkMode={speakerADarkMode}
+                  totalMessages={getRecentMessages("A").length}
                 />
               </div>
             ))}
@@ -398,7 +399,8 @@ export const TranslationInterface = ({
                   index={index}
                   speaker={message.speaker}
                   isNew={index === 0}
-                  isDarkMode={message.speaker === "A" ? speakerADarkMode : speakerBDarkMode}
+                  isDarkMode={speakerBDarkMode}
+                  totalMessages={getRecentMessages("B").length}
                 />
               </div>
             ))}
