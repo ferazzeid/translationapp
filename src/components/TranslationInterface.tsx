@@ -12,6 +12,7 @@ import { ConnectionStatus } from "./ConnectionStatus";
 import { SpeakerButton } from "./SpeakerButton";
 import { SpeakerControls } from "./SpeakerControls";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
+import { SimpleLanguageModal } from "./SimpleLanguageModal";
 
 interface Message {
   id: string;
@@ -51,6 +52,7 @@ export const TranslationInterface = ({
   const [speakerADarkMode, setSpeakerADarkMode] = useState(false);
   const [speakerBDarkMode, setSpeakerBDarkMode] = useState(false);
   const [activeVoiceModal, setActiveVoiceModal] = useState<"A" | "B" | null>(null);
+  const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
   
   const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
@@ -426,7 +428,7 @@ export const TranslationInterface = ({
       )}
 
       {/* Language Settings - Bottom Right */}
-      <LanguageSettings onOpenSettings={onOpenSettings} />
+      <LanguageSettings onOpenSettings={() => setIsLanguageModalOpen(true)} />
 
       <VoiceSelectionModal
         isOpen={activeVoiceModal !== null}
@@ -439,6 +441,21 @@ export const TranslationInterface = ({
             setSpeakerBVoice(voice);
           }
           setActiveVoiceModal(null);
+        }}
+      />
+
+      <SimpleLanguageModal
+        isOpen={isLanguageModalOpen}
+        onClose={() => setIsLanguageModalOpen(false)}
+        speakerALanguage={speakerALanguage}
+        speakerBLanguage={speakerBLanguage}
+        onSpeakerALanguageChange={(lang) => {
+          // This would typically update the language in a parent component or context
+          console.log('Speaker A language changed to:', lang);
+        }}
+        onSpeakerBLanguageChange={(lang) => {
+          // This would typically update the language in a parent component or context
+          console.log('Speaker B language changed to:', lang);
         }}
       />
     </div>
