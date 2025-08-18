@@ -87,37 +87,41 @@ serve(async (req) => {
       );
     }
     
-    // Prepare form data
-    const formData = new FormData();
-    const blob = new Blob([binaryAudio], { type: 'audio/webm' });
-    
-    // Additional validation on blob size
-    if (blob.size < 1000) {
-      console.log(`Audio blob too small: ${blob.size} bytes`);
-      return new Response(
-        JSON.stringify({ error: 'Audio recording too short, please speak longer' }),
-        { 
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
-    }
-    
-    formData.append('file', blob, 'audio.webm');
-    formData.append('model', 'whisper-1');
-    if (language) {
-      formData.append('language', language);
-    }
 
-    console.log(`Sending audio to OpenAI: ${blob.size} bytes`);
+    console.log(`Sending audio to OpenAI GPT-4o: ${binaryAudio.length} bytes`);
 
-    // Send to OpenAI
-    const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+    // Convert audio to base64 for GPT-4o
+    const audioBase64 = btoa(String.fromCharCode(...new Uint8Array(binaryAudio)));
+
+    // Send to OpenAI GPT-4o
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${openaiApiKey}`,
+        'Content-Type': 'application/json',
       },
-      body: formData,
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'text',
+                text: `Please transcribe this audio to text. Respond only with the transcribed text, no additional formatting or explanation. Language: ${language || 'auto-detect'}`
+              },
+              {
+                type: 'input_audio',
+                input_audio: {
+                  data: audioBase64,
+                  format: 'webm'
+                }
+              }
+            ]
+          }
+        ],
+        max_tokens: 1000
+      }),
     });
 
     if (!response.ok) {
@@ -135,9 +139,12 @@ serve(async (req) => {
     const result = await response.json();
     console.log('Transcription result:', result);
 
+    // Extract text from GPT-4o response
+    const transcribedText = result.choices?.[0]?.message?.content || '';
+
     return new Response(
       JSON.stringify({ 
-        text: result.text,
+        text: transcribedText,
         language: language
       }),
       { 
