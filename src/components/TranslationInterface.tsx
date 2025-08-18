@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import { useToast } from "@/components/ui/use-toast";
 import { SpeechBubble } from "./SpeechBubble";
-import { FloatingControlPanel } from "./FloatingControlPanel";
+import { CentralVolumeControl } from "./CentralVolumeControl";
 import { SpeakerButton } from "./SpeakerButton";
 
 interface Message {
@@ -298,14 +298,12 @@ export const TranslationInterface = ({
         ))}
       </div>
 
-      {/* Floating Control Panel */}
-      <FloatingControlPanel
+      {/* Central Volume Control */}
+      <CentralVolumeControl
         volume={volume}
         onVolumeChange={setVolume}
         isOnline={isOnline}
         onOpenSettings={onOpenSettings}
-        onRepeatLastMessage={repeatLastMessage}
-        hasMessages={messages.length > 0}
       />
 
       {/* Visual feedback for listening states */}
