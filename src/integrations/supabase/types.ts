@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_settings: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_encrypted: boolean | null
+          setting_key: string
+          setting_value: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_encrypted?: boolean | null
+          setting_key: string
+          setting_value?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_encrypted?: boolean | null
+          setting_key?: string
+          setting_value?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           color: string | null
@@ -183,6 +213,10 @@ export type Database = {
           similarity: number
         }[]
       }
+      get_admin_setting: {
+        Args: { key_name: string }
+        Returns: string
+      }
       get_idea_hierarchy: {
         Args: { input_idea_id: string }
         Returns: {
@@ -244,6 +278,10 @@ export type Database = {
       l2_normalize: {
         Args: { "": string } | { "": unknown } | { "": unknown }
         Returns: unknown
+      }
+      set_admin_setting: {
+        Args: { encrypted?: boolean; key_name: string; value: string }
+        Returns: undefined
       }
       sparsevec_out: {
         Args: { "": unknown }
