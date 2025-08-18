@@ -28,6 +28,7 @@ export const AdminSettings = ({ onBackToApp, onSignOut }: AdminSettingsProps) =>
   const [testingKey, setTestingKey] = useState(false);
   const [voiceModel, setVoiceModel] = useState("alloy");
   const [voiceSpeed, setVoiceSpeed] = useState("1.0");
+  const [gptModel, setGptModel] = useState("gpt-4o");
   const { toast } = useToast();
 
   const voiceOptions = [
@@ -58,10 +59,12 @@ export const AdminSettings = ({ onBackToApp, onSignOut }: AdminSettingsProps) =>
       const keyData = data?.find(s => s.setting_key === "openai_api_key");
       const voiceData = data?.find(s => s.setting_key === "voice_model");
       const speedData = data?.find(s => s.setting_key === "voice_speed");
+      const modelData = data?.find(s => s.setting_key === "openai_model");
       
       setOpenaiKey(keyData?.setting_value || "");
       setVoiceModel(voiceData?.setting_value || "alloy");
       setVoiceSpeed(speedData?.setting_value || "1.0");
+      setGptModel(modelData?.setting_value || "gpt-4o");
     } catch (error: any) {
       toast({
         title: "Error",
@@ -238,9 +241,30 @@ export const AdminSettings = ({ onBackToApp, onSignOut }: AdminSettingsProps) =>
                     </p>
                   )}
                 </div>
-                <Button onClick={handleSaveOpenAIKey} disabled={loading}>
-                  {loading ? "Saving..." : "Save API Key"}
-                </Button>
+
+                <div className="space-y-2">
+                  <Label htmlFor="gpt-model">GPT Model</Label>
+                  <Select value={gptModel} onValueChange={setGptModel}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="gpt-4o">GPT-4o (Best Performance)</SelectItem>
+                      <SelectItem value="gpt-4o-mini">GPT-4o Mini</SelectItem>
+                      <SelectItem value="gpt-4-turbo">GPT-4 Turbo</SelectItem>
+                      <SelectItem value="gpt-3.5-turbo">GPT-3.5 Turbo</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button onClick={handleSaveOpenAIKey} disabled={loading}>
+                    {loading ? "Saving..." : "Save API Key"}
+                  </Button>
+                  <Button onClick={() => updateSetting("openai_model", gptModel)} variant="outline">
+                    Save Model
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

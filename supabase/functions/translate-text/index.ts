@@ -31,15 +31,28 @@ serve(async (req) => {
       );
     }
 
-    // Get OpenAI API key from admin settings
-    const { data: apiKeyData, error: apiKeyError } = await supabase
+    // Get OpenAI API key and model from admin settings
+    const { data: settingsData, error: settingsError } = await supabase
       .from('admin_settings')
-      .select('setting_value')
-      .eq('setting_key', 'openai_api_key')
-      .single();
+      .select('setting_key, setting_value')
+      .in('setting_key', ['openai_api_key', 'openai_model']);
 
-    if (apiKeyError || !apiKeyData?.setting_value) {
-      console.error('Failed to get OpenAI API key:', apiKeyError);
+    if (settingsError) {
+      console.error('Failed to get settings:', settingsError);
+      return new Response(
+        JSON.stringify({ error: 'Settings not accessible' }),
+        { 
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    const apiKeyData = settingsData?.find(s => s.setting_key === 'openai_api_key');
+    const modelData = settingsData?.find(s => s.setting_key === 'openai_model');
+
+    if (!apiKeyData?.setting_value) {
+      console.error('OpenAI API key not configured');
       return new Response(
         JSON.stringify({ error: 'OpenAI API key not configured' }),
         { 
@@ -50,6 +63,7 @@ serve(async (req) => {
     }
 
     const openaiApiKey = apiKeyData.setting_value;
+    const gptModel = modelData?.setting_value || 'gpt-4o';
 
     // Language name mapping for better translation context
     const languageNames: { [key: string]: string } = {
@@ -76,7 +90,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: gptModel,
         messages: [
           {
             role: 'system',

@@ -3,6 +3,7 @@ import { Mic, MicOff, RotateCcw, Volume2, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { StatusIndicator } from "./StatusIndicator";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
 
 interface Message {
@@ -91,134 +92,168 @@ export const TranslationInterface = ({
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-surface">
-      {/* Header */}
-      <div className="p-4 space-y-3">
-        <div className="flex items-center justify-between">
-          <StatusIndicator isOnline={isOnline} volume={volume} />
-          <div className="flex items-center gap-2">
-            {onOpenAdminSettings && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onOpenAdminSettings}
-                className="h-8 w-8 p-0"
-              >
-                <Settings size={16} className="text-muted-foreground" />
-              </Button>
-            )}
+    <div className="h-screen flex bg-gradient-surface">
+      {/* Main Split Screen Area */}
+      <div className="flex-1">
+        <ResizablePanelGroup direction="vertical">
+          {/* Speaker A Panel (Top) */}
+          <ResizablePanel defaultSize={50} minSize={30}>
+            <div className="h-full flex flex-col bg-speaker-a/5 border-b-2 border-primary/20">
+              {/* Speaker A Header */}
+              <div className="p-4 bg-speaker-a/10">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded-full bg-speaker-a"></div>
+                    <span className="font-semibold text-lg">You ({speakerALanguage.toUpperCase()})</span>
+                  </div>
+                  <Button
+                    size="lg"
+                    variant={activeSpeaker === "A" ? "destructive" : "default"}
+                    className={cn(
+                      "h-12 w-12 p-0 rounded-full transition-all",
+                      activeSpeaker === "A" && "shadow-glow animate-pulse-glow"
+                    )}
+                    onClick={() => activeSpeaker === "A" ? stopListening() : startListening("A")}
+                    disabled={isListening && activeSpeaker !== "A"}
+                  >
+                    {activeSpeaker === "A" ? <MicOff size={24} /> : <Mic size={24} />}
+                  </Button>
+                </div>
+                
+                {/* Status for A */}
+                {isListening && activeSpeaker === "A" && (
+                  <div className="text-center mb-2">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-listening rounded-full text-white shadow-glow animate-pulse-glow">
+                      <div className="w-2 h-2 bg-white rounded-full animate-listening-wave"></div>
+                      <span className="font-medium">Listening...</span>
+                      <div className="w-2 h-2 bg-white rounded-full animate-listening-wave" style={{ animationDelay: '0.2s' }}></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Speaker A Messages */}
+              <div className="flex-1 p-4 overflow-y-auto">
+                <div className="space-y-3">
+                  {messages
+                    .filter(msg => msg.speaker === "A")
+                    .slice(0, 4)
+                    .map(msg => (
+                      <Card key={msg.id} className="p-4 bg-white/90 shadow-soft">
+                        <p className="text-xl font-medium text-foreground mb-2">{msg.original}</p>
+                        <p className="text-lg text-muted-foreground">{msg.translated}</p>
+                      </Card>
+                    ))}
+                </div>
+              </div>
+            </div>
+          </ResizablePanel>
+
+          <ResizableHandle withHandle />
+
+          {/* Speaker B Panel (Bottom - Rotated) */}
+          <ResizablePanel defaultSize={50} minSize={30}>
+            <div className="h-full flex flex-col bg-speaker-b/5 transform rotate-180">
+              {/* Speaker B Header (appears at bottom when rotated) */}
+              <div className="p-4 bg-speaker-b/10">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded-full bg-speaker-b"></div>
+                    <span className="font-semibold text-lg">Other Person ({speakerBLanguage.toUpperCase()})</span>
+                  </div>
+                  <Button
+                    size="lg"
+                    variant={activeSpeaker === "B" ? "destructive" : "default"}
+                    className={cn(
+                      "h-12 w-12 p-0 rounded-full transition-all",
+                      activeSpeaker === "B" && "shadow-glow animate-pulse-glow"
+                    )}
+                    onClick={() => activeSpeaker === "B" ? stopListening() : startListening("B")}
+                    disabled={isListening && activeSpeaker !== "B"}
+                  >
+                    {activeSpeaker === "B" ? <MicOff size={24} /> : <Mic size={24} />}
+                  </Button>
+                </div>
+                
+                {/* Status for B */}
+                {isListening && activeSpeaker === "B" && (
+                  <div className="text-center mb-2">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-listening rounded-full text-white shadow-glow animate-pulse-glow">
+                      <div className="w-2 h-2 bg-white rounded-full animate-listening-wave"></div>
+                      <span className="font-medium">Listening...</span>
+                      <div className="w-2 h-2 bg-white rounded-full animate-listening-wave" style={{ animationDelay: '0.2s' }}></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Speaker B Messages */}
+              <div className="flex-1 p-4 overflow-y-auto">
+                <div className="space-y-3">
+                  {messages
+                    .filter(msg => msg.speaker === "B")
+                    .slice(0, 4)
+                    .map(msg => (
+                      <Card key={msg.id} className="p-4 bg-white/90 shadow-soft">
+                        <p className="text-xl font-medium text-foreground mb-2">{msg.original}</p>
+                        <p className="text-lg text-muted-foreground">{msg.translated}</p>
+                      </Card>
+                    ))}
+                </div>
+              </div>
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
+
+      {/* Right Side Controls */}
+      <div className="w-20 bg-card/50 border-l border-border flex flex-col justify-between p-3">
+        {/* Top Controls */}
+        <div className="space-y-3">
+          <StatusIndicator 
+            isOnline={isOnline} 
+            volume={volume} 
+            className="flex-col items-center text-center p-2"
+          />
+          
+          {onOpenAdminSettings && (
             <Button
               variant="ghost"
               size="sm"
-              onClick={onOpenSettings}
-              className="h-8 w-8 p-0"
+              onClick={onOpenAdminSettings}
+              className="w-full h-12 flex flex-col items-center gap-1 p-1"
             >
-              <Settings size={16} />
+              <Settings size={18} className="text-muted-foreground" />
+              <span className="text-xs">Admin</span>
             </Button>
-          </div>
-        </div>
-        
-        {isListening && (
-          <div className="text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-listening rounded-full text-white shadow-glow animate-pulse-glow">
-              <div className="w-2 h-2 bg-white rounded-full animate-listening-wave"></div>
-              <span className="font-medium">Listening...</span>
-              <div className="w-2 h-2 bg-white rounded-full animate-listening-wave" style={{ animationDelay: '0.2s' }}></div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Split Screen Translation Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Speaker A Section (Top) */}
-        <div className="flex-1 flex flex-col border-b-2 border-primary/20">
-          <div className="p-4 bg-speaker-a/10">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-speaker-a"></div>
-                <span className="font-semibold text-sm">You ({speakerALanguage.toUpperCase()})</span>
-              </div>
-              <Button
-                size="sm"
-                variant={activeSpeaker === "A" ? "destructive" : "default"}
-                className={cn(
-                  "transition-all",
-                  activeSpeaker === "A" && "shadow-glow animate-pulse-glow"
-                )}
-                onClick={() => activeSpeaker === "A" ? stopListening() : startListening("A")}
-                disabled={isListening && activeSpeaker !== "A"}
-              >
-                {activeSpeaker === "A" ? <MicOff size={16} /> : <Mic size={16} />}
-              </Button>
-            </div>
-            
-            <div className="h-32 overflow-y-auto space-y-2">
-              {messages
-                .filter(msg => msg.speaker === "A")
-                .slice(0, 3)
-                .map(msg => (
-                  <Card key={msg.id} className="p-3 bg-white/80">
-                    <p className="text-lg font-medium text-foreground">{msg.original}</p>
-                    <p className="text-base text-muted-foreground mt-1">{msg.translated}</p>
-                  </Card>
-                ))}
-            </div>
-          </div>
+          )}
+          
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onOpenSettings}
+            className="w-full h-12 flex flex-col items-center gap-1 p-1"
+          >
+            <Settings size={18} />
+            <span className="text-xs">Settings</span>
+          </Button>
         </div>
 
-        {/* Speaker B Section (Bottom - Rotated) */}
-        <div className="flex-1 flex flex-col transform rotate-180">
-          <div className="p-4 bg-speaker-b/10">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-speaker-b"></div>
-                <span className="font-semibold text-sm">Other Person ({speakerBLanguage.toUpperCase()})</span>
-              </div>
-              <Button
-                size="sm"
-                variant={activeSpeaker === "B" ? "destructive" : "default"}
-                className={cn(
-                  "transition-all",
-                  activeSpeaker === "B" && "shadow-glow animate-pulse-glow"
-                )}
-                onClick={() => activeSpeaker === "B" ? stopListening() : startListening("B")}
-                disabled={isListening && activeSpeaker !== "B"}
-              >
-                {activeSpeaker === "B" ? <MicOff size={16} /> : <Mic size={16} />}
-              </Button>
-            </div>
-            
-            <div className="h-32 overflow-y-auto space-y-2">
-              {messages
-                .filter(msg => msg.speaker === "B")
-                .slice(0, 3)
-                .map(msg => (
-                  <Card key={msg.id} className="p-3 bg-white/80">
-                    <p className="text-lg font-medium text-foreground">{msg.original}</p>
-                    <p className="text-base text-muted-foreground mt-1">{msg.translated}</p>
-                  </Card>
-                ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Controls */}
-      <div className="p-4 space-y-3">
-        <div className="flex gap-3">
+        {/* Bottom Controls */}
+        <div className="space-y-3">
           <Button
             variant="outline"
-            className="flex-1"
+            size="sm"
             onClick={repeatLastMessage}
             disabled={!lastMessage}
+            className="w-full h-12 flex flex-col items-center gap-1 p-1"
           >
-            <RotateCcw size={20} className="mr-2" />
-            Repeat
+            <RotateCcw size={18} />
+            <span className="text-xs">Repeat</span>
           </Button>
           
-          <div className="flex items-center gap-2">
-            <Volume2 size={20} className="text-muted-foreground" />
+          <div className="flex flex-col items-center gap-2">
+            <Volume2 size={18} className="text-muted-foreground" />
             <input
               type="range"
               min="0"
@@ -226,8 +261,10 @@ export const TranslationInterface = ({
               step="0.1"
               value={volume}
               onChange={(e) => setVolume(parseFloat(e.target.value))}
-              className="w-20"
+              className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer transform -rotate-90 origin-center scale-75"
+              style={{ width: '60px', height: '4px' }}
             />
+            <span className="text-xs text-muted-foreground">{Math.round(volume * 100)}%</span>
           </div>
         </div>
       </div>
