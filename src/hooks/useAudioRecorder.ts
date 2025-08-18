@@ -12,10 +12,12 @@ export const useAudioRecorder = (): AudioRecorderHook => {
   const [error, setError] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+  const startTimeRef = useRef<number>(0);
 
   const startRecording = useCallback(async () => {
     try {
       setError(null);
+      startTimeRef.current = Date.now();
       
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -39,7 +41,7 @@ export const useAudioRecorder = (): AudioRecorderHook => {
         }
       };
 
-      mediaRecorder.start(250); // Collect data every 250ms
+      mediaRecorder.start(100); // Collect data every 100ms for better responsiveness
       mediaRecorderRef.current = mediaRecorder;
       setIsRecording(true);
 
@@ -60,9 +62,30 @@ export const useAudioRecorder = (): AudioRecorderHook => {
         return;
       }
 
+      // Check minimum recording duration (500ms minimum for better quality)
+      const recordingDuration = Date.now() - startTimeRef.current;
+      if (recordingDuration < 500) {
+        console.log(`Recording too short: ${recordingDuration}ms, minimum 500ms required`);
+        // Clean up and return null for short recordings
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        setIsRecording(false);
+        setError('Recording too short, please speak for at least half a second');
+        resolve(null);
+        return;
+      }
+
       mediaRecorder.onstop = async () => {
         try {
           const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm' });
+          
+          // Additional check on blob size
+          if (audioBlob.size < 1000) { // Less than 1KB is likely too short
+            console.log(`Audio blob too small: ${audioBlob.size} bytes`);
+            setError('Recording too short, please speak longer');
+            setIsRecording(false);
+            resolve(null);
+            return;
+          }
           
           // Convert blob to base64
           const reader = new FileReader();

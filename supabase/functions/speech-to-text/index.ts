@@ -75,14 +75,41 @@ serve(async (req) => {
     // Convert base64 audio to binary
     const binaryAudio = base64ToUint8Array(audio);
     
+    // Validate audio size (minimum 1KB to ensure it's not too short)
+    if (binaryAudio.length < 1000) {
+      console.log(`Audio data too small: ${binaryAudio.length} bytes`);
+      return new Response(
+        JSON.stringify({ error: 'Audio recording too short, please speak for at least half a second' }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+    
     // Prepare form data
     const formData = new FormData();
     const blob = new Blob([binaryAudio], { type: 'audio/webm' });
+    
+    // Additional validation on blob size
+    if (blob.size < 1000) {
+      console.log(`Audio blob too small: ${blob.size} bytes`);
+      return new Response(
+        JSON.stringify({ error: 'Audio recording too short, please speak longer' }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+    
     formData.append('file', blob, 'audio.webm');
     formData.append('model', 'whisper-1');
     if (language) {
       formData.append('language', language);
     }
+
+    console.log(`Sending audio to OpenAI: ${blob.size} bytes`);
 
     // Send to OpenAI
     const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
