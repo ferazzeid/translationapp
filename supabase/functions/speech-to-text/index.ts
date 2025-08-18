@@ -6,34 +6,25 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Process base64 in chunks to prevent memory issues
-function processBase64Chunks(base64String: string, chunkSize = 32768) {
-  const chunks: Uint8Array[] = [];
-  let position = 0;
-  
-  while (position < base64String.length) {
-    const chunk = base64String.slice(position, position + chunkSize);
-    const binaryChunk = atob(chunk);
-    const bytes = new Uint8Array(binaryChunk.length);
+// Convert base64 to Uint8Array
+function base64ToUint8Array(base64String: string): Uint8Array {
+  try {
+    // Remove data URL prefix if present
+    const cleanBase64 = base64String.replace(/^data:[^;]+;base64,/, '');
     
-    for (let i = 0; i < binaryChunk.length; i++) {
-      bytes[i] = binaryChunk.charCodeAt(i);
+    // Decode base64 string
+    const binaryString = atob(cleanBase64);
+    const bytes = new Uint8Array(binaryString.length);
+    
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
     }
     
-    chunks.push(bytes);
-    position += chunkSize;
+    return bytes;
+  } catch (error) {
+    console.error('Error processing base64:', error);
+    throw new Error('Invalid base64 audio data');
   }
-
-  const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
-  const result = new Uint8Array(totalLength);
-  let offset = 0;
-
-  for (const chunk of chunks) {
-    result.set(chunk, offset);
-    offset += chunk.length;
-  }
-
-  return result;
 }
 
 serve(async (req) => {
@@ -66,8 +57,8 @@ serve(async (req) => {
       );
     }
 
-    // Process audio in chunks
-    const binaryAudio = processBase64Chunks(audio);
+    // Convert base64 audio to binary
+    const binaryAudio = base64ToUint8Array(audio);
     
     // Prepare form data
     const formData = new FormData();
