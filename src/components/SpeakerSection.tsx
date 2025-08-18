@@ -25,7 +25,7 @@ export const SpeakerSection = ({
   isTop = false,
   className
 }: SpeakerSectionProps) => {
-  const buttonPosition = isTop ? "bottom-4" : "top-4";
+  const buttonPosition = isTop ? "bottom-6" : "top-6";
   
   return (
     <div className={cn("relative w-full h-full", className)}>
@@ -41,10 +41,10 @@ export const SpeakerSection = ({
         />
       </div>
 
-      {/* Speech Bubbles Area - Chat Style */}
+      {/* Speech Bubbles Area - Chat Style with proper spacing from center */}
       <div className={cn(
         "absolute inset-x-0 overflow-y-auto",
-        isTop ? "top-0 bottom-20 flex flex-col-reverse" : "bottom-0 top-20 flex flex-col"
+        isTop ? "top-0 bottom-24 flex flex-col-reverse" : "bottom-0 top-24 flex flex-col"
       )}>
         <div className="flex-1 py-4">
           {messages}
