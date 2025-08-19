@@ -74,6 +74,12 @@ const Index = () => {
     saveLanguages(newLanguages);
   };
 
+  const handleLanguageChangesBatch = (speakerA: string, speakerB: string) => {
+    const newLanguages = { speakerA, speakerB };
+    setSelectedLanguages(newLanguages);
+    saveLanguages(newLanguages);
+  };
+
   const handleSetupComplete = () => {
     setCurrentState("translation");
   };
@@ -165,6 +171,7 @@ const Index = () => {
               onOpenSettings={handleOpenSettings}
               onOpenAdminSettings={() => setCurrentState("admin-auth")}
               onSignOut={handleSignOut}
+              onLanguageChange={handleLanguageChangesBatch}
             />
           );
         

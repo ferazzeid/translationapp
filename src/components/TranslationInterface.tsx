@@ -37,14 +37,16 @@ interface TranslationInterfaceProps {
   onOpenSettings: () => void;
   onOpenAdminSettings?: () => void;
   onSignOut?: () => void;
+  onLanguageChange?: (speakerA: string, speakerB: string) => void;
 }
 
-export const TranslationInterface = ({
-  speakerALanguage,
-  speakerBLanguage,
-  onOpenSettings,
-  onOpenAdminSettings,
-  onSignOut
+export const TranslationInterface = ({ 
+  speakerALanguage, 
+  speakerBLanguage, 
+  onOpenSettings, 
+  onOpenAdminSettings, 
+  onSignOut,
+  onLanguageChange
 }: TranslationInterfaceProps) => {
   const [isListeningA, setIsListeningA] = useState(false);
   const [isListeningB, setIsListeningB] = useState(false);
@@ -602,12 +604,16 @@ export const TranslationInterface = ({
         onClose={() => setIsLanguageModalOpen(false)}
         speakerALanguage={speakerALanguage}
         speakerBLanguage={speakerBLanguage}
-        onSpeakerALanguageChange={(lang) => {
-          console.log('Speaker A language changed to:', lang);
+        onLanguagesSave={(speakerA, speakerB) => {
+          onLanguageChange?.(speakerA, speakerB);
+          setIsLanguageModalOpen(false);
         }}
-        onSpeakerBLanguageChange={(lang) => {
-          console.log('Speaker B language changed to:', lang);
-        }}
+      />
+
+      <WakeLockIndicator 
+        isActive={wakeLock.isActive} 
+        isSupported={wakeLock.isSupported}
+        onToggle={wakeLock.isActive ? wakeLock.release : wakeLock.request}
       />
     </div>
   );

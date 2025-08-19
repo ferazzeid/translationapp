@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -8,8 +9,7 @@ interface SimpleLanguageModalProps {
   onClose: () => void;
   speakerALanguage: string;
   speakerBLanguage: string;
-  onSpeakerALanguageChange: (language: string) => void;
-  onSpeakerBLanguageChange: (language: string) => void;
+  onLanguagesSave: (speakerA: string, speakerB: string) => void;
 }
 
 const LANGUAGES = [
@@ -40,11 +40,32 @@ export const SimpleLanguageModal = ({
   onClose,
   speakerALanguage,
   speakerBLanguage,
-  onSpeakerALanguageChange,
-  onSpeakerBLanguageChange
+  onLanguagesSave
 }: SimpleLanguageModalProps) => {
+  const [tempSpeakerA, setTempSpeakerA] = useState(speakerALanguage);
+  const [tempSpeakerB, setTempSpeakerB] = useState(speakerBLanguage);
+
+  // Update temp values when props change
+  useEffect(() => {
+    setTempSpeakerA(speakerALanguage);
+    setTempSpeakerB(speakerBLanguage);
+  }, [speakerALanguage, speakerBLanguage]);
+
+  const handleSave = () => {
+    onLanguagesSave(tempSpeakerA, tempSpeakerB);
+    onClose();
+  };
+
+  const handleCancel = () => {
+    setTempSpeakerA(speakerALanguage);
+    setTempSpeakerB(speakerBLanguage);
+    onClose();
+  };
+
+  const hasChanges = tempSpeakerA !== speakerALanguage || tempSpeakerB !== speakerBLanguage;
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleCancel}>
       <DialogContent className="max-w-sm bg-background border border-border shadow-lg p-0">
         <DialogTitle className="sr-only">Language Selection</DialogTitle>
         
@@ -58,7 +79,7 @@ export const SimpleLanguageModal = ({
           {/* You speak - Speaker A */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">You speak</label>
-            <Select value={speakerALanguage} onValueChange={onSpeakerALanguageChange}>
+            <Select value={tempSpeakerA} onValueChange={setTempSpeakerA}>
               <SelectTrigger className="w-full bg-background border border-border text-foreground">
                 <SelectValue />
               </SelectTrigger>
@@ -79,7 +100,7 @@ export const SimpleLanguageModal = ({
           {/* Other person speaks - Speaker B */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Other person speaks</label>
-            <Select value={speakerBLanguage} onValueChange={onSpeakerBLanguageChange}>
+            <Select value={tempSpeakerB} onValueChange={setTempSpeakerB}>
               <SelectTrigger className="w-full bg-background border border-border text-foreground">
                 <SelectValue />
               </SelectTrigger>
@@ -96,6 +117,24 @@ export const SimpleLanguageModal = ({
               </SelectContent>
             </Select>
           </div>
+        </div>
+
+        {/* Footer with buttons */}
+        <div className="p-4 border-t border-border flex gap-2">
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={handleCancel}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="flex-1"
+            onClick={handleSave}
+            disabled={!tempSpeakerA || !tempSpeakerB}
+          >
+            Save {hasChanges && "*"}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
