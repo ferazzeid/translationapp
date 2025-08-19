@@ -92,6 +92,10 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			spacing: {
+				'18': '4.5rem',
+				'88': '22rem',
+			},
 			keyframes: {
 				'accordion-down': {
 					from: {
@@ -109,22 +113,32 @@ export default {
 						height: '0'
 					}
 				},
-				'pulse-glow': {
-					'0%, 100%': {
-						opacity: '1',
-						transform: 'scale(1)'
+				'ripple': {
+					'0%': {
+						transform: 'scale(1)',
+						opacity: '1'
 					},
-					'50%': {
-						opacity: '0.7',
-						transform: 'scale(1.05)'
+					'100%': {
+						transform: 'scale(2.5)',
+						opacity: '0'
 					}
 				},
-				'listening-wave': {
+				'gentle-pulse': {
 					'0%, 100%': {
-						transform: 'scaleY(1)'
+						transform: 'scale(1)',
+						opacity: '1'
 					},
 					'50%': {
-						transform: 'scaleY(1.5)'
+						transform: 'scale(1.02)',
+						opacity: '0.95'
+					}
+				},
+				'wave-animation': {
+					'0%, 100%': {
+						transform: 'scaleY(0.3)'
+					},
+					'50%': {
+						transform: 'scaleY(1)'
 					}
 				},
 				'fade-in-up': {
@@ -141,8 +155,9 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'pulse-glow': 'pulse-glow var(--pulse-duration) ease-in-out infinite',
-				'listening-wave': 'listening-wave 0.8s ease-in-out infinite',
+				'ripple': 'ripple 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+				'gentle-pulse': 'gentle-pulse 2s ease-in-out infinite',
+				'wave-animation': 'wave-animation 1s ease-in-out infinite',
 				'fade-in-up': 'fade-in-up 0.3s ease-out'
 			},
 			backgroundImage: {

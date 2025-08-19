@@ -2,141 +2,153 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Translation App Design System - Mobile-first, High Contrast
-All colors MUST be HSL for maximum compatibility and theming.
-*/
-
 @layer base {
   :root {
-    /* Base colors - clean whites and dark grays */
-    --background: 0 0% 100%;
-    --foreground: 215 25% 15%;
-
-    /* Card system - subtle elevation */
-    --card: 0 0% 98%;
-    --card-foreground: 215 25% 15%;
-
-    /* Popover system */
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
-
-    /* Primary - Deep professional blue for trust */
-    --primary: 213 94% 35%;
-    --primary-foreground: 0 0% 100%;
-    --primary-light: 213 94% 45%;
-    --primary-glow: 213 94% 55%;
-
-    /* Secondary - Warm neutral for secondary actions */
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 215 25% 15%;
-
-    /* Muted - For subtle text and backgrounds */
-    --muted: 220 14% 96%;
-    --muted-foreground: 215 16% 46%;
-
-    /* Accent - Vibrant green for active/listening states */
-    --accent: 142 71% 45%;
-    --accent-foreground: 0 0% 100%;
-    --accent-light: 142 71% 55%;
-
-    /* Success - For positive feedback */
-    --success: 142 71% 45%;
-    --success-foreground: 0 0% 100%;
-
-    /* Warning - For attention states */
-    --warning: 45 93% 47%;
-    --warning-foreground: 0 0% 100%;
-
-    /* Destructive - For errors and dangerous actions */
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    /* Border and input styling */
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 213 94% 35%;
-
-    /* Border radius for modern feel */
-    --radius: 0.75rem;
-
-    /* Translation app specific colors */
-    --speaker-a: 213 94% 35%;  /* Primary blue for speaker A */
-    --speaker-b: 213 94% 35%;  /* Also primary blue for speaker B to avoid confusion */
-    --listening-glow: 213 94% 55%;
-    --connection-good: 142 71% 45%;
-    --connection-poor: 45 93% 47%;
-    --connection-bad: 0 84% 60%;
-
-    /* Gradients for visual appeal */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
-    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-light)));
-    --gradient-listening: linear-gradient(135deg, hsl(var(--primary-glow)), hsl(var(--accent-light)));
-    --gradient-surface: linear-gradient(180deg, hsl(var(--background)), hsl(var(--card)));
-
-    /* Shadows for depth */
-    --shadow-soft: 0 2px 8px -2px hsl(var(--primary) / 0.1);
-    --shadow-medium: 0 4px 16px -4px hsl(var(--primary) / 0.2);
-    --shadow-strong: 0 8px 32px -8px hsl(var(--primary) / 0.3);
-    --shadow-glow: 0 0 24px hsl(var(--listening-glow) / 0.4);
-
+    --background: 248 250 252;
+    --foreground: 15 23 42;
+    --card: 255 255 255;
+    --card-foreground: 15 23 42;
+    --popover: 255 255 255;
+    --popover-foreground: 15 23 42;
+    --primary: 59 130 246;
+    --primary-foreground: 248 250 252;
+    --secondary: 241 245 249;
+    --secondary-foreground: 51 65 85;
+    --muted: 248 250 252;
+    --muted-foreground: 100 116 139;
+    --accent: 241 245 249;
+    --accent-foreground: 51 65 85;
+    --destructive: 239 68 68;
+    --destructive-foreground: 248 250 252;
+    --border: 226 232 240;
+    --input: 226 232 240;
+    --ring: 59 130 246;
+    --radius: 12px;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    
+    /* Translation app specific colors - Modern blue palette */
+    --speaker-a: 59 130 246;
+    --speaker-b: 16 185 129;
+    --listening-glow: 99 179 237;
+    
+    /* Connection status colors */
+    --connection-good: 34 197 94;
+    --connection-poor: 251 191 36;
+    --connection-bad: 239 68 68;
+    
+    /* Primary colors variants */
+    --primary-light: 147 197 253;
+    --primary-glow: 99 179 237;
+    --accent-light: 226 232 240;
+    
+    /* Success and warning colors */
+    --success: 34 197 94;
+    --success-foreground: 248 250 252;
+    --warning: 251 191 36;
+    --warning-foreground: 15 23 42;
+    
+    /* Sidebar-specific colors */
+    --sidebar-background: 255 255 255;
+    --sidebar-foreground: 51 65 85;
+    --sidebar-primary: 15 23 42;
+    --sidebar-primary-foreground: 248 250 252;
+    --sidebar-accent: 241 245 249;
+    --sidebar-accent-foreground: 15 23 42;
+    --sidebar-border: 226 232 240;
+    --sidebar-ring: 59 130 246;
+    
+    /* Gradient definitions for beautiful effects */
+    --gradient-primary: linear-gradient(135deg, hsl(213 100% 67%) 0%, hsl(213 100% 77%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(220 14% 96%) 0%, hsl(220 13% 91%) 100%);
+    --gradient-listening: linear-gradient(135deg, hsl(213 100% 67%) 0%, hsl(199 89% 48%) 50%, hsl(213 100% 67%) 100%);
+    --gradient-surface: linear-gradient(180deg, hsl(220 14% 96%) 0%, hsl(215 25% 97%) 100%);
+    
+    /* Shadow definitions for depth */
+    --shadow-soft: 0 2px 8px hsl(0 0% 0% / 0.06);
+    --shadow-medium: 0 4px 16px hsl(0 0% 0% / 0.1);
+    --shadow-strong: 0 8px 32px hsl(0 0% 0% / 0.15);
+    --shadow-glow: 0 0 40px hsl(213 100% 67% / 0.2);
+    
     /* Animation variables */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    --pulse-duration: 20s; /* Much slower pulse for better UX */
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --pulse-duration: 2s;
+    
+    /* Spacing system */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 15 23 42;
+    --foreground: 248 250 252;
+    --card: 30 41 59;
+    --card-foreground: 248 250 252;
+    --popover: 30 41 59;
+    --popover-foreground: 248 250 252;
+    --primary: 99 179 237;
+    --primary-foreground: 15 23 42;
+    --secondary: 51 65 85;
+    --secondary-foreground: 226 232 240;
+    --muted: 51 65 85;
+    --muted-foreground: 148 163 184;
+    --accent: 51 65 85;
+    --accent-foreground: 226 232 240;
+    --destructive: 248 113 113;
+    --destructive-foreground: 15 23 42;
+    --border: 51 65 85;
+    --input: 51 65 85;
+    --ring: 99 179 237;
+    
+    /* Translation app specific colors for dark mode */
+    --speaker-a: 99 179 237;
+    --speaker-b: 52 211 153;
+    --listening-glow: 147 197 253;
+    
+    /* Connection status colors for dark mode */
+    --connection-good: 74 222 128;
+    --connection-poor: 252 211 77;
+    --connection-bad: 248 113 113;
+    
+    /* Primary colors variants for dark mode */
+    --primary-light: 147 197 253;
+    --primary-glow: 147 197 253;
+    --accent-light: 71 85 105;
+    
+    /* Success and warning colors for dark mode */
+    --success: 74 222 128;
+    --success-foreground: 15 23 42;
+    --warning: 252 211 77;
+    --warning-foreground: 15 23 42;
+    
+    /* Sidebar-specific colors for dark mode */
+    --sidebar-background: 15 23 42;
+    --sidebar-foreground: 226 232 240;
+    --sidebar-primary: 248 250 252;
+    --sidebar-primary-foreground: 15 23 42;
+    --sidebar-accent: 30 41 59;
+    --sidebar-accent-foreground: 226 232 240;
+    --sidebar-border: 51 65 85;
+    --sidebar-ring: 99 179 237;
+    
+    /* Gradient definitions for dark mode */
+    --gradient-primary: linear-gradient(135deg, hsl(211 100% 50%) 0%, hsl(211 100% 60%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(215 25% 27%) 0%, hsl(215 25% 37%) 100%);
+    --gradient-listening: linear-gradient(135deg, hsl(211 100% 50%) 0%, hsl(199 89% 48%) 50%, hsl(211 100% 50%) 100%);
+    --gradient-surface: linear-gradient(180deg, hsl(215 28% 17%) 0%, hsl(215 25% 27%) 100%);
+    
+    /* Shadow definitions for dark mode */
+    --shadow-soft: 0 2px 8px hsl(0 0% 0% / 0.25);
+    --shadow-medium: 0 4px 16px hsl(0 0% 0% / 0.35);
+    --shadow-strong: 0 8px 32px hsl(0 0% 0% / 0.45);
+    --shadow-glow: 0 0 40px hsl(211 100% 50% / 0.3);
   }
 }
 
@@ -144,45 +156,65 @@ All colors MUST be HSL for maximum compatibility and theming.
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
   }
 }
 
-/* Custom animation keyframes for recording states */
-@keyframes recording-pulse {
+@keyframes ripple {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes gentle-pulse {
   0%, 100% {
     transform: scale(1);
     opacity: 1;
   }
   50% {
-    transform: scale(1.05);
-    opacity: 0.8;
+    transform: scale(1.02);
+    opacity: 0.95;
   }
 }
 
-@keyframes recording-glow {
+@keyframes wave-animation {
   0%, 100% {
-    box-shadow: 0 0 20px hsl(var(--destructive) / 0.3);
+    transform: scaleY(0.3);
   }
   50% {
-    box-shadow: 0 0 30px hsl(var(--destructive) / 0.6);
+    transform: scaleY(1);
   }
 }
 
-/* Recording button animation class */
-.recording-pulse {
-  animation: recording-pulse var(--pulse-duration) ease-in-out infinite, 
-             recording-glow var(--pulse-duration) ease-in-out infinite;
+.microphone-ripple {
+  animation: ripple 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-/* Hide scrollbars */
+.gentle-pulse {
+  animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+.wave-bar {
+  animation: wave-animation 1s ease-in-out infinite;
+}
+
+.wave-bar:nth-child(1) { animation-delay: 0s; }
+.wave-bar:nth-child(2) { animation-delay: 0.1s; }
+.wave-bar:nth-child(3) { animation-delay: 0.2s; }
+.wave-bar:nth-child(4) { animation-delay: 0.3s; }
+.wave-bar:nth-child(5) { animation-delay: 0.4s; }
+
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .scrollbar-hide::-webkit-scrollbar { 
-  display: none;  /* Safari and Chrome */
+  display: none;
 }
