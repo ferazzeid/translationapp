@@ -79,7 +79,7 @@ export const VoiceSelectionModal = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className={cn(
         "max-w-xs bg-background border border-border shadow-lg p-0",
-        speaker === "A" && "rotate-180"
+        speaker === "B" && "rotate-180"
       )}>
         <DialogTitle className="sr-only">Voice Selection</DialogTitle>
         {/* Header */}
