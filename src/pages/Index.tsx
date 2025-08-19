@@ -52,16 +52,18 @@ const Index = () => {
   const [adminUser, setAdminUser] = useState<User | null>(null);
   const { isStandalone } = usePWA();
 
-  // Update state based on authentication
+  // Update state based on authentication - with better session persistence
   useEffect(() => {
+    // Don't make routing decisions while auth is still loading
     if (loading) return;
     
-    if (!isAuthenticated) {
+    // Only redirect to auth if we're definitely not authenticated
+    if (!isAuthenticated && !loading) {
       setCurrentState("auth");
-    } else {
-      setCurrentState(
-        selectedLanguages.speakerA && selectedLanguages.speakerB ? "translation" : "setup"
-      );
+    } else if (isAuthenticated) {
+      // User is authenticated, determine correct state
+      const hasLanguages = selectedLanguages.speakerA && selectedLanguages.speakerB;
+      setCurrentState(hasLanguages ? "translation" : "setup");
     }
   }, [isAuthenticated, loading, selectedLanguages]);
 
