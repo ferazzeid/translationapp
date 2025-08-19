@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Palette, Settings } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -87,23 +88,27 @@ export const AppSettings = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Theme Settings */}
       <Card className="theme-surface theme-border">
-        <CardHeader>
-          <CardTitle className="theme-text">Appearance</CardTitle>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-3 text-lg">
+            <Palette className="h-5 w-5 theme-icon" />
+            <span className="theme-text">Appearance</span>
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <ThemeSettings />
         </CardContent>
       </Card>
 
-      <Separator />
-
       {/* App Behavior Settings */}
       <Card className="theme-surface theme-border">
-        <CardHeader>
-          <CardTitle className="theme-text">App Behavior</CardTitle>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-3 text-lg">
+            <Settings className="h-5 w-5 theme-icon" />
+            <span className="theme-text">App Behavior</span>
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Wake Lock Settings */}
