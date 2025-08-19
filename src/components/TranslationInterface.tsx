@@ -159,11 +159,8 @@ export const TranslationInterface = ({
   }, []);
 
   const startListening = async (speaker: "A" | "B") => {
-    console.log('🎤 START LISTENING:', speaker, 'managedMode:', managedMode.isEnabled, 'currentTurn:', managedMode.currentTurn);
-    
     // Check if speaker can speak in managed mode
     if (!managedMode.canSpeak(speaker)) {
-      console.log('❌ CANNOT SPEAK - not their turn');
       toast({
         title: "Turn Management",
         description: `It's not Speaker ${speaker}'s turn to speak`,
@@ -202,22 +199,14 @@ export const TranslationInterface = ({
   };
 
   const stopListening = async (speaker: "A" | "B") => {
-    console.log('🛑 STOP LISTENING:', speaker);
-    
     try {
       let audioData: string | null = null;
       
       if (speaker === "A" && audioRecorderA.isRecording) {
-        console.log('📼 Stopping recorder A');
         audioData = await audioRecorderA.stopRecording();
       } else if (speaker === "B" && audioRecorderB.isRecording) {
-        console.log('📼 Stopping recorder B');
         audioData = await audioRecorderB.stopRecording();
-      } else {
-        console.log('⚠️ No active recorder found for speaker:', speaker);
       }
-
-      console.log('🎵 Audio data result:', audioData ? `YES (${audioData.length} chars)` : 'NO');
 
       // Always reset the listening state immediately after stopping recording
       if (speaker === "A") {
@@ -227,17 +216,12 @@ export const TranslationInterface = ({
       }
 
       if (audioData) {
-        console.log('🔄 Processing audio data for speaker:', speaker);
         await processAudioData(audioData, speaker);
-        console.log('✅ Audio processing completed successfully');
         
         // Switch turn in managed mode after successful processing
         if (managedMode.isEnabled) {
-          console.log('🔄 SWITCHING TURN after successful processing');
           managedMode.switchTurn();
         }
-      } else {
-        console.log('⚠️ No audio data to process, skipping turn switch');
       }
     } catch (error) {
       console.error('Error stopping recording:', error);
@@ -253,8 +237,6 @@ export const TranslationInterface = ({
   };
 
   const processAudioData = async (audioData: string, speaker: "A" | "B") => {
-    console.log('🔍 PROCESSING AUDIO:', speaker);
-    
     setIsProcessing(true);
     
     try {
@@ -262,39 +244,30 @@ export const TranslationInterface = ({
       const originalLang = isFromA ? speakerALanguage : speakerBLanguage;
       const targetLang = isFromA ? speakerBLanguage : speakerALanguage;
 
-      console.log('🌍 Languages:', { originalLang, targetLang });
-
       // Step 1: Speech to text using Whisper API
-      console.log('🎤➡️📝 Step 1: Calling speech-to-text...');
-      console.log('📊 Audio data length:', audioData ? audioData.length : 'NO DATA');
-      
       const { data: sttResponse, error: sttError } = await supabase.functions.invoke('speech-to-text', {
         body: {
           audio: audioData,
           language: originalLang
         }
       }).catch(networkError => {
-        console.error('🌐❌ Network error calling speech-to-text:', networkError);
+        console.error('Network error calling speech-to-text:', networkError);
         return { data: null, error: { message: `Network error: ${networkError.message}` } };
       });
 
-      console.log('🎤➡️📝 Speech-to-text response:', { sttResponse, sttError });
-
       if (sttError) {
-        console.error('❌ Speech-to-text error details:', sttError);
+        console.error('Speech-to-text error details:', sttError);
         throw new Error(`Speech-to-text failed: ${sttError.message || 'Unknown error'}`);
       }
 
       if (!sttResponse?.text) {
-        console.error('❌ No text returned from speech-to-text');
+        console.error('No text returned from speech-to-text');
         throw new Error('Failed to transcribe audio - no text returned');
       }
 
       const originalText = sttResponse.text.trim();
-      console.log('📝 Transcribed text:', originalText);
 
       // Step 2: Translate text using GPT-4o
-      console.log('Step 2: Calling translate-text...');
       const { data: translateResponse, error: translateError } = await supabase.functions.invoke('translate-text', {
         body: {
           text: originalText,
@@ -302,8 +275,6 @@ export const TranslationInterface = ({
           toLanguage: targetLang
         }
       });
-
-      console.log('Translation response:', { translateResponse, translateError });
 
       if (translateError) {
         console.error('Translation error:', translateError);
@@ -316,7 +287,6 @@ export const TranslationInterface = ({
       }
 
       const translatedText = translateResponse.translatedText.trim();
-      console.log('Translated text:', translatedText);
 
       // Step 3: Add message to conversation
       const newMessage: Message = {
@@ -327,24 +297,15 @@ export const TranslationInterface = ({
         timestamp: new Date()
       };
 
-      console.log('Adding new message:', newMessage);
-
-      setMessages(prev => {
-        const updated = [newMessage, ...prev];
-        console.log('Updated messages:', updated);
-        return updated;
-      });
+      setMessages(prev => [newMessage, ...prev]);
 
       // Step 4: Text to speech for the translation
-      console.log('Step 4: Calling text-to-speech...');
       const { data: ttsResponse, error: ttsError } = await supabase.functions.invoke('text-to-speech', {
         body: {
           text: translatedText,
           language: targetLang
         }
       });
-
-      console.log('Text-to-speech response:', { ttsResponse, ttsError });
 
       if (!ttsError && ttsResponse?.audioData) {
         playAudio(ttsResponse.audioData);
@@ -515,7 +476,6 @@ export const TranslationInterface = ({
         isProcessing={isProcessing}
         isManagedMode={managedMode.isEnabled}
         onSwitchTurn={() => {
-          console.log('🔄 MANUAL TURN SWITCH clicked');
           managedMode.switchTurn();
         }}
       />
