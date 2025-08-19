@@ -220,6 +220,47 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
 
         {/* Content */}
         <div className="flex-1 p-4 space-y-6 overflow-y-auto">
+          {/* OpenAI API Key Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="h-4 w-4" />
+                OpenAI Configuration
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="openai-key">OpenAI API Key</Label>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Input
+                      id="openai-key"
+                      type="password"
+                      placeholder="sk-..."
+                      className="bg-background text-foreground border-border"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Required for translation and speech services. This key is securely encrypted.
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  size="sm"
+                  className="flex-1"
+                >
+                  Save API Key
+                </Button>
+                <Button 
+                  variant="outline"
+                  size="sm"
+                >
+                  Test Key
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
           {/* App Branding Card */}
           <Card>
             <CardHeader>

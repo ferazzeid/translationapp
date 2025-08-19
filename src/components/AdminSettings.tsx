@@ -189,64 +189,7 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
           </div>
         </div>
 
-        {/* Content */}
         <div className="flex-1 p-4 space-y-6 overflow-y-auto">
-          {/* OpenAI API Key Section */}
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-base font-medium text-foreground mb-1">OpenAI API Key</h2>
-              <p className="text-sm text-muted-foreground">
-                Required for translation and speech services
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              <div className="space-y-2">
-                <Label htmlFor="openai-key" className="text-sm text-foreground">API Key</Label>
-                <div className="flex gap-2">
-                  <div className="relative flex-1">
-                    <Input
-                      id="openai-key"
-                      type={showKey ? "text" : "password"}
-                      value={openaiKey}
-                      onChange={(e) => setOpenaiKey(e.target.value)}
-                      placeholder="sk-..."
-                      className="bg-background text-foreground border-border pr-10"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
-                      onClick={() => setShowKey(!showKey)}
-                    >
-                      {showKey ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <Button 
-                  onClick={handleSaveOpenAIKey} 
-                  disabled={loading}
-                  size="sm"
-                  className="flex-1 bg-foreground text-background hover:bg-foreground/90"
-                >
-                  {loading ? "Saving..." : "Save"}
-                </Button>
-                <Button 
-                  onClick={testOpenAIKey} 
-                  disabled={testingKey} 
-                  variant="outline"
-                  size="sm"
-                  className="border-border text-foreground hover:bg-muted"
-                >
-                  {testingKey ? "Testing..." : "Test"}
-                </Button>
-              </div>
-            </div>
-          </div>
 
           {/* Theme Settings */}
           <div className="space-y-4">
@@ -292,32 +235,6 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
                 checked={managedModeEnabled}
                 onCheckedChange={handleManagedModeToggle}
               />
-            </div>
-
-            {/* Turn Indicator Color Setting */}
-            <div className="space-y-2">
-              <Label className="text-sm text-foreground">Turn Indicator Color</Label>
-              <div className="flex gap-2 flex-wrap">
-                {[
-                  { name: "Green", value: "green", class: "bg-green-100" },
-                  { name: "Blue", value: "blue", class: "bg-blue-100" },
-                  { name: "Purple", value: "purple", class: "bg-purple-100" },
-                  { name: "Yellow", value: "yellow", class: "bg-yellow-100" },
-                  { name: "Pink", value: "pink", class: "bg-pink-100" },
-                  { name: "Orange", value: "orange", class: "bg-orange-100" }
-                ].map((color) => (
-                  <button
-                    key={color.value}
-                    onClick={() => updateSetting('turn_indicator_color', color.value)}
-                    className={cn(
-                      "h-8 w-8 rounded-full border-2 transition-all",
-                      color.class,
-                      "border-border hover:scale-110"
-                    )}
-                    title={color.name}
-                  />
-                ))}
-              </div>
             </div>
           </div>
 

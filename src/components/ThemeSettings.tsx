@@ -71,81 +71,31 @@ export const ThemeSettings = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-3">
         {themeOptions.map((option) => (
-          <Card 
+          <div 
             key={option.name} 
-            className={`cursor-pointer transition-all ${
+            className={`flex items-center justify-between p-4 rounded-lg border transition-all ${
               theme === option.name 
-                ? 'ring-2 ring-primary' 
-                : 'hover:shadow-md'
+                ? 'ring-2 ring-primary bg-primary/5' 
+                : 'hover:bg-accent/50'
             }`}
           >
-            <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base">{option.label}</CardTitle>
-                {theme === option.name && (
-                  <Badge variant="default" className="text-xs">
-                    Active
-                  </Badge>
-                )}
-              </div>
-              <CardDescription className="text-sm">
-                {option.description}
-              </CardDescription>
-            </CardHeader>
+            <div>
+              <div className="font-medium">{option.label}</div>
+              <div className="text-sm text-muted-foreground">{option.description}</div>
+            </div>
             
-            <CardContent className="space-y-4">
-              {/* Theme Preview */}
-              <div className="flex items-center justify-center gap-3 p-4 bg-gray-50 rounded-lg">
-                {/* Mic button preview */}
-                <div 
-                  className="w-8 h-8 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: option.colors.micBg }}
-                >
-                  <Mic className="w-4 h-4" style={{ color: '#FFFFFF' }} />
-                </div>
-                
-                {/* Action button preview */}
-                <div 
-                  className="w-8 h-8 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: option.colors.actionBg }}
-                >
-                  <ArrowUpDown className="w-4 h-4" style={{ color: '#FFFFFF' }} />
-                </div>
-                
-                {/* Surface preview */}
-                <div 
-                  className="w-8 h-8 rounded-lg flex items-center justify-center border"
-                  style={{ backgroundColor: option.colors.surface }}
-                >
-                  <MessageSquare className="w-4 h-4" style={{ color: option.colors.primary }} />
-                </div>
-              </div>
-
-              {/* Action button */}
-              <Button
-                size="sm"
-                className="w-full min-h-[44px]"
-                onClick={() => handleApply(option.name)}
-                disabled={theme === option.name}
-              >
-                Apply
-              </Button>
-            </CardContent>
-          </Card>
+            <Button
+              size="sm"
+              onClick={() => handleApply(option.name)}
+              disabled={theme === option.name}
+              className="min-w-[70px]"
+            >
+              {theme === option.name ? 'Active' : 'Apply'}
+            </Button>
+          </div>
         ))}
-      </div>
-
-      <div className="pt-4 border-t theme-divider">
-        <Button 
-          variant="ghost" 
-          className="min-h-[44px] theme-button"
-          onClick={() => handleApply('neo-light')}
-          disabled={theme === 'neo-light'}
-        >
-          Reset to Default
-        </Button>
       </div>
     </div>
   );
