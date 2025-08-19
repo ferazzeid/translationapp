@@ -229,10 +229,10 @@ export const TranslationInterface = ({
       }
 
       if (audioData) {
-        await processAudioData(audioData, speaker);
+        const success = await processAudioData(audioData, speaker);
         
-        // Switch turn in managed mode after successful processing with cooldown
-        if (managedMode.isEnabled) {
+        // Only switch turn in managed mode after successful processing
+        if (success && managedMode.isEnabled) {
           const now = Date.now();
           const timeSinceLastSwitch = now - lastTurnSwitchTime;
           
@@ -256,13 +256,23 @@ export const TranslationInterface = ({
     }
   };
 
-  const processAudioData = async (audioData: string, speaker: "A" | "B") => {
+  const processAudioData = async (audioData: string, speaker: "A" | "B"): Promise<boolean> => {
     setIsProcessing(true);
     
     try {
       const isFromA = speaker === "A";
       const originalLang = isFromA ? speakerALanguage : speakerBLanguage;
       const targetLang = isFromA ? speakerBLanguage : speakerALanguage;
+
+      // Validate audio data before processing
+      if (!audioData || audioData.length < 100) {
+        toast({
+          title: "Recording Too Short",
+          description: "Please speak longer for better recognition.",
+          variant: "destructive"
+        });
+        return false;
+      }
 
       // Step 1: Speech to text using Whisper API
       const { data: sttResponse, error: sttError } = await supabase.functions.invoke('speech-to-text', {
@@ -277,7 +287,12 @@ export const TranslationInterface = ({
 
       if (sttError) {
         console.error('Speech-to-text error details:', sttError);
-        throw new Error(`Speech-to-text failed: ${sttError.message || 'Unknown error'}`);
+        toast({
+          title: "Speech Recognition Failed",
+          description: "Could not understand the audio. Please try speaking more clearly.",
+          variant: "destructive"
+        });
+        return false;
       }
 
       if (!sttResponse?.text) {
@@ -337,6 +352,7 @@ export const TranslationInterface = ({
         console.warn('Text-to-speech failed:', ttsError);
       }
 
+      return true; // Success
     } catch (error) {
       console.error('Translation error:', error);
       toast({
@@ -344,6 +360,7 @@ export const TranslationInterface = ({
         description: error instanceof Error ? error.message : "Failed to process audio",
         variant: "destructive"
       });
+      return false; // Failure
     } finally {
       setIsProcessing(false);
     }
@@ -433,7 +450,13 @@ export const TranslationInterface = ({
 
   // Hold-to-record handlers
   const handleHoldStart = (speaker: "A" | "B") => {
-    startListening(speaker);
+    // Add minimum hold delay to prevent accidental triggers
+    setTimeout(() => {
+      // Check if still holding (user hasn't released yet)
+      if ((speaker === "A" ? holdProgressA : holdProgressB) >= 0) {
+        startListening(speaker);
+      }
+    }, 150); // 150ms delay
     
     // Start progress tracking
     const startTime = Date.now();
@@ -458,7 +481,10 @@ export const TranslationInterface = ({
   };
 
   const handleHoldEnd = (speaker: "A" | "B") => {
-    stopListening(speaker);
+    // Only stop if actually recording
+    if (speaker === "A" ? isListeningA : isListeningB) {
+      stopListening(speaker);
+    }
     
     // Reset progress
     if (speaker === "A") {
