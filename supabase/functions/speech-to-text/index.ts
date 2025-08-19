@@ -93,15 +93,29 @@ serve(async (req) => {
     // Create FormData for Whisper API
     const formData = new FormData();
     
-    // Convert webm to wav for better OpenAI compatibility
-    // Since webm conversion is complex, we'll use a simpler approach:
-    // Send as wav format with proper headers to maximize compatibility
-    const fileName = 'audio.wav';
-    const mimeType = 'audio/wav';
+    // Check if the audio is WebM format by looking at the first few bytes
+    const isWebM = binaryAudio.length > 4 && 
+                   binaryAudio[0] === 0x1A && 
+                   binaryAudio[1] === 0x45 && 
+                   binaryAudio[2] === 0xDF && 
+                   binaryAudio[3] === 0xA3;
     
-    console.log(`Using format: ${fileName} (${mimeType})`);
+    // Use the correct format based on the actual audio data
+    let fileName: string;
+    let mimeType: string;
     
-    // Create blob with wav mime type for better OpenAI compatibility
+    if (isWebM) {
+      fileName = 'audio.webm';
+      mimeType = 'audio/webm';
+      console.log(`Using format: ${fileName} (${mimeType}) - WebM detected`);
+    } else {
+      // Fallback to wav if not WebM
+      fileName = 'audio.wav';
+      mimeType = 'audio/wav';
+      console.log(`Using format: ${fileName} (${mimeType}) - Fallback to WAV`);
+    }
+    
+    // Create blob with correct mime type
     const audioBlob = new Blob([binaryAudio], { type: mimeType });
     formData.append('file', audioBlob, fileName);
     formData.append('model', 'whisper-1');
