@@ -1,6 +1,8 @@
 import { Mic, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { HoldToRecordIndicator } from "./HoldToRecordIndicator";
+import { useRef, useCallback } from "react";
 
 interface SpeakerButtonProps {
   speaker: "A" | "B";
@@ -12,6 +14,10 @@ interface SpeakerButtonProps {
   className?: string;
   isManagedMode?: boolean;
   isMyTurn?: boolean;
+  holdToRecordMode?: boolean;
+  holdProgress?: number;
+  onHoldStart?: () => void;
+  onHoldEnd?: () => void;
 }
 
 export const SpeakerButton = ({
@@ -23,7 +29,11 @@ export const SpeakerButton = ({
   flag,
   className,
   isManagedMode = false,
-  isMyTurn = true
+  isMyTurn = true,
+  holdToRecordMode = false,
+  holdProgress = 0,
+  onHoldStart,
+  onHoldEnd
 }: SpeakerButtonProps) => {
   const getLanguageCode = (language: string): string => {
     const languageCodes: { [key: string]: string } = {
@@ -68,6 +78,29 @@ export const SpeakerButton = ({
 
   const isDisabled = isManagedMode && !isMyTurn && !isListening;
   const isActiveInManagedMode = isManagedMode && isMyTurn && !isListening;
+  const holdTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Hold-to-record handlers
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    if (isDisabled || !holdToRecordMode) return;
+    e.preventDefault();
+    onHoldStart?.();
+  }, [isDisabled, holdToRecordMode, onHoldStart]);
+
+  const handlePointerUp = useCallback((e: React.PointerEvent) => {
+    if (isDisabled || !holdToRecordMode) return;
+    e.preventDefault();
+    onHoldEnd?.();
+  }, [isDisabled, holdToRecordMode, onHoldEnd]);
+
+  const handleClick = useCallback(() => {
+    if (isDisabled || holdToRecordMode) return;
+    if (isListening) {
+      onStop();
+    } else {
+      onStart();
+    }
+  }, [isDisabled, holdToRecordMode, isListening, onStart, onStop]);
 
   return (
     <div className={cn("flex flex-col items-center", className)}>
@@ -105,12 +138,24 @@ export const SpeakerButton = ({
               "shadow-[0_0_20px_rgba(0,0,0,0.4)] hover:shadow-[0_0_25px_rgba(0,0,0,0.6)]"
             ]
           )}
-          onClick={isDisabled ? undefined : (isListening ? onStop : onStart)}
+          onClick={holdToRecordMode ? undefined : handleClick}
+          onPointerDown={holdToRecordMode ? handlePointerDown : undefined}
+          onPointerUp={holdToRecordMode ? handlePointerUp : undefined}
+          onPointerLeave={holdToRecordMode ? handlePointerUp : undefined}
         >
           {isListening ? (
             <Square className="h-8 w-8 fill-current relative z-10" />
           ) : (
             <Mic className="h-8 w-8 relative z-10" />
+          )}
+          
+          {/* Hold to Record Progress Indicator */}
+          {holdToRecordMode && (
+            <HoldToRecordIndicator
+              progress={holdProgress}
+              isRecording={isListening}
+              className="z-20"
+            />
           )}
         </Button>
         

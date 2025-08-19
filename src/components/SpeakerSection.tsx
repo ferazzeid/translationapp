@@ -16,6 +16,10 @@ interface SpeakerSectionProps {
   className?: string;
   isCurrentTurn?: boolean;
   isManagedMode?: boolean;
+  holdToRecordMode?: boolean;
+  holdProgress?: number;
+  onHoldStart?: () => void;
+  onHoldEnd?: () => void;
 }
 
 export const SpeakerSection = ({
@@ -30,7 +34,11 @@ export const SpeakerSection = ({
   isTop = false,
   className,
   isCurrentTurn = false,
-  isManagedMode = false
+  isManagedMode = false,
+  holdToRecordMode = false,
+  holdProgress = 0,
+  onHoldStart,
+  onHoldEnd
 }: SpeakerSectionProps) => {
   const showTurnIndicator = isManagedMode;
   const isActiveTurn = isManagedMode && isCurrentTurn;
@@ -82,16 +90,20 @@ export const SpeakerSection = ({
           </button>
 
           {/* Main Microphone Button */}
-          <SpeakerButton
-            speaker={speaker}
-            isListening={isListening}
-            onStart={onStart}
-            onStop={onStop}
-            language={language}
-            flag={flag}
-            isManagedMode={isManagedMode}
-            isMyTurn={isCurrentTurn}
-          />
+            <SpeakerButton
+              speaker={speaker}
+              isListening={isListening}
+              onStart={onStart}
+              onStop={onStop}
+              language={language}
+              flag={flag}
+              isManagedMode={isManagedMode}
+              isMyTurn={isCurrentTurn}
+              holdToRecordMode={holdToRecordMode}
+              holdProgress={holdProgress}
+              onHoldStart={onHoldStart}
+              onHoldEnd={onHoldEnd}
+            />
         </div>
       </div>
 

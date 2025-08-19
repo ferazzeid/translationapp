@@ -22,6 +22,7 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
   const [testingKey, setTestingKey] = useState(false);
   const [wakeLockEnabled, setWakeLockEnabled] = useState(true);
   const [managedModeEnabled, setManagedModeEnabled] = useState(false);
+  const [holdToRecordEnabled, setHoldToRecordEnabled] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
       const { data, error } = await supabase
         .from("admin_settings")
         .select("setting_key, setting_value")
-        .in("setting_key", ["openai_api_key", "wake_lock_enabled", "managed_mode_enabled"]);
+        .in("setting_key", ["openai_api_key", "wake_lock_enabled", "managed_mode_enabled", "hold_to_record_enabled"]);
 
       if (error) throw error;
 
@@ -47,6 +48,9 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
             break;
           case "managed_mode_enabled":
             setManagedModeEnabled(setting.setting_value === "true");
+            break;
+          case "hold_to_record_enabled":
+            setHoldToRecordEnabled(setting.setting_value === "true");
             break;
         }
       });
@@ -67,7 +71,8 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
 
       const settingName = key === "openai_api_key" ? "API key" : 
                          key === "wake_lock_enabled" ? "Wake lock setting" : 
-                         "Managed mode setting";
+                         key === "managed_mode_enabled" ? "Managed mode setting" :
+                         "Hold to record setting";
 
       toast({
         title: "Success",
@@ -107,6 +112,11 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
   const handleManagedModeToggle = async (enabled: boolean) => {
     setManagedModeEnabled(enabled);
     await updateSetting("managed_mode_enabled", enabled.toString());
+  };
+
+  const handleHoldToRecordToggle = async (enabled: boolean) => {
+    setHoldToRecordEnabled(enabled);
+    await updateSetting("hold_to_record_enabled", enabled.toString());
   };
 
   const testOpenAIKey = async () => {
@@ -302,6 +312,27 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
                   />
                 ))}
               </div>
+            </div>
+          </div>
+
+          {/* Hold to Record Settings */}
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-base font-medium text-foreground mb-1">Recording Mode</h2>
+              <p className="text-sm text-muted-foreground">
+                Choose between tap-to-record or hold-to-record interaction
+              </p>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <Label htmlFor="hold-to-record" className="text-sm text-foreground">
+                Hold to Record Mode
+              </Label>
+              <Switch
+                id="hold-to-record"
+                checked={holdToRecordEnabled}
+                onCheckedChange={handleHoldToRecordToggle}
+              />
             </div>
           </div>
         </div>

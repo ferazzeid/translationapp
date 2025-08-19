@@ -60,6 +60,9 @@ export const TranslationInterface = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isSpeakerEnabled, setIsSpeakerEnabled] = useState(true);
+  const [holdToRecordMode, setHoldToRecordMode] = useState(false);
+  const [holdProgressA, setHoldProgressA] = useState(0);
+  const [holdProgressB, setHoldProgressB] = useState(0);
   
   // Individual settings for each speaker
   const [speakerAVoice, setSpeakerAVoice] = useState("alloy");
@@ -122,7 +125,7 @@ export const TranslationInterface = ({
         const { data, error } = await supabase
           .from("admin_settings")
           .select("setting_key, setting_value")
-          .in("setting_key", ["wake_lock_enabled", "managed_mode_enabled"]);
+          .in("setting_key", ["wake_lock_enabled", "managed_mode_enabled", "hold_to_record_enabled"]);
 
         if (error) throw error;
 
@@ -135,6 +138,9 @@ export const TranslationInterface = ({
               break;
             case "managed_mode_enabled":
               managedMode.setEnabled(setting.setting_value === "true");
+              break;
+            case "hold_to_record_enabled":
+              setHoldToRecordMode(setting.setting_value === "true");
               break;
           }
         });
@@ -425,6 +431,43 @@ export const TranslationInterface = ({
     return messages.slice(0, 50);
   };
 
+  // Hold-to-record handlers
+  const handleHoldStart = (speaker: "A" | "B") => {
+    startListening(speaker);
+    
+    // Start progress tracking
+    const startTime = Date.now();
+    const maxDuration = 30000; // 30 seconds max recording
+    
+    const updateProgress = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min((elapsed / maxDuration) * 100, 100);
+      
+      if (speaker === "A") {
+        setHoldProgressA(progress);
+      } else {
+        setHoldProgressB(progress);
+      }
+      
+      if (progress < 100 && (speaker === "A" ? isListeningA : isListeningB)) {
+        requestAnimationFrame(updateProgress);
+      }
+    };
+    
+    requestAnimationFrame(updateProgress);
+  };
+
+  const handleHoldEnd = (speaker: "A" | "B") => {
+    stopListening(speaker);
+    
+    // Reset progress
+    if (speaker === "A") {
+      setHoldProgressA(0);
+    } else {
+      setHoldProgressB(0);
+    }
+  };
+
   return (
     <div className={cn(
       "flex flex-col bg-background overflow-hidden",
@@ -454,6 +497,10 @@ export const TranslationInterface = ({
           className={isRealMobile ? "h-full" : ""}
           isCurrentTurn={managedMode.currentTurn === "B"}
           isManagedMode={managedMode.isEnabled}
+          holdToRecordMode={holdToRecordMode}
+          holdProgress={holdProgressB}
+          onHoldStart={() => handleHoldStart("B")}
+          onHoldEnd={() => handleHoldEnd("B")}
           messages={getRecentMessages("B").map((message, index) => (
             <SpeechBubble
               key={`${message.id}-${index}`}
@@ -539,6 +586,10 @@ export const TranslationInterface = ({
           className={isRealMobile ? "h-full" : ""}
           isCurrentTurn={managedMode.currentTurn === "A"}
           isManagedMode={managedMode.isEnabled}
+          holdToRecordMode={holdToRecordMode}
+          holdProgress={holdProgressA}
+          onHoldStart={() => handleHoldStart("A")}
+          onHoldEnd={() => handleHoldEnd("A")}
           messages={getRecentMessages("A").map((message, index) => (
             <SpeechBubble
               key={`${message.id}-${index}`}
