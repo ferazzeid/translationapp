@@ -28,12 +28,24 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
   const [trialUserLimit, setTrialUserLimit] = useState("100");
   const [savingPaidLimit, setSavingPaidLimit] = useState(false);
   const [savingTrialLimit, setSavingTrialLimit] = useState(false);
+  
+  // TTS Provider states
+  const [ttsProvider, setTtsProvider] = useState("openai");
+  const [googleCloudKey, setGoogleCloudKey] = useState("");
+  const [elevenLabsKey, setElevenLabsKey] = useState("");
+  const [savingTtsProvider, setSavingTtsProvider] = useState(false);
+  const [testingGoogleKey, setTestingGoogleKey] = useState(false);
+  const [testingElevenLabsKey, setTestingElevenLabsKey] = useState(false);
+  const [hasGoogleKey, setHasGoogleKey] = useState(false);
+  const [hasElevenLabsKey, setHasElevenLabsKey] = useState(false);
+  
   const { toast } = useToast();
 
   useEffect(() => {
     loadBrandingSettings();
     checkExistingKey();
     loadApiLimits();
+    loadTtsSettings();
   }, []);
 
   const checkExistingKey = async () => {
@@ -372,6 +384,182 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
     }
   };
 
+  const loadTtsSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("admin_settings")
+        .select("setting_key, setting_value")
+        .in("setting_key", ["tts_provider", "google_cloud_key_exists", "elevenlabs_key_exists"]);
+
+      if (error) throw error;
+
+      data?.forEach((setting) => {
+        switch (setting.setting_key) {
+          case "tts_provider":
+            setTtsProvider(setting.setting_value || "openai");
+            break;
+          case "google_cloud_key_exists":
+            setHasGoogleKey(setting.setting_value === "true");
+            break;
+          case "elevenlabs_key_exists":
+            setHasElevenLabsKey(setting.setting_value === "true");
+            break;
+        }
+      });
+    } catch (error: any) {
+      console.error('Error loading TTS settings:', error);
+    }
+  };
+
+  const handleSaveTtsProvider = async () => {
+    setSavingTtsProvider(true);
+    try {
+      await updateSetting("tts_provider", ttsProvider);
+      toast({
+        title: "Success",
+        description: "TTS provider saved successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: `Failed to save TTS provider: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setSavingTtsProvider(false);
+    }
+  };
+
+  const handleSaveGoogleKey = async () => {
+    if (!googleCloudKey.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a Google Cloud API key",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase.rpc("set_admin_setting", {
+        key_name: "google_cloud_api_key",
+        value: googleCloudKey,
+        encrypted: true
+      });
+
+      if (error) throw error;
+
+      setHasGoogleKey(true);
+      setGoogleCloudKey("");
+      await updateSetting("google_cloud_key_exists", "true");
+      
+      toast({
+        title: "Success",
+        description: "Google Cloud API key saved successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: `Failed to save Google Cloud API key: ${error.message}`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleSaveElevenLabsKey = async () => {
+    if (!elevenLabsKey.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter an ElevenLabs API key",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase.rpc("set_admin_setting", {
+        key_name: "elevenlabs_api_key",
+        value: elevenLabsKey,
+        encrypted: true
+      });
+
+      if (error) throw error;
+
+      setHasElevenLabsKey(true);
+      setElevenLabsKey("");
+      await updateSetting("elevenlabs_key_exists", "true");
+      
+      toast({
+        title: "Success",
+        description: "ElevenLabs API key saved successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: `Failed to save ElevenLabs API key: ${error.message}`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleTestGoogleKey = async () => {
+    setTestingGoogleKey(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('text-to-speech', {
+        body: { 
+          text: "Test message", 
+          voice: "default", 
+          language: "en",
+          testProvider: "google" 
+        }
+      });
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Test Successful",
+        description: "Google Cloud TTS is working correctly",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Test Failed",
+        description: `Google Cloud TTS test failed: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setTestingGoogleKey(false);
+    }
+  };
+
+  const handleTestElevenLabsKey = async () => {
+    setTestingElevenLabsKey(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('text-to-speech', {
+        body: { 
+          text: "Test message", 
+          voice: "alloy", 
+          language: "en",
+          testProvider: "elevenlabs" 
+        }
+      });
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Test Successful",
+        description: "ElevenLabs TTS is working correctly",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Test Failed",
+        description: `ElevenLabs TTS test failed: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setTestingElevenLabsKey(false);
+    }
+  };
+
   return (
     <MobileFrame>
       <div className="h-full bg-background text-foreground flex flex-col">
@@ -681,6 +869,162 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
               >
                 {loading ? "Saving..." : "Save Branding Settings"}
               </Button>
+            </CardContent>
+          </Card>
+
+          {/* TTS Provider Selection */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="h-4 w-4" />
+                Text-to-Speech Providers
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Provider Selection */}
+              <div className="space-y-3">
+                <Label>Active TTS Provider</Label>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      id="openai-provider"
+                      name="tts-provider"
+                      value="openai"
+                      checked={ttsProvider === "openai"}
+                      onChange={(e) => setTtsProvider(e.target.value)}
+                      className="w-4 h-4"
+                    />
+                    <Label htmlFor="openai-provider" className="text-sm font-normal">
+                      OpenAI TTS (4000 chars/request)
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      id="google-provider"
+                      name="tts-provider"
+                      value="google"
+                      checked={ttsProvider === "google"}
+                      onChange={(e) => setTtsProvider(e.target.value)}
+                      className="w-4 h-4"
+                    />
+                    <Label htmlFor="google-provider" className="text-sm font-normal">
+                      Google Cloud TTS (5000 chars/request)
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      id="elevenlabs-provider"
+                      name="tts-provider"
+                      value="elevenlabs"
+                      checked={ttsProvider === "elevenlabs"}
+                      onChange={(e) => setTtsProvider(e.target.value)}
+                      className="w-4 h-4"
+                    />
+                    <Label htmlFor="elevenlabs-provider" className="text-sm font-normal">
+                      ElevenLabs TTS (Premium Quality)
+                    </Label>
+                  </div>
+                </div>
+                <Button 
+                  size="sm"
+                  onClick={handleSaveTtsProvider}
+                  disabled={savingTtsProvider}
+                  className="w-full"
+                >
+                  {savingTtsProvider ? "Saving..." : "Save TTS Provider"}
+                </Button>
+              </div>
+
+              {/* Google Cloud API Key */}
+              <div className="space-y-2 pt-4 border-t border-border">
+                <Label htmlFor="google-key">Google Cloud API Key</Label>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Input
+                      id="google-key"
+                      type="password"
+                      value={googleCloudKey}
+                      onChange={(e) => setGoogleCloudKey(e.target.value)}
+                      placeholder={hasGoogleKey ? "••••••••••••••••••••••••••••••" : "AIza..."}
+                      className="bg-background text-foreground border-border"
+                      disabled={hasGoogleKey}
+                    />
+                    {hasGoogleKey && (
+                      <div className="absolute inset-y-0 right-2 flex items-center">
+                        <span className="text-xs text-muted-foreground">Key saved</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Required for Google Cloud TTS. Get your key from Google Cloud Console.
+                </p>
+                <div className="flex gap-2">
+                  <Button 
+                    size="sm"
+                    className="flex-1"
+                    onClick={handleSaveGoogleKey}
+                    disabled={hasGoogleKey}
+                  >
+                    {hasGoogleKey ? "Key Saved" : "Save Google Key"}
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    size="sm"
+                    onClick={handleTestGoogleKey}
+                    disabled={testingGoogleKey || !hasGoogleKey}
+                  >
+                    {testingGoogleKey ? "Testing..." : "Test Key"}
+                  </Button>
+                </div>
+              </div>
+
+              {/* ElevenLabs API Key */}
+              <div className="space-y-2 pt-4 border-t border-border">
+                <Label htmlFor="elevenlabs-key">ElevenLabs API Key</Label>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Input
+                      id="elevenlabs-key"
+                      type="password"
+                      value={elevenLabsKey}
+                      onChange={(e) => setElevenLabsKey(e.target.value)}
+                      placeholder={hasElevenLabsKey ? "••••••••••••••••••••••••••••••" : "sk_..."}
+                      className="bg-background text-foreground border-border"
+                      disabled={hasElevenLabsKey}
+                    />
+                    {hasElevenLabsKey && (
+                      <div className="absolute inset-y-0 right-2 flex items-center">
+                        <span className="text-xs text-muted-foreground">Key saved</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Required for ElevenLabs TTS. Premium quality natural voices.
+                </p>
+                <div className="flex gap-2">
+                  <Button 
+                    size="sm"
+                    className="flex-1"
+                    onClick={handleSaveElevenLabsKey}
+                    disabled={hasElevenLabsKey}
+                  >
+                    {hasElevenLabsKey ? "Key Saved" : "Save ElevenLabs Key"}
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    size="sm"
+                    onClick={handleTestElevenLabsKey}
+                    disabled={testingElevenLabsKey || !hasElevenLabsKey}
+                  >
+                    {testingElevenLabsKey ? "Testing..." : "Test Key"}
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
