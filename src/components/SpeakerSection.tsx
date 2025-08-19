@@ -8,6 +8,7 @@ interface SpeakerSectionProps {
   isListening: boolean;
   onStart: () => void;
   onStop: () => void;
+  onRepeat: () => void;
   language: string;
   flag: string;
   messages: ReactNode;
@@ -22,6 +23,7 @@ export const SpeakerSection = ({
   isListening,
   onStart,
   onStop,
+  onRepeat,
   language,
   flag,
   messages,
@@ -63,8 +65,32 @@ export const SpeakerSection = ({
         </div>
       </div>
 
-      {/* Fixed microphone button - completely independent */}
+      {/* Fixed microphone and repeat button area */}
       <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center bg-background z-30 border-t border-border">
+        {/* Repeat Button - Left side */}
+        <div className="absolute left-4 top-1/2 -translate-y-1/2">
+          <button
+            onClick={onRepeat}
+            className="h-12 w-12 rounded-full bg-muted hover:bg-muted/80 border border-border shadow-sm flex items-center justify-center transition-colors"
+            title="Repeat last message"
+          >
+            <svg 
+              className="h-5 w-5 text-muted-foreground" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
+              />
+            </svg>
+          </button>
+        </div>
+
+        {/* Main Microphone Button - Center */}
         <SpeakerButton
           speaker={speaker}
           isListening={isListening}

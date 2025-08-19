@@ -363,23 +363,46 @@ export const TranslationInterface = ({
     setMessages([]);
   };
 
-  const repeatLastMessage = async () => {
-    const lastMessage = messages[0];
-    if (lastMessage) {
+  const repeatLastMessage = async (speakerRequesting: "A" | "B") => {
+    // Find the last message from the OTHER speaker (what they want to hear repeated)
+    const lastMessageFromOtherSpeaker = messages.find(message => message.speaker !== speakerRequesting);
+    
+    if (lastMessageFromOtherSpeaker) {
       try {
+        // Replay the translated text that was meant for the requesting speaker
+        const textToRepeat = lastMessageFromOtherSpeaker.translatedText;
+        const languageForRepeat = speakerRequesting === "A" ? speakerALanguage : speakerBLanguage;
+        
         const { data: ttsResponse, error: ttsError } = await supabase.functions.invoke('text-to-speech', {
           body: {
-            text: lastMessage.translatedText,
-            language: lastMessage.speaker === "A" ? speakerBLanguage : speakerALanguage
+            text: textToRepeat,
+            language: languageForRepeat
           }
         });
 
         if (!ttsError && ttsResponse?.audioData) {
           playAudio(ttsResponse.audioData);
+          
+          // Show a visual indicator that the message was repeated
+          toast({
+            title: "Message Repeated",
+            description: `"${textToRepeat.substring(0, 50)}${textToRepeat.length > 50 ? '...' : ''}"`,
+          });
         }
       } catch (error) {
         console.error('Error repeating message:', error);
+        toast({
+          title: "Repeat Failed",
+          description: "Could not repeat the last message",
+          variant: "destructive"
+        });
       }
+    } else {
+      toast({
+        title: "No Message to Repeat",
+        description: "There are no previous messages to repeat",
+        variant: "destructive"
+      });
     }
   };
 
@@ -404,6 +427,7 @@ export const TranslationInterface = ({
           isListening={isListeningB}
           onStart={() => startListening("B")}
           onStop={() => stopListening("B")}
+          onRepeat={() => repeatLastMessage("B")}
           language={speakerBLanguage}
           flag={getLanguageFlag(speakerBLanguage)}
           isTop={true}
@@ -481,6 +505,7 @@ export const TranslationInterface = ({
           isListening={isListeningA}
           onStart={() => startListening("A")}
           onStop={() => stopListening("A")}
+          onRepeat={() => repeatLastMessage("A")}
           language={speakerALanguage}
           flag={getLanguageFlag(speakerALanguage)}
           isTop={false}
