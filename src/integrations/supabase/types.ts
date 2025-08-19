@@ -156,7 +156,11 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          subscription_expires_at: string | null
+          subscription_status: string | null
           text_model: string | null
+          trial_api_calls_used: number | null
+          trial_started_at: string | null
           updated_at: string
           user_id: string
           voice_model: string | null
@@ -168,7 +172,11 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          subscription_expires_at?: string | null
+          subscription_status?: string | null
           text_model?: string | null
+          trial_api_calls_used?: number | null
+          trial_started_at?: string | null
           updated_at?: string
           user_id: string
           voice_model?: string | null
@@ -180,7 +188,11 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          subscription_expires_at?: string | null
+          subscription_status?: string | null
           text_model?: string | null
+          trial_api_calls_used?: number | null
+          trial_started_at?: string | null
           updated_at?: string
           user_id?: string
           voice_model?: string | null
