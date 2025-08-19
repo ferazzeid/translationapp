@@ -60,18 +60,13 @@ export const LanguageSelector = ({
                   <Button
                     key={language}
                     variant="ghost"
-                    className="h-10 justify-between text-base theme-button border-0 hover:theme-surface-alt px-3"
+                    className="h-10 justify-start text-base theme-button border-0 hover:theme-surface-alt px-3"
                     onClick={() => {
                       onLanguageChange("speakerB", language);
                       setExpandedSelector(null);
                     }}
                   >
-                    <div className="flex flex-col">
-                      <span className="font-medium">{language}</span>
-                      <span className="text-xs theme-text-muted">
-                        {getLanguageCode(language)}
-                      </span>
-                    </div>
+                    <span className="font-medium">{language}</span>
                   </Button>
                 ))}
               </div>
@@ -103,18 +98,13 @@ export const LanguageSelector = ({
                   <Button
                     key={language}
                     variant="ghost"
-                    className="h-10 justify-between text-base theme-button border-0 hover:theme-surface-alt px-3"
+                    className="h-10 justify-start text-base theme-button border-0 hover:theme-surface-alt px-3"
                     onClick={() => {
                       onLanguageChange("speakerA", language);
                       setExpandedSelector(null);
                     }}
                   >
-                    <div className="flex flex-col">
-                      <span className="font-medium">{language}</span>
-                      <span className="text-xs theme-text-muted">
-                        {getLanguageCode(language)}
-                      </span>
-                    </div>
+                    <span className="font-medium">{language}</span>
                   </Button>
                 ))}
               </div>

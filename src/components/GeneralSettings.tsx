@@ -31,7 +31,7 @@ export const GeneralSettings = ({
       icon: Languages,
       description: "Change your conversation languages",
       action: onOpenLanguageSettings,
-      info: `You: ${speakerALanguage} (${getLanguageCode(speakerALanguage)}) → Other: ${speakerBLanguage} (${getLanguageCode(speakerBLanguage)})`
+      info: `You: ${speakerALanguage} → Other: ${speakerBLanguage}`
     }
   ];
 
