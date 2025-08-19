@@ -47,7 +47,7 @@ export const HorizontalVolumeControl = ({
           )}
           title={isSpeakerEnabled ? "Disable Speaker" : "Enable Speaker"}
         >
-          <VolumeIcon className="h-5 w-5 sm:h-4 sm:w-4" />
+          <VolumeIcon className="h-5 w-5 sm:h-4 sm:w-4 theme-icon theme-icon-hover" />
         </Button>
 
         {/* Horizontal Volume Slider */}
@@ -75,7 +75,7 @@ export const HorizontalVolumeControl = ({
             className="h-12 w-12 sm:h-10 sm:w-10 rounded-full flex-shrink-0 bg-primary text-primary-foreground border-2 border-primary hover:bg-primary/90 hover:text-primary-foreground transition-all duration-200 shadow-lg"
             title="Pass Turn to Other Speaker"
           >
-            <ArrowUpDown className="h-6 w-6 sm:h-5 sm:w-5" />
+            <ArrowUpDown className="h-6 w-6 sm:h-5 sm:w-5 theme-icon-light" />
           </Button>
         ) : (
           <div className="h-12 w-12 sm:h-10 sm:w-10 flex-shrink-0" />
@@ -89,7 +89,7 @@ export const HorizontalVolumeControl = ({
           className="h-10 w-10 sm:h-8 sm:w-8 rounded-full flex-shrink-0 bg-muted text-foreground border-border hover:bg-muted/80 touch-none"
           title="Clear all messages"
         >
-          <Eraser className="h-5 w-5 sm:h-4 sm:w-4" />
+          <Eraser className="h-5 w-5 sm:h-4 sm:w-4 theme-icon theme-icon-hover" />
         </Button>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { MessageCircle, Settings } from "lucide-react";
+import { User, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -29,7 +29,7 @@ export const SpeakerControls = ({
           className="h-10 w-10 rounded-full theme-icon-button hover:theme-icon-button-hover"
           title={`Voice Selection for Speaker ${speaker}`}
         >
-          <MessageCircle className="h-4 w-4 theme-icon theme-icon-hover" />
+          <User className="h-4 w-4 theme-icon theme-icon-hover" />
         </Button>
       </div>
       

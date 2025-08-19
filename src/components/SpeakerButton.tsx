@@ -108,9 +108,9 @@ export const SpeakerButton = ({
         {/* Enhanced pulsing circles for active speaker */}
         {isActiveInManagedMode && (
           <>
-            <div className="absolute inset-0 rounded-full theme-text/20 animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite] scale-110" />
-            <div className="absolute inset-0 rounded-full theme-text/10 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] scale-125" />
-            <div className="absolute inset-0 rounded-full theme-text/5 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] scale-140" />
+            <div className="absolute inset-0 rounded-full bg-[hsl(var(--theme-primary)/0.3)] animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite] scale-110" />
+            <div className="absolute inset-0 rounded-full bg-[hsl(var(--theme-primary)/0.2)] animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] scale-125" />
+            <div className="absolute inset-0 rounded-full bg-[hsl(var(--theme-primary)/0.1)] animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] scale-140" />
           </>
         )}
         

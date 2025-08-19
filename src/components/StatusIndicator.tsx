@@ -13,25 +13,25 @@ export const StatusIndicator = ({ isOnline, volume, className }: StatusIndicator
   const WifiIcon = isOnline ? Wifi : WifiOff;
 
   return (
-    <div className={cn("flex items-center gap-3 p-3 rounded-lg bg-card shadow-soft", className)}>
+    <div className={cn("flex items-center gap-3 p-3 rounded-lg theme-surface theme-border border", className)}>
       <div className="flex items-center gap-1">
         <WifiIcon 
           size={20} 
-          className={`text-${connectionColor}`} 
+          className={isOnline ? "theme-icon theme-icon-hover" : "theme-icon-muted"} 
         />
-        <span className={`text-sm font-medium text-${connectionColor}`}>
+        <span className={cn("text-sm font-medium", isOnline ? "theme-text" : "theme-text-muted")}>
           {isOnline ? "Connected" : "Offline"}
         </span>
       </div>
       
-      <div className="h-4 w-px bg-border" />
+      <div className="h-4 w-px theme-border bg-[hsl(var(--theme-border))]" />
       
       <div className="flex items-center gap-1">
         <VolumeIcon 
           size={20} 
-          className={volume > 0 ? "text-foreground" : "text-destructive"} 
+          className={volume > 0 ? "theme-icon theme-icon-hover" : "theme-icon-muted"} 
         />
-        <span className="text-sm font-medium text-foreground">
+        <span className="text-sm font-medium theme-text">
           {Math.round(volume * 100)}%
         </span>
       </div>

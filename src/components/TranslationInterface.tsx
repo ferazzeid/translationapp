@@ -15,8 +15,6 @@ import { SpeakerControls } from "./SpeakerControls";
 import { SpeakerSection } from "./SpeakerSection";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
 import { ProcessingIndicator } from "./ProcessingIndicator";
-import { WakeLockIndicator } from "./WakeLockIndicator";
-import { SettingsButton } from "./SettingsButton";
 
 
 interface Message {
@@ -624,19 +622,6 @@ export const TranslationInterface = ({
 
       </div>
 
-      {/* Settings Button - Bottom Right */}
-      <SettingsButton onOpenSettings={onOpenSettings} />
-
-      {/* Wake Lock Indicator - Bottom Left */}
-      {wakeLock.isSupported && (
-        <div className="absolute bottom-5 left-5 z-40">
-          <WakeLockIndicator
-            isActive={wakeLock.isActive}
-            isSupported={wakeLock.isSupported}
-            onToggle={() => wakeLock.isActive ? wakeLock.release() : wakeLock.request()}
-          />
-        </div>
-      )}
 
 
       {/* Modals - Outside rotated areas */}

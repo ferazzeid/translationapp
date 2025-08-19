@@ -35,14 +35,14 @@ export const FloatingControlPanel = ({
             <ConnectionIcon 
               className={cn(
                 "h-4 w-4",
-                isOnline ? "text-connection-good" : "text-connection-bad"
+                isOnline ? "theme-icon theme-icon-hover" : "theme-icon-muted"
               )} 
             />
           </div>
 
           {/* Volume Control */}
           <div className="flex items-center gap-3 px-2">
-            <Volume2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <Volume2 className="h-4 w-4 theme-icon theme-icon-hover flex-shrink-0" />
             <div className="w-24">
               <Slider
                 value={[Math.round(volume * 100)]}
@@ -65,7 +65,7 @@ export const FloatingControlPanel = ({
             disabled={!hasMessages}
             className="h-8 w-8 rounded-full hover:bg-accent/20 disabled:opacity-50"
           >
-            <RotateCcw className="h-4 w-4" />
+            <RotateCcw className="h-4 w-4 theme-icon theme-icon-hover" />
           </Button>
 
           {/* Settings Button */}
@@ -75,7 +75,7 @@ export const FloatingControlPanel = ({
             onClick={onOpenSettings}
             className="h-8 w-8 rounded-full hover:bg-accent/20"
           >
-            <Settings className="h-4 w-4" />
+            <Settings className="h-4 w-4 theme-icon theme-icon-hover" />
           </Button>
         </div>
       </div>

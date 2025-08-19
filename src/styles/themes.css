@@ -77,12 +77,10 @@
   --theme-icon-color-active: 0 0% 100%; /* Active/selected icon color */
   --theme-icon-color-muted: 0 0% 50%; /* Muted icon color */
   
-  /* Icon colors for buttons and indicators */
-  --theme-icon-color: 0 0% 20%; /* Default icon color */
-  --theme-icon-color-hover: 0 0% 10%; /* Icon hover color */
-  --theme-icon-color-disabled: 0 0% 60%; /* Disabled icon color */
-  --theme-icon-color-active: 0 0% 100%; /* Active/selected icon color */
-  --theme-icon-color-muted: 0 0% 50%; /* Muted icon color */
+  /* Light icon variants for dynamic switching */
+  --theme-icon-color-light: 0 0% 100%; /* Light/white icon color */
+  --theme-icon-color-light-hover: 0 0% 90%; /* Light icon hover color */
+  --theme-icon-color-light-muted: 0 0% 70%; /* Light muted icon color */
 
   /* Modal/Dialog theming */
   --theme-modal-bg: 0 0% 100%; /* Modal background */
@@ -608,4 +606,30 @@
 
 .theme-dropdown-hover {
   background-color: hsl(var(--theme-dropdown-hover, 0 0% 96%));
+}
+
+/* Light icon utility classes */
+.theme-icon-light { 
+  color: hsl(var(--theme-icon-color-light, 0 0% 100%)); 
+}
+
+.theme-icon-light-hover { 
+  color: hsl(var(--theme-icon-color-light-hover, 0 0% 90%)); 
+}
+
+.theme-icon-light:hover { 
+  color: hsl(var(--theme-icon-color-light-hover, 0 0% 90%)); 
+}
+
+.theme-icon-light-muted { 
+  color: hsl(var(--theme-icon-color-light-muted, 0 0% 70%)); 
+}
+
+/* Auto icon color - adapts based on background */
+.theme-icon-auto { 
+  color: hsl(var(--theme-icon-color, 0 0% 20%)); 
+}
+
+.theme-icon-auto:hover { 
+  color: hsl(var(--theme-icon-color-hover, 0 0% 10%)); 
 }

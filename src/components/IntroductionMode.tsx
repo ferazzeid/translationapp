@@ -86,7 +86,7 @@ export const IntroductionMode = ({ targetLanguage, onContinueToTranslation, onOp
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         <div className="text-center space-y-2">
           <div className="w-12 h-12 mx-auto theme-primary rounded-full flex items-center justify-center shadow-medium">
-            <Volume2 size={24} className="text-white" />
+            <Volume2 size={24} className="theme-icon-light" />
           </div>
           <p className="text-sm theme-text-muted">Choose a phrase to introduce the app</p>
         </div>
