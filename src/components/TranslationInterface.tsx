@@ -7,6 +7,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { usePWA } from "@/hooks/usePWA";
 import { useWakeLock } from "@/hooks/useWakeLock";
 import { useManagedMode } from "@/hooks/useManagedMode";
+import { useVoiceGenderDetection } from "@/hooks/useVoiceGenderDetection";
 import { getLanguageCode } from "@/constants/languages";
 import { SpeechBubble } from "./SpeechBubble";
 import { MidSectionControls } from "./MidSectionControls";
@@ -63,6 +64,8 @@ export const TranslationInterface = ({
   const [speakerAVoice, setSpeakerAVoice] = useState("alloy");
   const [speakerBVoice, setSpeakerBVoice] = useState("nova");
   const [activeVoiceModal, setActiveVoiceModal] = useState<"A" | "B" | null>(null);
+  const [speakerAGenderDetected, setSpeakerAGenderDetected] = useState(false);
+  const [speakerBGenderDetected, setSpeakerBGenderDetected] = useState(false);
   
   const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -72,7 +75,9 @@ export const TranslationInterface = ({
   const isMobile = useIsMobile();
   const { isStandalone } = usePWA();
   const wakeLock = useWakeLock();
-  const managedMode = useManagedMode();
+  const [initialManagedModeEnabled, setInitialManagedModeEnabled] = useState(false);
+  const managedMode = useManagedMode(initialManagedModeEnabled);
+  const voiceGenderDetection = useVoiceGenderDetection();
   
   // Determine if we're on a real mobile device (not desktop with mobile frame)
   const isRealMobile = isMobile || isStandalone;
@@ -100,6 +105,7 @@ export const TranslationInterface = ({
             case "managed_mode_enabled":
               const shouldEnable = setting.setting_value === "true";
               console.log('Admin settings: managed_mode_enabled =', shouldEnable, 'current enabled =', managedMode.isEnabled);
+              setInitialManagedModeEnabled(shouldEnable);
               managedMode.setEnabled(shouldEnable);
               break;
             case "hold_to_record_enabled":
@@ -113,7 +119,7 @@ export const TranslationInterface = ({
     };
 
     loadAdminSettings();
-  }, [wakeLock, managedMode]);
+  }, [wakeLock, managedMode, setInitialManagedModeEnabled]);
 
   // Monitor online status
   useEffect(() => {
@@ -201,6 +207,38 @@ export const TranslationInterface = ({
           setTimeout(() => {
             managedMode.switchTurn();
           }, 500);
+        }
+        
+        // Perform voice gender detection for first-time speakers
+        if (success && audioData) {
+          const isFirstTime = speaker === "A" ? !speakerAGenderDetected : !speakerBGenderDetected;
+          if (isFirstTime) {
+            try {
+              // Convert base64 to blob for gender detection
+              const binaryString = atob(audioData);
+              const bytes = new Uint8Array(binaryString.length);
+              for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+              }
+              const audioBlob = new Blob([bytes], { type: 'audio/webm' });
+              
+              const genderResult = await voiceGenderDetection.detectGender(audioBlob);
+              const recommendedVoice = voiceGenderDetection.getDefaultVoiceForGender(genderResult.gender);
+              
+              // Auto-assign voice based on detected gender
+              if (speaker === "A") {
+                setSpeakerAVoice(recommendedVoice);
+                setSpeakerAGenderDetected(true);
+              } else {
+                setSpeakerBVoice(recommendedVoice);
+                setSpeakerBGenderDetected(true);
+              }
+              
+              console.log(`Auto-assigned ${genderResult.gender} voice "${recommendedVoice}" for Speaker ${speaker}`);
+            } catch (error) {
+              console.error('Voice gender detection failed:', error);
+            }
+          }
         }
       }
     } catch (error) {

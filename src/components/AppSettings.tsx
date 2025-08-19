@@ -139,7 +139,7 @@ export const AppSettings = () => {
             <div>
               <h3 className="text-base font-medium theme-text mb-1">Managed Mode</h3>
               <p className="text-sm theme-text-muted">
-                AI-managed turn-taking system with visual indicators (Beta feature)
+                AI-managed turn-taking system with visual indicators
               </p>
             </div>
             
