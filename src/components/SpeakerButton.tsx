@@ -126,15 +126,13 @@ export const SpeakerButton = ({
               "hover:bg-[hsl(var(--theme-mic-bg))]",
               "scale-110"
             ] : isDisabled ? [
-              "bg-gray-400 text-gray-200 border-2 border-gray-300",
+              "theme-surface-alt theme-text-muted border-2 theme-border",
               "cursor-not-allowed opacity-50"
             ] : isActiveInManagedMode ? [
-              "theme-mic border-2 border-[hsl(var(--theme-mic-bg))]",
-              "hover:opacity-90",
-              "shadow-[0_0_20px_hsl(var(--theme-mic-bg)/0.4)] hover:shadow-[0_0_25px_hsl(var(--theme-mic-bg)/0.6)]"
+              "theme-mic border-2",
+              "hover:opacity-90"
             ] : [
-              "theme-button",
-              "shadow-[0_0_20px_hsl(var(--theme-border)/0.3)] hover:shadow-[0_0_25px_hsl(var(--theme-border)/0.5)]"
+              "theme-button"
             ]
           )}
           onClick={holdToRecordMode ? undefined : handleClick}

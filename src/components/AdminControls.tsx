@@ -9,7 +9,7 @@ export const AdminControls = ({
   onOpenAdminSettings
 }: AdminControlsProps) => {
   return (
-    <div className="absolute bottom-20 left-5 z-40">
+    <div className="absolute bottom-6 left-5 z-40">
       <Button
         variant="outline"
         size="icon"

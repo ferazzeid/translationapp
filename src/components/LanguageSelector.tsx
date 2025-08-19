@@ -11,7 +11,7 @@ interface Language {
 }
 
 const LANGUAGES: Language[] = [
-  { code: "en", name: "English", flag: "🇺🇸" },
+  { code: "en", name: "English", flag: "EN" },
   { code: "hu", name: "Hungarian", flag: "🇭🇺" },
   { code: "es", name: "Spanish", flag: "🇪🇸" },
   { code: "fr", name: "French", flag: "🇫🇷" },
@@ -64,8 +64,8 @@ export const LanguageSelector = ({
             <Button
               variant="outline"
               className={cn(
-                "w-full justify-between h-12 text-left theme-button border-2 theme-border hover:theme-surface-alt focus-visible:ring-2 focus-visible:ring-theme-primary focus-visible:ring-offset-0",
-                expandedSelector === "speakerB" && "theme-surface-alt border-theme-primary"
+                "w-full justify-between h-12 text-left theme-button border-2 theme-border hover:theme-surface-alt",
+                expandedSelector === "speakerB" && "theme-surface-alt"
               )}
               onClick={() => setExpandedSelector(expandedSelector === "speakerB" ? null : "speakerB")}
             >
@@ -82,7 +82,7 @@ export const LanguageSelector = ({
                   <Button
                     key={lang.code}
                     variant="ghost"
-                    className="h-10 justify-start text-base theme-button border-0 hover:theme-surface-alt focus-visible:ring-2 focus-visible:ring-theme-primary focus-visible:ring-offset-0"
+                    className="h-10 justify-start text-base theme-button border-0 hover:theme-surface-alt"
                     onClick={() => {
                       onLanguageChange("speakerB", lang.code);
                       setExpandedSelector(null);
@@ -102,8 +102,8 @@ export const LanguageSelector = ({
             <Button
               variant="outline"
               className={cn(
-                "w-full justify-between h-12 text-left theme-button border-2 theme-border hover:theme-surface-alt focus-visible:ring-2 focus-visible:ring-theme-primary focus-visible:ring-offset-0",
-                expandedSelector === "speakerA" && "theme-surface-alt border-theme-primary"
+                "w-full justify-between h-12 text-left theme-button border-2 theme-border hover:theme-surface-alt",
+                expandedSelector === "speakerA" && "theme-surface-alt"
               )}
               onClick={() => setExpandedSelector(expandedSelector === "speakerA" ? null : "speakerA")}
             >
@@ -120,7 +120,7 @@ export const LanguageSelector = ({
                   <Button
                     key={lang.code}
                     variant="ghost"
-                    className="h-10 justify-start text-base theme-button border-0 hover:theme-surface-alt focus-visible:ring-2 focus-visible:ring-theme-primary focus-visible:ring-offset-0"
+                    className="h-10 justify-start text-base theme-button border-0 hover:theme-surface-alt"
                     onClick={() => {
                       onLanguageChange("speakerA", lang.code);
                       setExpandedSelector(null);

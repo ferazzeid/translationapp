@@ -49,15 +49,15 @@
   --theme-action-strong-fg: 0 0% 100%; /* #FFFFFF */
   
   /* Microphone */
-  --theme-mic-bg: 41 121 255; /* #2979FF */
-  --theme-mic-fg: 255 255 255; /* #FFFFFF */
-  --theme-mic-glow: 41 121 255; /* #2979FF with opacity */
+  --theme-mic-bg: 218 100% 58%; /* #2979FF */
+  --theme-mic-fg: 0 0% 100%; /* #FFFFFF */
+  --theme-mic-glow: 218 100% 58%; /* #2979FF with opacity */
   
   /* Status colors */
-  --theme-success: 18 183 106; /* #12B76A */
-  --theme-danger: 255 59 48; /* #FF3B30 */
-  --theme-focus-ring: 157 190 255; /* #9DBEFF */
-  --theme-divider: 230 230 230; /* #E6E6E6 */
+  --theme-success: 152 69% 40%; /* #12B76A */
+  --theme-danger: 4 86% 60%; /* #FF3B30 */
+  --theme-focus-ring: 220 100% 80%; /* #9DBEFF */
+  --theme-divider: 0 0% 90%; /* #E6E6E6 */
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -77,19 +77,19 @@
   --theme-border: 230 230 230;
   
   /* Aqua-specific colors */
-  --theme-primary: 0 191 166; /* #00BFA6 */
-  --theme-primary-weak: 224 247 244; /* #E0F7F4 */
-  --theme-action-strong-bg: 43 47 49; /* #2B2F31 */
-  --theme-action-strong-fg: 255 255 255;
-  --theme-mic-bg: 0 191 166; /* #00BFA6 */
-  --theme-mic-fg: 255 255 255;
-  --theme-mic-glow: 0 191 166; /* #00BFA6 with opacity */
+  --theme-primary: 180 100% 36%; /* #00BFA6 */
+  --theme-primary-weak: 180 55% 91%; /* #E0F7F4 */
+  --theme-action-strong-bg: 0 0% 18%; /* #2B2F31 */
+  --theme-action-strong-fg: 0 0% 100%;
+  --theme-mic-bg: 180 100% 36%; /* #00BFA6 */
+  --theme-mic-fg: 0 0% 100%;
+  --theme-mic-glow: 180 100% 36%; /* #00BFA6 with opacity */
   
   /* Status colors */
-  --theme-success: 18 183 106;
-  --theme-danger: 255 59 48;
-  --theme-focus-ring: 157 190 255;
-  --theme-divider: 230 230 230;
+  --theme-success: 152 69% 40%;
+  --theme-danger: 4 86% 60%;
+  --theme-focus-ring: 220 100% 80%;
+  --theme-divider: 0 0% 90%;
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -109,19 +109,19 @@
   --theme-border: 230 230 230;
   
   /* Violet-specific colors */
-  --theme-primary: 98 0 238; /* #6200EE */
-  --theme-primary-weak: 237 231 246; /* #EDE7F6 */
-  --theme-action-strong-bg: 44 44 44; /* #2C2C2C */
-  --theme-action-strong-fg: 255 255 255;
-  --theme-mic-bg: 98 0 238; /* #6200EE */
-  --theme-mic-fg: 255 255 255;
-  --theme-mic-glow: 98 0 238; /* #6200EE with opacity */
+  --theme-primary: 265 100% 48%; /* #6200EE */
+  --theme-primary-weak: 255 45% 90%; /* #EDE7F6 */
+  --theme-action-strong-bg: 0 0% 17%; /* #2C2C2C */
+  --theme-action-strong-fg: 0 0% 100%;
+  --theme-mic-bg: 265 100% 48%; /* #6200EE */
+  --theme-mic-fg: 0 0% 100%;
+  --theme-mic-glow: 265 100% 48%; /* #6200EE with opacity */
   
   /* Status colors */
-  --theme-success: 18 183 106;
-  --theme-danger: 255 59 48;
-  --theme-focus-ring: 157 190 255;
-  --theme-divider: 230 230 230;
+  --theme-success: 152 69% 40%;
+  --theme-danger: 4 86% 60%;
+  --theme-focus-ring: 220 100% 80%;
+  --theme-divider: 0 0% 90%;
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
