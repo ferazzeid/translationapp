@@ -14,7 +14,7 @@ const WaveformBars = () => {
       {[...Array(5)].map((_, i) => (
         <div
           key={i}
-          className="w-1 theme-recording rounded-sm animate-pulse"
+          className="w-1 theme-text rounded-sm animate-pulse"
           style={{
             height: `${8 + Math.random() * 16}px`,
             animationDelay: `${i * 0.1}s`,
@@ -44,8 +44,8 @@ export const ProcessingIndicator = ({
       className={cn(
         "fixed left-1/2 -translate-x-1/2 z-50 pointer-events-none",
         isBottomHalf 
-          ? "top-3/4" // Center of bottom half
-          : "top-1/4" // Center of top half
+          ? "bottom-28" // Position above bottom speaker controls
+          : "top-20" // Position below top area
       )}
     >
       <div className="h-6 flex items-center justify-center">
