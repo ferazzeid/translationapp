@@ -2,24 +2,24 @@
 
 /* Global theme variables with fallbacks */
 :root {
-  /* Default theme fallbacks (neo-light colors) */
-  --theme-bg: 250 250 250; /* #FAFAFA */
-  --theme-surface: 255 255 255; /* #FFFFFF */
-  --theme-surface-alt: 242 243 245; /* #F2F3F5 */
-  --theme-text: 34 34 34; /* #222222 */
-  --theme-text-muted: 102 102 102; /* #666666 */
-  --theme-border: 230 230 230; /* #E6E6E6 */
-  --theme-primary: 41 121 255; /* #2979FF */
-  --theme-primary-weak: 227 242 253; /* #E3F2FD */
-  --theme-action-strong-bg: 34 34 34; /* #222222 */
-  --theme-action-strong-fg: 255 255 255; /* #FFFFFF */
-  --theme-mic-bg: 41 121 255; /* #2979FF */
-  --theme-mic-fg: 255 255 255; /* #FFFFFF */
-  --theme-mic-glow: 41 121 255; /* #2979FF with opacity */
-  --theme-success: 18 183 106; /* #12B76A */
-  --theme-danger: 255 59 48; /* #FF3B30 */
-  --theme-focus-ring: 157 190 255; /* #9DBEFF */
-  --theme-divider: 230 230 230; /* #E6E6E6 */
+  /* Default theme fallbacks (neo-light colors) - All HSL values */
+  --theme-bg: 0 0% 98%; /* #FAFAFA */
+  --theme-surface: 0 0% 100%; /* #FFFFFF */
+  --theme-surface-alt: 220 9% 96%; /* #F2F3F5 */
+  --theme-text: 0 0% 13%; /* #222222 */
+  --theme-text-muted: 0 0% 40%; /* #666666 */
+  --theme-border: 0 0% 90%; /* #E6E6E6 */
+  --theme-primary: 218 100% 58%; /* #2979FF */
+  --theme-primary-weak: 210 100% 94%; /* #E3F2FD */
+  --theme-action-strong-bg: 0 0% 13%; /* #222222 */
+  --theme-action-strong-fg: 0 0% 100%; /* #FFFFFF */
+  --theme-mic-bg: 218 100% 58%; /* #2979FF */
+  --theme-mic-fg: 0 0% 100%; /* #FFFFFF */
+  --theme-mic-glow: 218 100% 58%; /* #2979FF with opacity */
+  --theme-success: 152 69% 40%; /* #12B76A */
+  --theme-danger: 4 86% 60%; /* #FF3B30 */
+  --theme-focus-ring: 220 100% 80%; /* #9DBEFF */
+  --theme-divider: 0 0% 90%; /* #E6E6E6 */
   --theme-radius-lg: 28px;
   --theme-radius-md: 16px;
   --theme-shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.06);
@@ -29,24 +29,24 @@
 /* Default theme: neo-light */
 :root[data-theme="neo-light"] {
   /* Backgrounds */
-  --theme-bg: 250 250 250; /* #FAFAFA */
-  --theme-surface: 255 255 255; /* #FFFFFF */
-  --theme-surface-alt: 242 243 245; /* #F2F3F5 */
+  --theme-bg: 0 0% 98%; /* #FAFAFA */
+  --theme-surface: 0 0% 100%; /* #FFFFFF */
+  --theme-surface-alt: 220 9% 96%; /* #F2F3F5 */
   
   /* Text */
-  --theme-text: 34 34 34; /* #222222 */
-  --theme-text-muted: 102 102 102; /* #666666 */
+  --theme-text: 0 0% 13%; /* #222222 */
+  --theme-text-muted: 0 0% 40%; /* #666666 */
   
   /* Borders */
-  --theme-border: 230 230 230; /* #E6E6E6 */
+  --theme-border: 0 0% 90%; /* #E6E6E6 */
   
   /* Primary colors */
-  --theme-primary: 41 121 255; /* #2979FF */
-  --theme-primary-weak: 227 242 253; /* #E3F2FD */
+  --theme-primary: 218 100% 58%; /* #2979FF */
+  --theme-primary-weak: 210 100% 94%; /* #E3F2FD */
   
   /* Action buttons (Pass/Wipe buttons) */
-  --theme-action-strong-bg: 34 34 34; /* #222222 */
-  --theme-action-strong-fg: 255 255 255; /* #FFFFFF */
+  --theme-action-strong-bg: 0 0% 13%; /* #222222 */
+  --theme-action-strong-fg: 0 0% 100%; /* #FFFFFF */
   
   /* Microphone */
   --theme-mic-bg: 41 121 255; /* #2979FF */
@@ -186,4 +186,9 @@
 
 .theme-divider {
   border-color: hsl(var(--theme-divider));
+}
+
+.theme-language-chip { 
+  background-color: hsl(var(--theme-surface)); 
+  color: hsl(var(--theme-text)); 
 }

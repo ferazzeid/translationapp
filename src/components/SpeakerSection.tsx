@@ -56,8 +56,8 @@ export const SpeakerSection = ({
       <div className="absolute inset-0 bottom-20 sm:bottom-24 overflow-hidden">
         {/* Language Indicator - 20px margin from left */}
         <div className="absolute top-2 left-5 z-40 theme-language-chip backdrop-blur-sm border theme-divider rounded px-2 py-1">
-          <span className="text-xs font-medium">
-            {language.toUpperCase()}
+          <span className="text-xs font-medium theme-text">
+            {flag} {language.toUpperCase()}
           </span>
         </div>
         
