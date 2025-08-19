@@ -41,26 +41,26 @@ export const MidSectionControls = ({
       {/* Right: Pass Turn and Wipe Buttons */}
       <div className="flex items-center justify-end w-1/2">
         <div className="flex items-center gap-4">
-          {/* Pass Turn Button - Large with Black Background */}
+          {/* Pass Turn Button - Themed Action Strong */}
           {isManagedMode && (
             <Button
               variant="outline"
               size="icon"
               onClick={onPassTurn}
-              className="h-12 w-12 rounded-full bg-black text-white border-2 border-black hover:bg-gray-900 transition-all duration-200"
+              className="h-12 w-12 rounded-full theme-action-strong border-2 border-[hsl(var(--theme-action-strong-bg))] hover:opacity-90 transition-all duration-200"
               title="Pass turn to other speaker"
             >
               <ArrowUpDown className="h-6 w-6" />
             </Button>
           )}
 
-          {/* Wipe Button - Black Background (same as Pass Turn) */}
+          {/* Wipe Button - Themed Action Strong */}
           <Button
             variant="outline"
             size="icon"
             onClick={onWipeMessages}
             disabled={!hasMessages}
-            className="h-12 w-12 rounded-full bg-black text-white border-2 border-black hover:bg-gray-900 disabled:opacity-50 disabled:bg-gray-800 transition-all duration-200"
+            className="h-12 w-12 rounded-full theme-action-strong border-2 border-[hsl(var(--theme-action-strong-bg))] hover:opacity-90 disabled:opacity-50 transition-all duration-200"
             title="Clear all messages"
           >
             <Eraser className="h-6 w-6" />

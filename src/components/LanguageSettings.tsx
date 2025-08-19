@@ -14,7 +14,7 @@ export const LanguageSettings = ({
         variant="outline"
         size="icon"
         onClick={onOpenSettings}
-        className="h-10 w-10 rounded-full bg-white text-gray-600 border-2 border-gray-300 hover:bg-gray-100 shadow-sm"
+        className="h-10 w-10 rounded-full theme-button border-2"
         title="Language Settings"
       >
         <Globe className="h-4 w-4" />

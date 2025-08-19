@@ -28,7 +28,7 @@ export const SpeakerControls = ({
           variant="outline"
           size="icon"
           onClick={onOpenVoiceSelection}
-          className="h-10 w-10 rounded-full bg-white text-gray-600 border-2 border-gray-300 hover:bg-gray-100 shadow-sm"
+          className="h-10 w-10 rounded-full theme-button border-2"
           title={`Voice Selection for Speaker ${speaker}`}
         >
           <MessageCircle className="h-4 w-4" />
@@ -44,7 +44,7 @@ export const SpeakerControls = ({
           variant="outline"
           size="icon"
           onClick={onToggleDarkMode}
-          className="h-10 w-10 rounded-full bg-white text-gray-600 border-2 border-gray-300 hover:bg-gray-100 shadow-sm"
+          className="h-10 w-10 rounded-full theme-button border-2"
           title={isDarkMode ? "Switch to Light Bubbles" : "Switch to Dark Bubbles"}
         >
           {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}

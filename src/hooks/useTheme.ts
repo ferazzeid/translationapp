@@ -1,0 +1,1 @@
+export { useTheme, type ThemeName } from '@/contexts/ThemeContext';

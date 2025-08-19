@@ -122,20 +122,19 @@ export const SpeakerButton = ({
             "h-20 w-20 rounded-full transition-all duration-300 relative overflow-hidden",
             !isDisabled && "hover:scale-105",
             isListening ? [
-              "bg-black text-white border-2 border-gray-600",
-              "hover:bg-black", // Prevent hover changes when recording
+              "theme-mic theme-mic-glow",
+              "hover:bg-[hsl(var(--theme-mic-bg))]", // Prevent hover changes when recording
               "scale-110" // Recording scale without strobe
             ] : isDisabled ? [
               "bg-gray-400 text-gray-200 border-2 border-gray-300",
               "cursor-not-allowed opacity-50"
             ] : isActiveInManagedMode ? [
-              "bg-black text-white border-2 border-gray-600",
-              "hover:bg-gray-900 hover:border-gray-500",
-              "shadow-[0_0_20px_rgba(0,0,0,0.4)] hover:shadow-[0_0_25px_rgba(0,0,0,0.6)]"
+              "theme-mic border-2 border-[hsl(var(--theme-mic-bg))]",
+              "hover:opacity-90",
+              "shadow-[0_0_20px_hsl(var(--theme-mic-bg)/0.4)] hover:shadow-[0_0_25px_hsl(var(--theme-mic-bg)/0.6)]"
             ] : [
-              "bg-white text-black border-2 border-gray-300",
-              "hover:bg-gray-100 hover:border-gray-400",
-              "shadow-[0_0_20px_rgba(0,0,0,0.1)] hover:shadow-[0_0_25px_rgba(0,0,0,0.2)]"
+              "theme-button border-2",
+              "shadow-[0_0_20px_hsl(var(--theme-border)/0.3)] hover:shadow-[0_0_25px_hsl(var(--theme-border)/0.5)]"
             ]
           )}
           onClick={holdToRecordMode ? undefined : handleClick}

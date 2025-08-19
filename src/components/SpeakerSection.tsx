@@ -55,8 +55,8 @@ export const SpeakerSection = ({
       {/* Messages area with language indicator */}
       <div className="absolute inset-0 bottom-20 sm:bottom-24 overflow-hidden">
         {/* Language Indicator - Top-left corner of message area */}
-        <div className="absolute top-2 left-2 z-40 bg-background/80 backdrop-blur-sm border border-border rounded px-2 py-1">
-          <span className="text-xs font-medium text-foreground">
+        <div className="absolute top-2 left-2 z-40 theme-language-chip backdrop-blur-sm border theme-border rounded px-2 py-1">
+          <span className="text-xs font-medium">
             {language.toUpperCase()}
           </span>
         </div>
@@ -77,11 +77,11 @@ export const SpeakerSection = ({
         <div className="absolute left-20 bottom-6 flex items-center">
           <button
             onClick={onRepeat}
-            className="h-10 w-10 rounded-full bg-white text-gray-600 hover:bg-gray-100 border-2 border-gray-300 shadow-sm flex items-center justify-center transition-colors"
+            className="h-10 w-10 rounded-full theme-button border-2 flex items-center justify-center transition-colors"
             title="Repeat last message"
           >
             <svg 
-              className="h-4 w-4 text-gray-600" 
+              className="h-4 w-4" 
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"

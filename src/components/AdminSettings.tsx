@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Settings, X } from "lucide-react";
 import { MobileFrame } from "./MobileFrame";
+import { ThemeSettings } from "./ThemeSettings";
 import { cn } from "@/lib/utils";
 
 interface AdminSettingsProps {
@@ -245,6 +246,11 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
                 </Button>
               </div>
             </div>
+          </div>
+
+          {/* Theme Settings */}
+          <div className="space-y-4">
+            <ThemeSettings />
           </div>
 
           {/* Wake Lock Settings */}

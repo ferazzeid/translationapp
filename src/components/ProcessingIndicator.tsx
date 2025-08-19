@@ -14,7 +14,7 @@ const WaveformBars = () => {
       {[...Array(5)].map((_, i) => (
         <div
           key={i}
-          className="w-1 bg-red-500 rounded-sm animate-pulse"
+          className="w-1 theme-recording rounded-sm animate-pulse"
           style={{
             height: `${8 + Math.random() * 16}px`,
             animationDelay: `${i * 0.1}s`,

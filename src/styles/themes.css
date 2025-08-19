@@ -1,0 +1,144 @@
+/* Theme System - Design Tokens */
+
+/* Default theme: neo-light */
+:root[data-theme="neo-light"] {
+  /* Backgrounds */
+  --theme-bg: 250 250 250; /* #FAFAFA */
+  --theme-surface: 255 255 255; /* #FFFFFF */
+  --theme-surface-alt: 242 243 245; /* #F2F3F5 */
+  
+  /* Text */
+  --theme-text: 34 34 34; /* #222222 */
+  --theme-text-muted: 102 102 102; /* #666666 */
+  
+  /* Borders */
+  --theme-border: 230 230 230; /* #E6E6E6 */
+  
+  /* Primary colors */
+  --theme-primary: 41 121 255; /* #2979FF */
+  --theme-primary-weak: 227 242 253; /* #E3F2FD */
+  
+  /* Action buttons (Pass/Wipe buttons) */
+  --theme-action-strong-bg: 34 34 34; /* #222222 */
+  --theme-action-strong-fg: 255 255 255; /* #FFFFFF */
+  
+  /* Microphone */
+  --theme-mic-bg: 41 121 255; /* #2979FF */
+  --theme-mic-fg: 255 255 255; /* #FFFFFF */
+  --theme-mic-glow: 41 121 255; /* #2979FF with opacity */
+  
+  /* Status colors */
+  --theme-success: 18 183 106; /* #12B76A */
+  --theme-danger: 255 59 48; /* #FF3B30 */
+  --theme-focus-ring: 157 190 255; /* #9DBEFF */
+  
+  /* Radius and shadows */
+  --theme-radius-lg: 28px;
+  --theme-radius-md: 16px;
+  --theme-shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.06);
+  --theme-shadow-md: 0 6px 20px hsl(0 0% 0% / 0.12);
+}
+
+/* Aqua theme */
+:root[data-theme="aqua-light"] {
+  /* Inherit from neo-light except overrides */
+  --theme-bg: 250 250 250;
+  --theme-surface: 255 255 255;
+  --theme-surface-alt: 242 243 245;
+  --theme-text: 34 34 34;
+  --theme-text-muted: 102 102 102;
+  --theme-border: 230 230 230;
+  
+  /* Aqua-specific colors */
+  --theme-primary: 0 191 166; /* #00BFA6 */
+  --theme-primary-weak: 224 247 244; /* #E0F7F4 */
+  --theme-action-strong-bg: 43 47 49; /* #2B2F31 */
+  --theme-action-strong-fg: 255 255 255;
+  --theme-mic-bg: 0 191 166; /* #00BFA6 */
+  --theme-mic-fg: 255 255 255;
+  --theme-mic-glow: 0 191 166; /* #00BFA6 with opacity */
+  
+  /* Status colors */
+  --theme-success: 18 183 106;
+  --theme-danger: 255 59 48;
+  --theme-focus-ring: 157 190 255;
+  
+  /* Radius and shadows */
+  --theme-radius-lg: 28px;
+  --theme-radius-md: 16px;
+  --theme-shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.06);
+  --theme-shadow-md: 0 6px 20px hsl(0 0% 0% / 0.12);
+}
+
+/* Violet Material theme */
+:root[data-theme="violet-material"] {
+  /* Inherit from neo-light except overrides */
+  --theme-bg: 250 250 250;
+  --theme-surface: 255 255 255;
+  --theme-surface-alt: 242 243 245;
+  --theme-text: 34 34 34;
+  --theme-text-muted: 102 102 102;
+  --theme-border: 230 230 230;
+  
+  /* Violet-specific colors */
+  --theme-primary: 98 0 238; /* #6200EE */
+  --theme-primary-weak: 237 231 246; /* #EDE7F6 */
+  --theme-action-strong-bg: 44 44 44; /* #2C2C2C */
+  --theme-action-strong-fg: 255 255 255;
+  --theme-mic-bg: 98 0 238; /* #6200EE */
+  --theme-mic-fg: 255 255 255;
+  --theme-mic-glow: 98 0 238; /* #6200EE with opacity */
+  
+  /* Status colors */
+  --theme-success: 18 183 106;
+  --theme-danger: 255 59 48;
+  --theme-focus-ring: 157 190 255;
+  
+  /* Radius and shadows */
+  --theme-radius-lg: 28px;
+  --theme-radius-md: 16px;
+  --theme-shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.06);
+  --theme-shadow-md: 0 6px 20px hsl(0 0% 0% / 0.12);
+}
+
+/* Utility classes using theme tokens */
+.theme-bg { background-color: hsl(var(--theme-bg)); }
+.theme-surface { background-color: hsl(var(--theme-surface)); }
+.theme-surface-alt { background-color: hsl(var(--theme-surface-alt)); }
+.theme-text { color: hsl(var(--theme-text)); }
+.theme-text-muted { color: hsl(var(--theme-text-muted)); }
+.theme-border { border-color: hsl(var(--theme-border)); }
+
+.theme-action-strong { 
+  background-color: hsl(var(--theme-action-strong-bg)); 
+  color: hsl(var(--theme-action-strong-fg)); 
+}
+
+.theme-mic { 
+  background-color: hsl(var(--theme-mic-bg)); 
+  color: hsl(var(--theme-mic-fg)); 
+}
+
+.theme-mic-glow {
+  box-shadow: 0 0 0 8px hsl(var(--theme-mic-glow) / 0.25);
+}
+
+.theme-button {
+  background-color: hsl(var(--theme-surface));
+  color: hsl(var(--theme-text));
+  border: 1px solid hsl(var(--theme-border));
+  box-shadow: var(--theme-shadow-sm);
+}
+
+.theme-button:hover {
+  background-color: hsl(var(--theme-surface-alt));
+}
+
+.theme-recording {
+  color: hsl(var(--theme-danger));
+}
+
+.theme-language-chip {
+  background-color: hsl(var(--theme-primary-weak));
+  color: hsl(var(--theme-text));
+}

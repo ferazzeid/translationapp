@@ -148,6 +148,12 @@ All colors MUST be HSL for maximum compatibility and theming.
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Theme-aware body styling when themes are enabled */
+  [data-theme] body {
+    background-color: hsl(var(--theme-bg));
+    color: hsl(var(--theme-text));
+  }
 }
 
 /* Custom animation keyframes for recording states */
