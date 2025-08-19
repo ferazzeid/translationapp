@@ -122,8 +122,18 @@ serve(async (req) => {
     const result = await response.json();
     console.log('Whisper transcription result:', result);
 
-    // Extract text from Whisper response
-    const transcribedText = result.text || '';
+    // Extract text from Whisper response and clean it
+    let transcribedText = result.text || '';
+    
+    // Remove any unwanted contamination text
+    transcribedText = transcribedText
+      .replace(/transcribed by https:\/\/otter\.ai/gi, '')
+      .replace(/transcribed by otter\.ai/gi, '')
+      .replace(/átirata: https:\/\/otter\.ai/gi, '')
+      .replace(/átirata:/gi, '')
+      .trim();
+    
+    console.log('Cleaned transcribed text:', transcribedText);
 
     return new Response(
       JSON.stringify({ 
