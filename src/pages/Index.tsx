@@ -146,8 +146,10 @@ const Index = () => {
       return content;
     }
 
-    // Don't wrap in mobile frame if running as installed PWA
-    if (isStandalone) {
+    // Don't wrap in mobile frame if running as installed PWA or on mobile device
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (isStandalone || isMobileDevice) {
       return (
         <div className="min-h-screen w-full">
           {content}
@@ -155,7 +157,7 @@ const Index = () => {
       );
     }
 
-    // Wrap other views in mobile frame for browser viewing
+    // Wrap other views in mobile frame for desktop browser viewing
     return (
       <MobileFrame>
         {content}

@@ -62,8 +62,8 @@ export const LanguageSelector = ({
             <Button
               variant="outline"
               className={cn(
-                "w-full justify-between h-12 text-left border-black",
-                expandedSelector === "speakerB" && "ring-2 ring-black"
+                "w-full justify-between h-12 text-left border-black hover:bg-gray-50 focus-visible:ring-1 focus-visible:ring-black focus-visible:ring-offset-0",
+                expandedSelector === "speakerB" && "bg-gray-50"
               )}
               onClick={() => setExpandedSelector(expandedSelector === "speakerB" ? null : "speakerB")}
             >
@@ -80,7 +80,7 @@ export const LanguageSelector = ({
                   <Button
                     key={lang.code}
                     variant="ghost"
-                    className="h-10 justify-start text-base text-black hover:bg-gray-100"
+                    className="h-10 justify-start text-base text-black hover:bg-gray-100 focus-visible:ring-1 focus-visible:ring-black focus-visible:ring-offset-0"
                     onClick={() => {
                       onLanguageChange("speakerB", lang.code);
                       setExpandedSelector(null);
@@ -100,8 +100,8 @@ export const LanguageSelector = ({
             <Button
               variant="outline"
               className={cn(
-                "w-full justify-between h-12 text-left border-black",
-                expandedSelector === "speakerA" && "ring-2 ring-black"
+                "w-full justify-between h-12 text-left border-black hover:bg-gray-50 focus-visible:ring-1 focus-visible:ring-black focus-visible:ring-offset-0",
+                expandedSelector === "speakerA" && "bg-gray-50"
               )}
               onClick={() => setExpandedSelector(expandedSelector === "speakerA" ? null : "speakerA")}
             >
@@ -118,7 +118,7 @@ export const LanguageSelector = ({
                   <Button
                     key={lang.code}
                     variant="ghost"
-                    className="h-10 justify-start text-base text-black hover:bg-gray-100"
+                    className="h-10 justify-start text-base text-black hover:bg-gray-100 focus-visible:ring-1 focus-visible:ring-black focus-visible:ring-offset-0"
                     onClick={() => {
                       onLanguageChange("speakerA", lang.code);
                       setExpandedSelector(null);
