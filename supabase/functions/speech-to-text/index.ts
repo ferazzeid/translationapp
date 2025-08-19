@@ -123,11 +123,22 @@ serve(async (req) => {
     console.log(`Received audio data: ${audio.length} characters`);
     const binaryAudio = base64ToUint8Array(audio);
     
-    // Validate audio size (minimum 500 bytes for webm header)
-    if (binaryAudio.length < 500) {
+    // Validate audio size (minimum 100 bytes, maximum 25MB for OpenAI)
+    if (binaryAudio.length < 100) {
       console.log(`Audio data too small: ${binaryAudio.length} bytes`);
       return new Response(
         JSON.stringify({ error: 'Audio recording too short, please speak longer' }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+    
+    if (binaryAudio.length > 25 * 1024 * 1024) {
+      console.log(`Audio data too large: ${binaryAudio.length} bytes`);
+      return new Response(
+        JSON.stringify({ error: 'Audio recording too long, please speak shorter phrases' }),
         { 
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -140,26 +151,46 @@ serve(async (req) => {
     // Create FormData for Whisper API
     const formData = new FormData();
     
-    // Check if the audio is WebM format by looking at the first few bytes
+    // More robust format detection
+    let fileName: string;
+    let mimeType: string;
+    
+    // Check for WebM signature (first 4 bytes: 0x1A, 0x45, 0xDF, 0xA3)
     const isWebM = binaryAudio.length > 4 && 
                    binaryAudio[0] === 0x1A && 
                    binaryAudio[1] === 0x45 && 
                    binaryAudio[2] === 0xDF && 
                    binaryAudio[3] === 0xA3;
     
-    // Use the correct format based on the actual audio data
-    let fileName: string;
-    let mimeType: string;
+    // Check for WAV signature (first 4 bytes: "RIFF")
+    const isWAV = binaryAudio.length > 12 && 
+                  binaryAudio[0] === 0x52 && // R
+                  binaryAudio[1] === 0x49 && // I
+                  binaryAudio[2] === 0x46 && // F
+                  binaryAudio[3] === 0x46;   // F
+    
+    // Check for MP3 signature (first 2 bytes: 0xFF, 0xFB or 0xFF, 0xFA)
+    const isMP3 = binaryAudio.length > 2 && 
+                  binaryAudio[0] === 0xFF && 
+                  (binaryAudio[1] === 0xFB || binaryAudio[1] === 0xFA);
     
     if (isWebM) {
       fileName = 'audio.webm';
       mimeType = 'audio/webm';
       console.log(`Using format: ${fileName} (${mimeType}) - WebM detected`);
-    } else {
-      // Fallback to wav if not WebM
+    } else if (isWAV) {
       fileName = 'audio.wav';
       mimeType = 'audio/wav';
-      console.log(`Using format: ${fileName} (${mimeType}) - Fallback to WAV`);
+      console.log(`Using format: ${fileName} (${mimeType}) - WAV detected`);
+    } else if (isMP3) {
+      fileName = 'audio.mp3';
+      mimeType = 'audio/mp3';
+      console.log(`Using format: ${fileName} (${mimeType}) - MP3 detected`);
+    } else {
+      // Default to webm for browser recordings
+      fileName = 'audio.webm';
+      mimeType = 'audio/webm';
+      console.log(`Using format: ${fileName} (${mimeType}) - Default format`);
     }
     
     // Create blob with correct mime type

@@ -700,13 +700,15 @@ export const TranslationInterface = ({
         }}
       />
 
-      {/* Processing/Recording Indicator */}
-      <ProcessingIndicator 
-        isProcessing={isProcessing}
-        isRecording={isListeningA || isListeningB}
-        speaker={isListeningA ? "A" : "B"}
-        type={isListeningA || isListeningB ? "recording" : "processing"}
-      />
+      {/* Processing/Recording Indicator - Only show when there's actual activity */}
+      {(isProcessing || isListeningA || isListeningB) && (
+        <ProcessingIndicator 
+          isProcessing={isProcessing}
+          isRecording={isListeningA || isListeningB}
+          speaker={isListeningA ? "A" : isListeningB ? "B" : "A"}
+          type={isListeningA || isListeningB ? "recording" : "processing"}
+        />
+      )}
 
     </div>
   );
