@@ -1,5 +1,5 @@
 import { Slider } from "@/components/ui/slider";
-import { VolumeX, Volume1, Volume2, Eraser, Brain } from "lucide-react";
+import { VolumeX, Volume1, Volume2, Eraser, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +10,8 @@ interface HorizontalVolumeControlProps {
   onToggleSpeaker: () => void;
   onClearMessages: () => void;
   isProcessing?: boolean;
+  isManagedMode?: boolean;
+  onSwitchTurn?: () => void;
 }
 
 export const HorizontalVolumeControl = ({
@@ -18,7 +20,9 @@ export const HorizontalVolumeControl = ({
   isSpeakerEnabled,
   onToggleSpeaker,
   onClearMessages,
-  isProcessing = false
+  isProcessing = false,
+  isManagedMode = false,
+  onSwitchTurn
 }: HorizontalVolumeControlProps) => {
   const getVolumeIcon = () => {
     if (!isSpeakerEnabled) return VolumeX;
@@ -59,15 +63,20 @@ export const HorizontalVolumeControl = ({
           />
         </div>
 
-        {/* Processing Indicator */}
-        <div className="h-10 w-10 sm:h-8 sm:w-8 rounded-full flex-shrink-0 flex items-center justify-center bg-muted border border-border">
-          <Brain 
-            className={cn(
-              "h-5 w-5 sm:h-4 sm:w-4 text-foreground",
-              isProcessing && "animate-pulse"
-            )} 
-          />
-        </div>
+        {/* Pass Turn Button (only in managed mode) */}
+        {isManagedMode && onSwitchTurn ? (
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onSwitchTurn}
+            className="h-12 w-12 sm:h-10 sm:w-10 rounded-full flex-shrink-0 bg-background border-2 border-foreground text-foreground hover:bg-foreground hover:text-background transition-all duration-200 shadow-lg"
+            title="Pass Turn"
+          >
+            <ArrowUpDown className="h-6 w-6 sm:h-5 sm:w-5" />
+          </Button>
+        ) : (
+          <div className="h-12 w-12 sm:h-10 sm:w-10 flex-shrink-0" />
+        )}
 
         {/* Clear Messages Button */}
         <Button

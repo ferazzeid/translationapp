@@ -18,12 +18,9 @@ import { SpeakerControls } from "./SpeakerControls";
 import { SpeakerSection } from "./SpeakerSection";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
 import { SimpleLanguageModal } from "./SimpleLanguageModal";
-import { TurnIndicatorSettings } from "./TurnIndicatorSettings";
 import { ProcessingIndicator } from "./ProcessingIndicator";
 import { WakeLockIndicator } from "./WakeLockIndicator";
 import { ManagedModeControls } from "./ManagedModeControls";
-import { Button } from "@/components/ui/button";
-import { Palette } from "lucide-react";
 
 interface Message {
   id: string;
@@ -69,7 +66,6 @@ export const TranslationInterface = ({
   const [speakerBDarkMode, setSpeakerBDarkMode] = useState(false);
   const [activeVoiceModal, setActiveVoiceModal] = useState<"A" | "B" | null>(null);
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
-  const [isTurnSettingsOpen, setIsTurnSettingsOpen] = useState(false);
   
   const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
@@ -510,14 +506,16 @@ export const TranslationInterface = ({
         </div>
         
         {/* Volume Control - Center */}
-        <HorizontalVolumeControl
-          volume={volume}
-          onVolumeChange={setVolume}
-          isSpeakerEnabled={isSpeakerEnabled}
-          onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
-          onClearMessages={clearAllMessages}
-          isProcessing={isProcessing}
-        />
+      <HorizontalVolumeControl
+        volume={volume}
+        onVolumeChange={setVolume}
+        isSpeakerEnabled={isSpeakerEnabled}
+        onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
+        onClearMessages={clearAllMessages}
+        isProcessing={isProcessing}
+        isManagedMode={managedMode.isEnabled}
+        onSwitchTurn={managedMode.switchTurn}
+      />
         
         {/* Right side space for symmetry */}
         <div className="absolute right-2 top-1/2 -translate-y-1/2">
@@ -607,18 +605,6 @@ export const TranslationInterface = ({
       {/* Language Settings - Bottom Right */}
       <LanguageSettings onOpenSettings={() => setIsLanguageModalOpen(true)} />
 
-      {/* Turn Indicator Settings - Bottom Center */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-40">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => setIsTurnSettingsOpen(true)}
-          className="h-8 w-8 rounded-full bg-background/90 border border-border shadow-sm hover:bg-foreground hover:text-background"
-          title="Turn Indicator Settings"
-        >
-          <Palette className="h-3 w-3" />
-        </Button>
-      </div>
 
       {/* Modals - Outside rotated areas */}
       <VoiceSelectionModal
@@ -647,12 +633,6 @@ export const TranslationInterface = ({
         }}
       />
 
-      <TurnIndicatorSettings
-        isOpen={isTurnSettingsOpen}
-        onClose={() => setIsTurnSettingsOpen(false)}
-        currentColor={turnIndicatorColor}
-        onColorChange={setTurnIndicatorColor}
-      />
     </div>
   );
 };

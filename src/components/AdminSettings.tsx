@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Settings, X } from "lucide-react";
 import { MobileFrame } from "./MobileFrame";
+import { cn } from "@/lib/utils";
 
 interface AdminSettingsProps {
   onBackToApp: () => void;
@@ -275,6 +276,32 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
                 checked={managedModeEnabled}
                 onCheckedChange={handleManagedModeToggle}
               />
+            </div>
+
+            {/* Turn Indicator Color Setting */}
+            <div className="space-y-2">
+              <Label className="text-sm text-foreground">Turn Indicator Color</Label>
+              <div className="flex gap-2 flex-wrap">
+                {[
+                  { name: "Green", value: "green", class: "bg-green-100" },
+                  { name: "Blue", value: "blue", class: "bg-blue-100" },
+                  { name: "Purple", value: "purple", class: "bg-purple-100" },
+                  { name: "Yellow", value: "yellow", class: "bg-yellow-100" },
+                  { name: "Pink", value: "pink", class: "bg-pink-100" },
+                  { name: "Orange", value: "orange", class: "bg-orange-100" }
+                ].map((color) => (
+                  <button
+                    key={color.value}
+                    onClick={() => updateSetting('turn_indicator_color', color.value)}
+                    className={cn(
+                      "h-8 w-8 rounded-full border-2 transition-all",
+                      color.class,
+                      "border-border hover:scale-110"
+                    )}
+                    title={color.name}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
