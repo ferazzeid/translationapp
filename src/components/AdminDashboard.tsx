@@ -144,7 +144,7 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
       data?.forEach((setting) => {
         switch (setting.setting_key) {
           case "app_name":
-            setAppName(setting.setting_value || "Translation App");
+            setAppName(setting.setting_value || "TalkDuo");
             break;
           case "app_logo_url":
             setLogoUrl(setting.setting_value || "");

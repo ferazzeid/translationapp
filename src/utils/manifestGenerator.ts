@@ -38,8 +38,8 @@ export const generateDynamicManifest = async (): Promise<PWAManifestData> => {
 
     // Generate manifest with admin settings or fallbacks
     const manifest: PWAManifestData = {
-      name: settingsMap.app_name || "Translation Bridge",
-      short_name: settingsMap.app_short_name || "TransBridge", 
+      name: settingsMap.app_name || "TalkDuo",
+      short_name: settingsMap.app_short_name || "TalkDuo",
       description: settingsMap.app_description || "Real-time translation app for seamless communication",
       start_url: "/",
       display: "standalone",
@@ -69,8 +69,8 @@ export const generateDynamicManifest = async (): Promise<PWAManifestData> => {
     
     // Return default manifest on error
     return {
-      name: "Translation Bridge",
-      short_name: "TransBridge",
+      name: "TalkDuo",
+      short_name: "TalkDuo",
       description: "Real-time translation app for seamless communication",
       start_url: "/",
       display: "standalone", 
