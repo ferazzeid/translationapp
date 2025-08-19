@@ -23,8 +23,8 @@ export const WakeLockIndicator = ({
       size="icon"
       onClick={onToggle}
       className={cn(
-        "h-8 w-8 rounded-full bg-background/90 border border-border shadow-sm hover:bg-foreground hover:text-background",
-        isActive && "text-primary",
+        "h-8 w-8 rounded-full theme-icon-button hover:theme-icon-button-hover border",
+        isActive && "text-primary ring-2 ring-primary/20",
         className
       )}
       title={isActive ? "Screen lock prevented" : "Allow screen lock"}

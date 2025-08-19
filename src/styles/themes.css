@@ -48,6 +48,25 @@
   --theme-button-outline-fg: 0 0% 13%; /* Outline button text */
   --theme-button-ghost-hover: 0 0% 96%; /* Ghost button hover */
   --theme-button-ghost-fg: 0 0% 13%; /* Ghost button text */
+
+  /* Icon buttons (circular) */
+  --theme-icon-button-bg: 0 0% 94%; /* Icon button background */
+  --theme-icon-button-fg: 0 0% 20%; /* Icon button text */
+  --theme-icon-button-hover: 0 0% 90%; /* Icon button hover */
+  --theme-icon-button-border: 0 0% 85%; /* Icon button border */
+
+  /* Language chip/indicator */
+  --theme-language-chip-bg: 0 0% 100%; /* Language chip background */
+  --theme-language-chip-fg: 0 0% 13%; /* Language chip text */
+  --theme-language-chip-border: 0 0% 90%; /* Language chip border */
+
+  /* Microphone inactive states */
+  --theme-mic-inactive-bg: 0 0% 94%; /* Inactive mic background */
+  --theme-mic-inactive-fg: 0 0% 40%; /* Inactive mic text */
+  --theme-mic-inactive-hover: 0 0% 90%; /* Inactive mic hover */
+
+  /* Console prominent background */
+  --theme-console-prominent-bg: 0 0% 94%; /* Prominent console background */
   
   --theme-radius-lg: 28px;
   --theme-radius-md: 16px;
@@ -88,6 +107,17 @@
   --theme-focus-ring: 220 100% 80%; /* #9DBEFF */
   --theme-divider: 0 0% 90%; /* #E6E6E6 */
   
+  /* Neo theme icon buttons */
+  --theme-icon-button-bg: 210 40% 92%; /* Light gray-blue */
+  --theme-icon-button-fg: 215.4 16.3% 46.9%; /* Muted blue-gray */
+  --theme-icon-button-hover: 221.2 83.2% 53.3%; /* Primary blue */
+  --theme-language-chip-bg: 210 40% 98%; /* Very light blue */
+  --theme-language-chip-fg: 222.2 84% 4.9%; /* Dark text */
+  --theme-mic-inactive-bg: 210 40% 92%; /* Light gray-blue */
+  --theme-mic-inactive-fg: 215.4 16.3% 46.9%; /* Muted text */
+  --theme-mic-inactive-hover: 210 40% 88%; /* Slightly darker */
+  --theme-console-prominent-bg: 210 40% 94%; /* Prominent console */
+
   /* Radius and shadows */
   --theme-radius-lg: 28px;
   --theme-radius-md: 16px;
@@ -147,6 +177,17 @@
   --theme-button-outline-fg: 200 25% 15%; /* Dark teal text */
   --theme-button-ghost-hover: 180 30% 94%; /* Light aqua ghost hover */
   --theme-button-ghost-fg: 200 25% 15%; /* Dark teal text */
+
+  /* Aqua theme icon buttons */
+  --theme-icon-button-bg: 185 85% 85%; /* Light aqua */
+  --theme-icon-button-fg: 180 15% 25%; /* Dark aqua text */
+  --theme-icon-button-hover: 185 85% 55%; /* Vibrant aqua */
+  --theme-language-chip-bg: 185 85% 92%; /* Very light aqua */
+  --theme-language-chip-fg: 180 15% 15%; /* Dark text */
+  --theme-mic-inactive-bg: 185 85% 85%; /* Light aqua */
+  --theme-mic-inactive-fg: 180 15% 45%; /* Muted aqua text */
+  --theme-mic-inactive-hover: 185 85% 75%; /* Medium aqua */
+  --theme-console-prominent-bg: 185 85% 88%; /* Prominent aqua console */
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -207,6 +248,17 @@
   --theme-button-outline-fg: 265 30% 20%; /* Dark purple text */
   --theme-button-ghost-hover: 265 20% 94%; /* Light purple ghost hover */
   --theme-button-ghost-fg: 265 30% 20%; /* Dark purple text */
+
+  /* Violet theme icon buttons */
+  --theme-icon-button-bg: 262 83% 85%; /* Light violet */
+  --theme-icon-button-fg: 270 25% 25%; /* Dark violet text */
+  --theme-icon-button-hover: 262 83% 68%; /* Vibrant violet */
+  --theme-language-chip-bg: 262 83% 92%; /* Very light violet */
+  --theme-language-chip-fg: 270 25% 15%; /* Dark text */
+  --theme-mic-inactive-bg: 262 83% 85%; /* Light violet */
+  --theme-mic-inactive-fg: 270 25% 45%; /* Muted violet text */
+  --theme-mic-inactive-hover: 262 83% 75%; /* Medium violet */
+  --theme-console-prominent-bg: 262 83% 88%; /* Prominent violet console */
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -369,4 +421,37 @@
 
 .theme-button-ghost:hover {
   background-color: hsl(var(--theme-button-ghost-hover, 0 0% 96%));
+}
+
+/* Icon button utilities */
+.theme-icon-button {
+  background-color: hsl(var(--theme-icon-button-bg, 0 0% 94%));
+  color: hsl(var(--theme-icon-button-fg, 0 0% 20%));
+  border-color: hsl(var(--theme-icon-button-border, 0 0% 85%));
+}
+
+.theme-icon-button-hover:hover {
+  background-color: hsl(var(--theme-icon-button-hover, 0 0% 90%));
+}
+
+/* Language chip utilities */
+.theme-language-chip {
+  background-color: hsl(var(--theme-language-chip-bg, 0 0% 100%));
+  color: hsl(var(--theme-language-chip-fg, 0 0% 13%));
+  border-color: hsl(var(--theme-language-chip-border, 0 0% 90%));
+}
+
+/* Microphone inactive utilities */
+.theme-mic-inactive {
+  background-color: hsl(var(--theme-mic-inactive-bg, 0 0% 94%));
+  color: hsl(var(--theme-mic-inactive-fg, 0 0% 40%));
+}
+
+.theme-mic-inactive-hover:hover {
+  background-color: hsl(var(--theme-mic-inactive-hover, 0 0% 90%));
+}
+
+/* Console prominent background */
+.theme-console-prominent-bg {
+  background-color: hsl(var(--theme-console-prominent-bg, 0 0% 94%));
 }

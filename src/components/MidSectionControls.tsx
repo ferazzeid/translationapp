@@ -43,28 +43,28 @@ export const MidSectionControls = ({
         <div className="flex items-center gap-4">
            {/* Pass Turn Button */}
            {isManagedMode && (
-             <Button
-               variant="ghost"
-               size="icon"
-               onClick={onPassTurn}
-               className="min-h-[44px] min-w-[44px] h-12 w-12 rounded-full theme-action-strong hover:opacity-90 transition-all duration-200"
-               title="Pass turn to other speaker"
-             >
-               <ArrowUpDown className="h-6 w-6" />
-             </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onPassTurn}
+                className="min-h-[44px] min-w-[44px] h-12 w-12 rounded-full theme-icon-button hover:theme-icon-button-hover border theme-icon-button-border transition-all duration-200"
+                title="Pass turn to other speaker"
+              >
+                <ArrowUpDown className="h-5 w-5" />
+              </Button>
            )}
 
            {/* Wipe Button */}
-           <Button
-             variant="ghost"
-             size="icon"
-             onClick={onWipeMessages}
-             disabled={!hasMessages}
-             className="min-h-[44px] min-w-[44px] h-12 w-12 rounded-full theme-action-strong hover:opacity-90 disabled:opacity-50 transition-all duration-200"
-             title="Clear all messages"
-           >
-             <Eraser className="h-6 w-6" />
-           </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onWipeMessages}
+              disabled={!hasMessages}
+              className="min-h-[44px] min-w-[44px] h-12 w-12 rounded-full theme-icon-button hover:theme-icon-button-hover disabled:opacity-50 border theme-icon-button-border transition-all duration-200"
+              title="Clear all messages"
+            >
+              <Eraser className="h-5 w-5" />
+            </Button>
         </div>
       </div>
     </div>

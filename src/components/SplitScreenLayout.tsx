@@ -22,7 +22,7 @@ export const SplitScreenLayout = ({
       </div>
 
       {/* Central Control Strip - Increased height for better spacing */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-20 theme-console-bg border-t border-b theme-console-border z-30 flex items-center justify-center">
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-20 theme-console-prominent-bg border-t border-b theme-console-border z-30 flex items-center justify-center">
         {centerContent}
       </div>
 

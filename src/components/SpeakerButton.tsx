@@ -126,13 +126,13 @@ export const SpeakerButton = ({
               "hover:bg-[hsl(var(--theme-mic-bg))]",
               "scale-110"
             ] : isDisabled ? [
-              "theme-surface-alt theme-text-muted border-2 theme-border",
+              "theme-mic-inactive border-2 theme-border",
               "cursor-not-allowed opacity-50"
             ] : isActiveInManagedMode ? [
               "theme-mic border-2",
               "hover:opacity-90"
             ] : [
-              "theme-button"
+              "theme-mic-inactive hover:theme-mic-inactive-hover border-2 theme-border"
             ]
           )}
           onClick={holdToRecordMode ? undefined : handleClick}
