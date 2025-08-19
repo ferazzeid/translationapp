@@ -7,6 +7,7 @@ import { AdminSettings } from "@/components/AdminSettings";
 import { MobileFrame } from "@/components/MobileFrame";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { usePWA } from "@/hooks/usePWA";
 
 type AppState = "setup" | "introduction" | "translation" | "settings" | "admin-auth" | "admin-settings";
 
@@ -47,6 +48,7 @@ const Index = () => {
     selectedLanguages.speakerA && selectedLanguages.speakerB ? "translation" : "setup"
   );
   const [adminUser, setAdminUser] = useState<User | null>(null);
+  const { isStandalone } = usePWA();
 
   const handleLanguageChange = (speaker: "speakerA" | "speakerB", language: string) => {
     const newLanguages = {
@@ -156,7 +158,16 @@ const Index = () => {
       return content;
     }
 
-    // Wrap other views in mobile frame
+    // Don't wrap in mobile frame if running as installed PWA
+    if (isStandalone) {
+      return (
+        <div className="min-h-screen w-full">
+          {content}
+        </div>
+      );
+    }
+
+    // Wrap other views in mobile frame for browser viewing
     return (
       <MobileFrame>
         {content}
