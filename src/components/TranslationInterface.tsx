@@ -467,7 +467,10 @@ export const TranslationInterface = ({
 
   // Hold-to-record handlers
   const handleHoldStart = (speaker: "A" | "B") => {
-    // Start progress tracking immediately for visual feedback
+    // Start recording immediately when user begins holding
+    startListening(speaker);
+    
+    // Start progress tracking
     const startTime = Date.now();
     const maxDuration = 30000; // 30 seconds max recording
     
@@ -481,27 +484,25 @@ export const TranslationInterface = ({
         setHoldProgressB(progress);
       }
       
-      // Continue updating while holding
-      if (progress < 100) {
+      // Continue updating while holding and still recording
+      if (progress < 100 && (speaker === "A" ? isListeningA : isListeningB)) {
         requestAnimationFrame(updateProgress);
       }
     };
     
+    // Start progress animation
     requestAnimationFrame(updateProgress);
-    
-    // Start recording after a short delay
-    setTimeout(() => {
-      startListening(speaker);
-    }, 100);
   };
 
   const handleHoldEnd = (speaker: "A" | "B") => {
-    // Only stop if actually recording
-    if (speaker === "A" ? isListeningA : isListeningB) {
+    // Always try to stop recording when user releases
+    const isCurrentlyRecording = speaker === "A" ? isListeningA : isListeningB;
+    
+    if (isCurrentlyRecording) {
       stopListening(speaker);
     }
     
-    // Reset progress
+    // Reset progress immediately
     if (speaker === "A") {
       setHoldProgressA(0);
     } else {
