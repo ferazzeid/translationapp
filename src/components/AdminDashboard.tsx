@@ -16,14 +16,103 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
   const [appName, setAppName] = useState("Translation App");
   const [logoUrl, setLogoUrl] = useState("");
   const [faviconUrl, setFaviconUrl] = useState("");
+  const [openaiKey, setOpenaiKey] = useState("");
+  const [hasExistingKey, setHasExistingKey] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [uploadingFavicon, setUploadingFavicon] = useState(false);
+  const [savingKey, setSavingKey] = useState(false);
+  const [testingKey, setTestingKey] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     loadBrandingSettings();
+    checkExistingKey();
   }, []);
+
+  const checkExistingKey = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('validate-openai-key');
+      if (!error && data?.hasKey) {
+        setHasExistingKey(true);
+      }
+    } catch (error) {
+      console.log('No existing key found');
+    }
+  };
+
+  const handleSaveOpenAIKey = async () => {
+    if (!openaiKey.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter an OpenAI API key",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSavingKey(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('validate-openai-key', {
+        body: { apiKey: openaiKey }
+      });
+
+      if (error) throw error;
+
+      if (data?.isValid) {
+        setHasExistingKey(true);
+        setOpenaiKey("");
+        toast({
+          title: "Success",
+          description: "OpenAI API key saved and validated successfully",
+        });
+      } else {
+        toast({
+          title: "Invalid Key",
+          description: "The provided OpenAI API key is invalid",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: `Failed to save API key: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setSavingKey(false);
+    }
+  };
+
+  const handleTestOpenAIKey = async () => {
+    setTestingKey(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('validate-openai-key');
+      
+      if (error) throw error;
+      
+      if (data?.isValid) {
+        toast({
+          title: "Key Valid",
+          description: "OpenAI API key is working correctly",
+        });
+      } else {
+        toast({
+          title: "Key Invalid",
+          description: "OpenAI API key validation failed",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Test Failed",
+        description: `Failed to test API key: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setTestingKey(false);
+    }
+  };
 
   const loadBrandingSettings = async () => {
     try {
@@ -229,16 +318,24 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
+                <div className="space-y-2">
                 <Label htmlFor="openai-key">OpenAI API Key</Label>
                 <div className="flex gap-2">
                   <div className="relative flex-1">
                     <Input
                       id="openai-key"
                       type="password"
-                      placeholder="sk-..."
+                      value={openaiKey}
+                      onChange={(e) => setOpenaiKey(e.target.value)}
+                      placeholder={hasExistingKey ? "••••••••••••••••••••••••••••••" : "sk-..."}
                       className="bg-background text-foreground border-border"
+                      disabled={hasExistingKey}
                     />
+                    {hasExistingKey && (
+                      <div className="absolute inset-y-0 right-2 flex items-center">
+                        <span className="text-xs text-muted-foreground">Key saved</span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -249,14 +346,18 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
                 <Button 
                   size="sm"
                   className="flex-1"
+                  onClick={handleSaveOpenAIKey}
+                  disabled={savingKey || hasExistingKey}
                 >
-                  Save API Key
+                  {savingKey ? "Saving..." : hasExistingKey ? "Key Saved" : "Save API Key"}
                 </Button>
                 <Button 
                   variant="outline"
                   size="sm"
+                  onClick={handleTestOpenAIKey}
+                  disabled={testingKey || !hasExistingKey}
                 >
-                  Test Key
+                  {testingKey ? "Testing..." : "Test Key"}
                 </Button>
               </div>
             </CardContent>

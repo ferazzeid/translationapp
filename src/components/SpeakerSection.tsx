@@ -53,8 +53,8 @@ export const SpeakerSection = ({
       {/* Messages area with language indicator */}
       <div className="absolute inset-0 bottom-20 sm:bottom-24 overflow-hidden">
         {/* Language Indicator - smaller and positioned right */}
-        <div className="absolute top-2 right-3 z-40 theme-language-chip backdrop-blur-sm border theme-divider rounded px-1.5 py-0.5">
-          <span className="text-xs font-medium theme-icon">
+        <div className="absolute top-2 right-3 z-40 theme-language-chip backdrop-blur-sm border theme-divider rounded px-1.5 py-0.5 text-center min-w-[32px]">
+          <span className="text-xs font-medium theme-icon leading-none block">
             {flag}
           </span>
         </div>
