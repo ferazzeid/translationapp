@@ -535,7 +535,7 @@ export const TranslationInterface = ({
               isNew={index === 0}
               isDarkMode={speakerBDarkMode}
             />
-          )}
+          ))}
         />
         
         {/* Speaker B Controls - Inside rotated section with relative positioning */}
@@ -616,15 +616,7 @@ export const TranslationInterface = ({
               isNew={index === 0}
               isDarkMode={speakerADarkMode}
             />
-          )).concat(
-            isProcessing ? [
-              <ProcessingIndicator 
-                key="processing-a"
-                isProcessing={true} 
-                speaker="A"
-              />
-            ] : []
-          )}
+          ))}
         />
         
         {/* Speaker A Controls - Inside section with proper positioning */}
