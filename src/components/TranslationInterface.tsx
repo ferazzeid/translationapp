@@ -530,7 +530,6 @@ export const TranslationInterface = ({
           isListening={isListeningB}
           onStart={() => startListening("B")}
           onStop={() => stopListening("B")}
-          onRepeat={() => repeatLastMessage("B")}
           language={speakerBLanguage}
           flag={getLanguageFlag(speakerBLanguage)}
           isTop={true}
@@ -601,7 +600,6 @@ export const TranslationInterface = ({
           isListening={isListeningA}
           onStart={() => startListening("A")}
           onStop={() => stopListening("A")}
-          onRepeat={() => repeatLastMessage("A")}
           language={speakerALanguage}
           flag={getLanguageFlag(speakerALanguage)}
           isTop={false}

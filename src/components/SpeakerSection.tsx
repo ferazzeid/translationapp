@@ -8,7 +8,6 @@ interface SpeakerSectionProps {
   isListening: boolean;
   onStart: () => void;
   onStop: () => void;
-  onRepeat: () => void;
   language: string;
   flag: string;
   messages: ReactNode;
@@ -27,7 +26,6 @@ export const SpeakerSection = ({
   isListening,
   onStart,
   onStop,
-  onRepeat,
   language,
   flag,
   messages,
@@ -73,29 +71,6 @@ export const SpeakerSection = ({
         "absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center z-30",
         isActiveTurn ? "bg-transparent" : "theme-surface"
       )}>
-        {/* Right side: Repeat button with 20px margin to avoid admin button */}
-        <div className="absolute right-5 bottom-6 flex items-center">
-          <button
-            onClick={onRepeat}
-            className="min-h-[44px] min-w-[44px] h-10 w-10 rounded-full theme-button flex items-center justify-center transition-colors shadow-sm"
-            title="Repeat last message"
-          >
-            <svg 
-              className="h-4 w-4" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
-              />
-            </svg>
-          </button>
-        </div>
-
         {/* Center: Main Microphone Button - Perfectly centered */}
         <div className="flex items-center justify-center">
           <SpeakerButton
