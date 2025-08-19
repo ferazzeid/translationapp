@@ -24,11 +24,7 @@ export const useManagedMode = (initialEnabled: boolean = false): ManagedModeStat
   }, []);
 
   const switchTurn = useCallback(() => {
-    setCurrentTurn(prev => {
-      console.log('🔄 useManagedMode: switchTurn called, switching from', prev, 'to', prev === "A" ? "B" : "A");
-      const newTurn = prev === "A" ? "B" : "A";
-      return newTurn;
-    });
+    setCurrentTurn(prev => prev === "A" ? "B" : "A");
   }, []);
 
   const canSpeak = useCallback((speaker: Speaker) => {

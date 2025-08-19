@@ -38,15 +38,11 @@ export const SpeakerSection = ({
 
   return (
     <div className={cn(
-      "h-full w-full relative bg-background overflow-hidden",
-      isActiveTurn && "ring-1 ring-primary/30",
-      
+      "h-full w-full relative overflow-hidden",
+      isActiveTurn ? "" : "bg-background", // Only apply bg when not active turn
+      isActiveTurn && "ring-2 ring-green-400/60",
       className
     )}>
-      {(() => {
-        console.log(`Speaker ${speaker}: isManagedMode=${isManagedMode}, isCurrentTurn=${isCurrentTurn}, showTurnIndicator=${showTurnIndicator}`);
-        return null;
-      })()}
 
       {/* Messages area - absolutely contained, can't push anything */}
       <div className="absolute inset-0 bottom-20 sm:bottom-24 overflow-hidden">
@@ -58,7 +54,10 @@ export const SpeakerSection = ({
       </div>
 
       {/* Fixed microphone and repeat button area */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center bg-background z-30 border-t border-border">
+      <div className={cn(
+        "absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center z-30 border-t border-border",
+        isActiveTurn ? "bg-transparent" : "bg-background"
+      )}>
         {/* Container for microphone and repeat button */}
         <div className="flex items-center gap-3">
           {/* Repeat Button - Left of microphone */}

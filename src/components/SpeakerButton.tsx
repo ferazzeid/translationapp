@@ -91,19 +91,17 @@ export const SpeakerButton = ({
             isListening ? [
               "bg-red-500 text-white border-2 border-red-400",
               "hover:bg-red-500", // Prevent hover changes when recording
-              "animate-pulse scale-110" // Recording pulse
+              "scale-110" // Recording scale without strobe
             ] : isDisabled ? [
               "bg-gray-400 text-gray-200 border-2 border-gray-300",
               "cursor-not-allowed opacity-50"
             ] : isActiveInManagedMode ? [
               "bg-black text-white border-2 border-gray-700",
               "hover:bg-gray-900 hover:border-gray-600",
-              "shadow-[0_0_20px_rgba(0,0,0,0.4)] hover:shadow-[0_0_25px_rgba(0,0,0,0.6)]",
-              "animate-[pulse_1.5s_ease-in-out_infinite]"
+              "shadow-[0_0_20px_rgba(0,0,0,0.4)] hover:shadow-[0_0_25px_rgba(0,0,0,0.6)]"
             ] : [
               "bg-black text-white border-2 border-gray-700",
               "hover:bg-gray-900 hover:border-gray-600",
-              "before:absolute before:inset-0 before:rounded-full before:bg-black before:opacity-50 before:animate-[pulse_2s_ease-in-out_infinite]",
               "shadow-[0_0_20px_rgba(0,0,0,0.4)] hover:shadow-[0_0_25px_rgba(0,0,0,0.6)]"
             ]
           )}
