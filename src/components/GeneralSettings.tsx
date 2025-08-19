@@ -47,14 +47,6 @@ export const GeneralSettings = ({
       description: "Change your conversation languages",
       action: onOpenLanguageSettings,
       info: `You: ${getLanguageName(speakerALanguage)} → Other: ${getLanguageName(speakerBLanguage)}`
-    },
-    {
-      title: "Admin Settings",
-      icon: Shield,
-      description: "API keys and landing page configuration",
-      action: onOpenAdminSettings,
-      info: "Advanced settings (admin access required)",
-      isAdmin: true
     }
   ];
 
@@ -79,10 +71,7 @@ export const GeneralSettings = ({
           <Card key={section.title} className="theme-surface theme-border">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-3 text-lg">
-                <section.icon className={cn(
-                  "h-5 w-5",
-                  section.isAdmin ? "text-orange-500" : "theme-icon"
-                )} />
+                <section.icon className="h-5 w-5 theme-icon" />
                 <span className="theme-text">{section.title}</span>
               </CardTitle>
             </CardHeader>
@@ -94,12 +83,9 @@ export const GeneralSettings = ({
                 </p>
               )}
               <Button
-                variant={section.isAdmin ? "destructive" : "outline"}
+                variant="outline"
                 onClick={section.action}
-                className={cn(
-                  "w-full justify-start",
-                  section.isAdmin && "hover:bg-destructive/90"
-                )}
+                className="w-full justify-start"
                 disabled={!section.action || section.action === (() => {})}
               >
                 Configure
@@ -133,6 +119,30 @@ export const GeneralSettings = ({
                 Sign Out
               </Button>
             )}
+          </CardContent>
+        </Card>
+
+        {/* Admin Settings Section - Moved to bottom */}
+        <Card className="theme-surface theme-border">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-3 text-lg">
+              <Shield className="h-5 w-5 text-orange-500" />
+              <span className="theme-text">Admin Settings</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <p className="text-sm theme-text-muted mb-3">API keys and landing page configuration</p>
+            <p className="text-xs theme-text-muted mb-4 font-mono bg-muted/50 p-2 rounded">
+              Advanced settings (admin access required)
+            </p>
+            <Button
+              variant="destructive"
+              onClick={onOpenAdminSettings}
+              className="w-full justify-start hover:bg-destructive/90"
+              disabled={!onOpenAdminSettings || onOpenAdminSettings === (() => {})}
+            >
+              Configure
+            </Button>
           </CardContent>
         </Card>
       </div>

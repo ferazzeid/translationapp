@@ -80,7 +80,7 @@ export const SpeakerButton = ({
   const isActiveInManagedMode = isManagedMode && isMyTurn && !isListening;
   const holdTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Hold-to-record handlers
+  // Hold-to-record handlers for both mouse and touch
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     if (isDisabled || !holdToRecordMode) return;
     e.preventDefault();
@@ -90,6 +90,31 @@ export const SpeakerButton = ({
   const handlePointerUp = useCallback((e: React.PointerEvent) => {
     if (isDisabled || !holdToRecordMode) return;
     e.preventDefault();
+    onHoldEnd?.();
+  }, [isDisabled, holdToRecordMode, onHoldEnd]);
+
+  // Mobile touch handlers
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (isDisabled || !holdToRecordMode) return;
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Touch start - hold to record mode');
+    onHoldStart?.();
+  }, [isDisabled, holdToRecordMode, onHoldStart]);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (isDisabled || !holdToRecordMode) return;
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Touch end - hold to record mode');
+    onHoldEnd?.();
+  }, [isDisabled, holdToRecordMode, onHoldEnd]);
+
+  const handleTouchCancel = useCallback((e: React.TouchEvent) => {
+    if (isDisabled || !holdToRecordMode) return;
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Touch cancel - hold to record mode');
     onHoldEnd?.();
   }, [isDisabled, holdToRecordMode, onHoldEnd]);
 
@@ -139,6 +164,15 @@ export const SpeakerButton = ({
           onPointerDown={holdToRecordMode ? handlePointerDown : undefined}
           onPointerUp={holdToRecordMode ? handlePointerUp : undefined}
           onPointerLeave={holdToRecordMode ? handlePointerUp : undefined}
+          onTouchStart={holdToRecordMode ? handleTouchStart : undefined}
+          onTouchEnd={holdToRecordMode ? handleTouchEnd : undefined}
+          onTouchCancel={holdToRecordMode ? handleTouchCancel : undefined}
+          style={{ 
+            touchAction: 'none',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            WebkitTouchCallout: 'none'
+          }}
         >
           {isListening ? (
             <Square className="!h-8 !w-8 fill-current relative z-10 icon" />
