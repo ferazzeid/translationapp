@@ -287,9 +287,26 @@ export const TranslationInterface = ({
 
       if (sttError) {
         console.error('Speech-to-text error details:', sttError);
+        
+        // Extract better error message from the actual error
+        let errorMessage = "Could not understand the audio. Please try speaking more clearly.";
+        if (sttError.message) {
+          if (sttError.message.includes('Audio format not supported')) {
+            errorMessage = "Audio format issue. Please try recording again.";
+          } else if (sttError.message.includes('recording too short')) {
+            errorMessage = "Recording too short. Please speak longer.";
+          } else if (sttError.message.includes('Network error')) {
+            errorMessage = "Connection issue. Please check your internet and try again.";
+          } else if (sttError.message.includes('API key not configured')) {
+            errorMessage = "Service configuration issue. Please contact support.";
+          } else {
+            errorMessage = sttError.message;
+          }
+        }
+        
         toast({
           title: "Speech Recognition Failed",
-          description: "Could not understand the audio. Please try speaking more clearly.",
+          description: errorMessage,
           variant: "destructive"
         });
         return false;
