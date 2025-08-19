@@ -89,6 +89,8 @@ export const ManagedModeControls = ({
   if (!isEnabled) return null;
 
   const isMyTurn = currentTurn === speaker;
+  
+  console.log(`ManagedModeControls: isEnabled=${isEnabled}, currentTurn=${currentTurn}, speaker=${speaker}, isMyTurn=${isMyTurn}`);
 
   // Only show for current speaker and keep it minimal
   if (!isMyTurn) return null;

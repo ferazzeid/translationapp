@@ -43,21 +43,13 @@ export const SpeakerSection = ({
       isInactiveTurn && "opacity-70",
       className
     )}>
-      {/* Turn Indicator */}
-      {showTurnIndicator && (
-        <div className={cn(
-          "absolute top-2 left-2 right-2 z-20 text-center text-xs font-medium py-1 px-2 rounded-md",
-          isActiveTurn ? "bg-primary/20 text-primary border border-primary/30" : "bg-muted/50 text-muted-foreground"
-        )}>
-          {isActiveTurn ? `Speaker ${speaker} - Your Turn` : `Speaker ${speaker} - Waiting`}
-        </div>
-      )}
+      {(() => {
+        console.log(`Speaker ${speaker}: isManagedMode=${isManagedMode}, isCurrentTurn=${isCurrentTurn}, showTurnIndicator=${showTurnIndicator}`);
+        return null;
+      })()}
 
       {/* Messages area - absolutely contained, can't push anything */}
-      <div className={cn(
-        "absolute inset-0 bottom-20 sm:bottom-24 overflow-hidden",
-        showTurnIndicator && "top-8"
-      )}>
+      <div className="absolute inset-0 bottom-20 sm:bottom-24 overflow-hidden">
         <div className="h-full p-2 sm:p-4 overflow-y-auto flex flex-col-reverse">
           <div className="space-y-2 sm:space-y-3 min-h-0">
             {messages}
