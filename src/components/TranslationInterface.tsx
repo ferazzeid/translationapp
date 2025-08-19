@@ -65,6 +65,7 @@ export const TranslationInterface = ({
   const [activeVoiceModal, setActiveVoiceModal] = useState<"A" | "B" | null>(null);
   
   const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
   const audioRecorderA = useAudioRecorder();
   const audioRecorderB = useAudioRecorder();
@@ -381,6 +382,7 @@ export const TranslationInterface = ({
         const audioData = `data:audio/mp3;base64,${chunk}`;
         const audio = new Audio(audioData);
         audio.volume = volume;
+        currentAudioRef.current = audio;
         
         // Wait for audio to finish playing before starting next chunk
         await new Promise<void>((resolve, reject) => {
@@ -393,7 +395,17 @@ export const TranslationInterface = ({
       console.error('Error playing audio:', error);
     } finally {
       setIsPlayingAudio(false);
+      currentAudioRef.current = null;
     }
+  };
+
+  const cancelVoicePlayback = () => {
+    if (currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current.currentTime = 0;
+      currentAudioRef.current = null;
+    }
+    setIsPlayingAudio(false);
   };
 
   const clearAllMessages = () => {
@@ -568,11 +580,15 @@ export const TranslationInterface = ({
             managedMode.switchTurn();
             console.log('New turn:', managedMode.currentTurn === "A" ? "B" : "A");
           }}
+          onCancelVoice={cancelVoicePlayback}
           hasMessages={messages.length > 0}
           isManagedMode={managedMode.isEnabled}
           isProcessing={isProcessing}
           isRecording={isListeningA || isListeningB}
+          isPlayingAudio={isPlayingAudio}
           speaker={isListeningA ? "A" : isListeningB ? "B" : undefined}
+          speakerALanguage={speakerALanguage}
+          speakerBLanguage={speakerBLanguage}
         />
       </div>
 

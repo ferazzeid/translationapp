@@ -112,9 +112,9 @@ export const SpeakerStatusMessage = ({
 
   return (
     <div className={cn(
-      "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
-      "text-sm theme-text opacity-75 font-medium text-center animate-fade-in",
-      "px-3 py-1 rounded-md theme-surface/50 backdrop-blur-sm",
+      "text-xs theme-text opacity-75 font-medium text-center animate-fade-in",
+      "px-2 py-1 rounded-md theme-surface-alt/80 backdrop-blur-sm",
+      "whitespace-nowrap",
       className
     )}>
       {getStatusText()}

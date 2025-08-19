@@ -53,7 +53,7 @@ export const CentralLoadingAnimation = ({
 
   return (
     <div className={cn(
-      "flex items-center justify-center text-2xl theme-primary animate-fade-in",
+      "flex items-center justify-center text-lg theme-text animate-fade-in",
       className
     )}>
       {isRecording ? <RecordingWave /> : <ProcessingDots />}
