@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Globe, MessageCircle, Brain } from "lucide-react";
-import googlePlayButton from "@/assets/google-play-button.png";
+const googlePlayButton = "/lovable-uploads/ea99cf28-e571-4519-b377-a7d30fea7b14.png";
 const landingHeroBg = "/lovable-uploads/7d33a979-ef4a-4ab9-84af-a3cdfa66b285.png";
 
 const LandingPage = () => {
