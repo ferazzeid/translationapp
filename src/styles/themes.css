@@ -717,7 +717,6 @@
 
 .mic .icon, .mic svg { 
   color: hsl(var(--theme-mic-fg)); 
-  fill: currentColor; 
   stroke: currentColor; 
 }
 
