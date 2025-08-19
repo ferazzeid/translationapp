@@ -24,10 +24,10 @@ export const useManagedMode = (initialEnabled: boolean = false): ManagedModeStat
   }, []);
 
   const switchTurn = useCallback(() => {
-    console.log('useManagedMode: switchTurn called, current turn:', currentTurn);
+    console.log('🔄 useManagedMode: switchTurn called, current turn:', currentTurn);
     setCurrentTurn(prev => {
       const newTurn = prev === "A" ? "B" : "A";
-      console.log('useManagedMode: switching from', prev, 'to', newTurn);
+      console.log('🔄 useManagedMode: switching from', prev, 'to', newTurn);
       return newTurn;
     });
   }, [currentTurn]);

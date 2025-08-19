@@ -159,13 +159,11 @@ export const TranslationInterface = ({
   }, []);
 
   const startListening = async (speaker: "A" | "B") => {
-    console.log('startListening called for speaker:', speaker);
-    console.log('managedMode.canSpeak(' + speaker + '):', managedMode.canSpeak(speaker));
-    console.log('Current turn:', managedMode.currentTurn, 'isEnabled:', managedMode.isEnabled);
+    console.log('🎤 START LISTENING:', speaker, 'managedMode:', managedMode.isEnabled, 'currentTurn:', managedMode.currentTurn);
     
     // Check if speaker can speak in managed mode
     if (!managedMode.canSpeak(speaker)) {
-      console.log('Speaker cannot speak, showing toast');
+      console.log('❌ CANNOT SPEAK - not their turn');
       toast({
         title: "Turn Management",
         description: `It's not Speaker ${speaker}'s turn to speak`,
@@ -204,27 +202,24 @@ export const TranslationInterface = ({
   };
 
   const stopListening = async (speaker: "A" | "B") => {
-    console.log('stopListening called for speaker:', speaker);
-    console.log('Recorder A isRecording:', audioRecorderA.isRecording);
-    console.log('Recorder B isRecording:', audioRecorderB.isRecording);
+    console.log('🛑 STOP LISTENING:', speaker);
     
     try {
       let audioData: string | null = null;
       
       if (speaker === "A" && audioRecorderA.isRecording) {
-        console.log('Stopping recorder A');
+        console.log('📼 Stopping recorder A');
         audioData = await audioRecorderA.stopRecording();
       } else if (speaker === "B" && audioRecorderB.isRecording) {
-        console.log('Stopping recorder B');
+        console.log('📼 Stopping recorder B');
         audioData = await audioRecorderB.stopRecording();
       } else {
-        console.log('No active recorder found for speaker:', speaker);
+        console.log('⚠️ No active recorder found for speaker:', speaker);
       }
 
-      console.log('Audio data result:', audioData ? `YES (${audioData.length} chars)` : 'NO');
+      console.log('🎵 Audio data result:', audioData ? `YES (${audioData.length} chars)` : 'NO');
 
       // Always reset the listening state immediately after stopping recording
-      // This prevents stuck button states
       if (speaker === "A") {
         setIsListeningA(false);
       } else {
@@ -232,15 +227,18 @@ export const TranslationInterface = ({
       }
 
       if (audioData) {
-        console.log('Processing audio data for speaker:', speaker);
+        console.log('🔄 Processing audio data for speaker:', speaker);
         await processAudioData(audioData, speaker);
+        console.log('✅ Audio processing completed successfully');
         
         // Switch turn in managed mode after successful processing
         if (managedMode.isEnabled) {
-          console.log('Switching turn from', managedMode.currentTurn, 'in managed mode');
+          console.log('🔄 SWITCHING TURN: from', managedMode.currentTurn, 'to', managedMode.currentTurn === "A" ? "B" : "A");
           managedMode.switchTurn();
-          console.log('Turn switched to:', managedMode.currentTurn);
+          console.log('✅ Turn switched to:', managedMode.currentTurn);
         }
+      } else {
+        console.log('⚠️ No audio data to process, skipping turn switch');
       }
     } catch (error) {
       console.error('Error stopping recording:', error);
@@ -256,7 +254,7 @@ export const TranslationInterface = ({
   };
 
   const processAudioData = async (audioData: string, speaker: "A" | "B") => {
-    console.log('Processing audio data for speaker:', speaker);
+    console.log('🔍 PROCESSING AUDIO:', speaker);
     
     setIsProcessing(true);
     
@@ -265,12 +263,11 @@ export const TranslationInterface = ({
       const originalLang = isFromA ? speakerALanguage : speakerBLanguage;
       const targetLang = isFromA ? speakerBLanguage : speakerALanguage;
 
-      console.log('Languages:', { originalLang, targetLang });
+      console.log('🌍 Languages:', { originalLang, targetLang });
 
       // Step 1: Speech to text using Whisper API
-      console.log('Step 1: Calling speech-to-text...');
-      console.log('Audio data length:', audioData ? audioData.length : 'NO DATA');
-      console.log('Original language:', originalLang);
+      console.log('🎤➡️📝 Step 1: Calling speech-to-text...');
+      console.log('📊 Audio data length:', audioData ? audioData.length : 'NO DATA');
       
       const { data: sttResponse, error: sttError } = await supabase.functions.invoke('speech-to-text', {
         body: {
@@ -278,24 +275,24 @@ export const TranslationInterface = ({
           language: originalLang
         }
       }).catch(networkError => {
-        console.error('Network error calling speech-to-text:', networkError);
+        console.error('🌐❌ Network error calling speech-to-text:', networkError);
         return { data: null, error: { message: `Network error: ${networkError.message}` } };
       });
 
-      console.log('Speech-to-text response:', { sttResponse, sttError });
+      console.log('🎤➡️📝 Speech-to-text response:', { sttResponse, sttError });
 
       if (sttError) {
-        console.error('Speech-to-text error details:', sttError);
+        console.error('❌ Speech-to-text error details:', sttError);
         throw new Error(`Speech-to-text failed: ${sttError.message || 'Unknown error'}`);
       }
 
       if (!sttResponse?.text) {
-        console.error('No text returned from speech-to-text');
+        console.error('❌ No text returned from speech-to-text');
         throw new Error('Failed to transcribe audio - no text returned');
       }
 
       const originalText = sttResponse.text.trim();
-      console.log('Transcribed text:', originalText);
+      console.log('📝 Transcribed text:', originalText);
 
       // Step 2: Translate text using GPT-4o
       console.log('Step 2: Calling translate-text...');
@@ -451,13 +448,7 @@ export const TranslationInterface = ({
         )}
         style={{
           backgroundColor: managedMode.isEnabled && managedMode.currentTurn === "B" 
-            ? turnIndicatorColor === "green" ? "#dcfce7" 
-            : turnIndicatorColor === "blue" ? "#dbeafe"
-            : turnIndicatorColor === "purple" ? "#f3e8ff"
-            : turnIndicatorColor === "yellow" ? "#fef3c7"
-            : turnIndicatorColor === "pink" ? "#fce7f3"
-            : turnIndicatorColor === "orange" ? "#fed7aa"
-            : "#dcfce7"
+            ? "#dcfce7"  // Light green when Speaker B's turn
             : "transparent"
         }}
       >
@@ -525,9 +516,10 @@ export const TranslationInterface = ({
         isProcessing={isProcessing}
         isManagedMode={managedMode.isEnabled}
         onSwitchTurn={() => {
-          console.log('Manual turn switch clicked, current turn:', managedMode.currentTurn);
+          console.log('🔄 MANUAL TURN SWITCH clicked, current turn:', managedMode.currentTurn);
+          const oldTurn = managedMode.currentTurn;
           managedMode.switchTurn();
-          console.log('Manual turn switched to:', managedMode.currentTurn);
+          console.log('🔄 Manual turn switched from', oldTurn, 'to:', managedMode.currentTurn);
         }}
       />
         
@@ -544,13 +536,7 @@ export const TranslationInterface = ({
         )}
         style={{
           backgroundColor: managedMode.isEnabled && managedMode.currentTurn === "A" 
-            ? turnIndicatorColor === "green" ? "#dcfce7" 
-            : turnIndicatorColor === "blue" ? "#dbeafe"
-            : turnIndicatorColor === "purple" ? "#f3e8ff"
-            : turnIndicatorColor === "yellow" ? "#fef3c7"
-            : turnIndicatorColor === "pink" ? "#fce7f3"
-            : turnIndicatorColor === "orange" ? "#fed7aa"
-            : "#dcfce7"
+            ? "#dcfce7"  // Light green when Speaker A's turn
             : "transparent"
         }}
       >
