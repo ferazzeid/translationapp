@@ -55,6 +55,8 @@ export const TranslationInterface = ({
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [selectedVoice, setSelectedVoice] = useState("alloy");
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+  const [lastTurnSwitchTime, setLastTurnSwitchTime] = useState<number>(0);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isSpeakerEnabled, setIsSpeakerEnabled] = useState(true);
@@ -159,6 +161,11 @@ export const TranslationInterface = ({
   }, []);
 
   const startListening = async (speaker: "A" | "B") => {
+    // Prevent starting if audio is currently playing (to avoid feedback)
+    if (isPlayingAudio) {
+      return;
+    }
+
     // Check if speaker can speak in managed mode
     if (!managedMode.canSpeak(speaker)) {
       toast({
@@ -218,9 +225,16 @@ export const TranslationInterface = ({
       if (audioData) {
         await processAudioData(audioData, speaker);
         
-        // Switch turn in managed mode after successful processing
+        // Switch turn in managed mode after successful processing with cooldown
         if (managedMode.isEnabled) {
-          managedMode.switchTurn();
+          const now = Date.now();
+          const timeSinceLastSwitch = now - lastTurnSwitchTime;
+          
+          // Only switch if enough time has passed (3 seconds cooldown)
+          if (timeSinceLastSwitch > 3000) {
+            managedMode.switchTurn();
+            setLastTurnSwitchTime(now);
+          }
         }
       }
     } catch (error) {
@@ -308,7 +322,7 @@ export const TranslationInterface = ({
       });
 
       if (!ttsError && ttsResponse?.audioData) {
-        playAudio(ttsResponse.audioData);
+        await playAudio(ttsResponse.audioData);
       } else if (ttsError) {
         console.warn('Text-to-speech failed:', ttsError);
       }
@@ -325,20 +339,29 @@ export const TranslationInterface = ({
     }
   };
 
-  const playAudio = (audioBase64: string) => {
+  const playAudio = async (audioBase64: string) => {
     if (!isSpeakerEnabled) {
       console.log('Speaker is disabled, skipping audio playback');
       return;
     }
     
     try {
-      const audio = new Audio(`data:audio/mp3;base64,${audioBase64}`);
+      setIsPlayingAudio(true);
+      
+      const audioData = `data:audio/wav;base64,${audioBase64}`;
+      const audio = new Audio(audioData);
       audio.volume = volume;
-      audio.play().catch(error => {
-        console.error('Error playing audio:', error);
+      
+      // Wait for audio to finish playing
+      await new Promise((resolve, reject) => {
+        audio.onended = resolve;
+        audio.onerror = reject;
+        audio.play();
       });
     } catch (error) {
-      console.error('Error creating audio:', error);
+      console.error('Error playing audio:', error);
+    } finally {
+      setIsPlayingAudio(false);
     }
   };
 
@@ -364,7 +387,7 @@ export const TranslationInterface = ({
         });
 
         if (!ttsError && ttsResponse?.audioData) {
-          playAudio(ttsResponse.audioData);
+          await playAudio(ttsResponse.audioData);
           
           // Show a visual indicator that the message was repeated
           toast({
