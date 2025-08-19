@@ -3,6 +3,8 @@ import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { usePWA } from "@/hooks/usePWA";
 import { SpeechBubble } from "./SpeechBubble";
 import { CentralVolumeControl } from "./CentralVolumeControl";
 import { HorizontalVolumeControl } from "./HorizontalVolumeControl";
@@ -60,6 +62,11 @@ export const TranslationInterface = ({
   const { toast } = useToast();
   const audioRecorderA = useAudioRecorder();
   const audioRecorderB = useAudioRecorder();
+  const isMobile = useIsMobile();
+  const { isStandalone } = usePWA();
+  
+  // Determine if we're on a real mobile device (not desktop with mobile frame)
+  const isRealMobile = isMobile || isStandalone;
 
   // Language code to name mapping
   const getLanguageName = (code: string) => {
@@ -328,9 +335,15 @@ export const TranslationInterface = ({
   };
 
   return (
-    <div className="h-full w-full flex flex-col bg-background overflow-hidden">
+    <div className={cn(
+      "flex flex-col bg-background overflow-hidden",
+      isRealMobile ? "h-[100dvh] w-full" : "h-full w-full"
+    )}>
       {/* Speaker B Half - Top (Rotated 180°) - Other Person */}
-      <div className="h-1/2 rotate-180 relative">
+      <div className={cn(
+        "rotate-180 relative",
+        isRealMobile ? "h-[calc(50dvh-2.5rem)]" : "h-1/2"
+      )}>
         <SpeakerSection
           speaker="B"
           isListening={isListeningB}
@@ -339,6 +352,7 @@ export const TranslationInterface = ({
           language={speakerBLanguage}
           flag={getLanguageFlag(speakerBLanguage)}
           isTop={true}
+          className={isRealMobile ? "h-full" : ""}
           messages={getRecentMessages("B").map((message, index) => (
             <SpeechBubble
               key={`${message.id}-${index}`}
@@ -371,9 +385,12 @@ export const TranslationInterface = ({
       </div>
 
       {/* Central Controls Strip */}
-      <div className="flex-shrink-0 h-20 bg-background z-30 flex items-center justify-center relative">
+      <div className={cn(
+        "flex-shrink-0 bg-background z-30 flex items-center justify-center relative border-t border-b border-border",
+        isRealMobile ? "h-20" : "h-20"
+      )}>
         {/* Connection Status - Left Side */}
-        <div className="absolute left-4 top-1/2 -translate-y-1/2">
+        <div className="absolute left-2 top-1/2 -translate-y-1/2">
           <CentralVolumeControl isOnline={isOnline} />
         </div>
         
@@ -389,7 +406,10 @@ export const TranslationInterface = ({
       </div>
 
       {/* Speaker A Half - Bottom (Normal) - You */}
-      <div className="h-1/2 relative">
+      <div className={cn(
+        "relative",
+        isRealMobile ? "h-[calc(50dvh-2.5rem)]" : "h-1/2"
+      )}>
         <SpeakerSection
           speaker="A"
           isListening={isListeningA}
@@ -398,6 +418,7 @@ export const TranslationInterface = ({
           language={speakerALanguage}
           flag={getLanguageFlag(speakerALanguage)}
           isTop={false}
+          className={isRealMobile ? "h-full" : ""}
           messages={getRecentMessages("A").map((message, index) => (
             <SpeechBubble
               key={`${message.id}-${index}`}

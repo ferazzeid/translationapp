@@ -29,16 +29,16 @@ export const SpeakerSection = ({
   return (
     <div className={cn("h-full w-full relative bg-background overflow-hidden", className)}>
       {/* Messages area - absolutely contained, can't push anything */}
-      <div className="absolute inset-0 bottom-24 overflow-hidden">
-        <div className="h-full p-4 overflow-y-auto flex flex-col-reverse">
-          <div className="space-y-3 min-h-0">
+      <div className="absolute inset-0 bottom-20 sm:bottom-24 overflow-hidden">
+        <div className="h-full p-2 sm:p-4 overflow-y-auto flex flex-col-reverse">
+          <div className="space-y-2 sm:space-y-3 min-h-0">
             {messages}
           </div>
         </div>
       </div>
 
       {/* Fixed microphone button - completely independent */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 flex items-center justify-center bg-background z-30">
+      <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center bg-background z-30 border-t border-border">
         <SpeakerButton
           speaker={speaker}
           isListening={isListening}
