@@ -451,8 +451,18 @@ export const TranslationInterface = ({
           <CentralVolumeControl isOnline={isOnline} />
         </div>
         
-        {/* Wake Lock Indicator - Left Side */}
-        <div className="absolute left-12 top-1/2 -translate-y-1/2">
+        {/* Volume Control - Center */}
+        <HorizontalVolumeControl
+          volume={volume}
+          onVolumeChange={setVolume}
+          isSpeakerEnabled={isSpeakerEnabled}
+          onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
+          onClearMessages={clearAllMessages}
+          isProcessing={isProcessing}
+        />
+        
+        {/* Wake Lock Indicator - Right Side */}
+        <div className="absolute right-12 top-1/2 -translate-y-1/2">
           <WakeLockIndicator
             isActive={wakeLock.isActive}
             isSupported={wakeLock.isSupported}
@@ -466,17 +476,7 @@ export const TranslationInterface = ({
           />
         </div>
         
-        {/* Volume Control - Center */}
-        <HorizontalVolumeControl
-          volume={volume}
-          onVolumeChange={setVolume}
-          isSpeakerEnabled={isSpeakerEnabled}
-          onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
-          onClearMessages={clearAllMessages}
-          isProcessing={isProcessing}
-        />
-        
-        {/* Managed Mode Controls - Right Side */}
+        {/* Managed Mode Controls - Far Right */}
         <div className="absolute right-2 top-1/2 -translate-y-1/2">
           <ManagedModeControls
             isEnabled={managedMode.isEnabled}
