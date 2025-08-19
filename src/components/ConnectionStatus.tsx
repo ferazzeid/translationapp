@@ -13,7 +13,7 @@ export const ConnectionStatus = ({ isOnline }: ConnectionStatusProps) => {
       <ConnectionIcon 
         className={cn(
           "h-4 w-4",
-          isOnline ? "text-green-500" : "text-red-500"
+          isOnline ? "theme-online" : "theme-offline"
         )} 
       />
     </div>

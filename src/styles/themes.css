@@ -20,6 +20,11 @@
   --theme-danger: 4 86% 60%; /* #FF3B30 */
   --theme-focus-ring: 220 100% 80%; /* #9DBEFF */
   --theme-divider: 0 0% 90%; /* #E6E6E6 */
+  --theme-online: 152 69% 40%; /* Success green */
+  --theme-offline: 4 86% 60%; /* Danger red */
+  --theme-active-ring: 152 69% 40%; /* Green ring for active turn */
+  --theme-frame-bg: 220 9% 11%; /* Dark gray for mobile frame */
+  --theme-frame-border: 220 9% 16%; /* Darker gray for frame border */
   --theme-radius-lg: 28px;
   --theme-radius-md: 16px;
   --theme-shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.06);
@@ -89,7 +94,12 @@
   --theme-success: 152 69% 40%;
   --theme-danger: 4 86% 60%;
   --theme-focus-ring: 220 100% 80%;
-  --theme-divider: 0 0% 90%;
+  --theme-divider: 180 20% 88%;
+  --theme-online: 152 69% 40%; /* Success green */
+  --theme-offline: 4 86% 60%; /* Danger red */
+  --theme-active-ring: 180 100% 36%; /* Aqua ring for active turn */
+  --theme-frame-bg: 200 25% 15%; /* Dark teal frame */
+  --theme-frame-border: 200 25% 20%; /* Teal frame border */
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -120,8 +130,13 @@
   /* Status colors */
   --theme-success: 152 69% 40%;
   --theme-danger: 4 86% 60%;
-  --theme-focus-ring: 220 100% 80%;
-  --theme-divider: 0 0% 90%;
+  --theme-focus-ring: 265 80% 75%;
+  --theme-divider: 265 15% 88%;
+  --theme-online: 152 69% 40%; /* Success green */
+  --theme-offline: 4 86% 60%; /* Danger red */
+  --theme-active-ring: 265 100% 48%; /* Violet ring for active turn */
+  --theme-frame-bg: 265 30% 15%; /* Dark purple frame */
+  --theme-frame-border: 265 30% 20%; /* Purple frame border */
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -205,4 +220,24 @@
 
 .theme-divider {
   border-color: hsl(var(--theme-divider, 0 0% 90%));
+}
+
+.theme-online {
+  color: hsl(var(--theme-online, 152 69% 40%));
+}
+
+.theme-offline {
+  color: hsl(var(--theme-offline, 4 86% 60%));
+}
+
+.theme-frame-bg {
+  background-color: hsl(var(--theme-frame-bg, 220 9% 11%));
+}
+
+.theme-frame-border {
+  border-color: hsl(var(--theme-frame-border, 220 9% 16%));
+}
+
+.theme-active-ring {
+  --tw-ring-color: hsl(var(--theme-active-ring, 152 69% 40%) / 0.6);
 }

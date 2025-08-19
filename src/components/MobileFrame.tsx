@@ -8,14 +8,14 @@ interface MobileFrameProps {
 
 export const MobileFrame = ({ children, className }: MobileFrameProps) => {
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+    <div className="min-h-screen theme-frame-bg flex items-center justify-center p-4">
       <div className={cn(
         "relative",
         "w-full max-w-sm", // Mobile width constraint
         "h-[800px]", // Fixed mobile height
         "bg-background",
         "rounded-[2.5rem]", // Large border radius for phone-like appearance
-        "border-8 border-gray-800", // Phone bezel - uniform all around
+        "border-8 theme-frame-border", // Phone bezel - uniform all around
         "shadow-2xl",
         "overflow-hidden",
         "mx-auto",

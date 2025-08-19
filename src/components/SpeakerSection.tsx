@@ -46,7 +46,7 @@ export const SpeakerSection = ({
     <div className={cn(
       "h-full w-full relative overflow-hidden",
       isActiveTurn ? "" : "theme-surface", // Only apply bg when not active turn
-      isActiveTurn && "ring-2 ring-green-500/60",
+      isActiveTurn && "ring-2 theme-active-ring",
       className
     )}>
 
