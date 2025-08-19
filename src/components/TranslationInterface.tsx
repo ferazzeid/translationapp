@@ -461,22 +461,7 @@ export const TranslationInterface = ({
           isProcessing={isProcessing}
         />
         
-        {/* Wake Lock Indicator - Right Side */}
-        <div className="absolute right-12 top-1/2 -translate-y-1/2">
-          <WakeLockIndicator
-            isActive={wakeLock.isActive}
-            isSupported={wakeLock.isSupported}
-            onToggle={() => {
-              if (wakeLock.isActive) {
-                wakeLock.release();
-              } else {
-                wakeLock.request();
-              }
-            }}
-          />
-        </div>
-        
-        {/* Managed Mode Controls - Far Right */}
+        {/* Managed Mode Controls - Right Side */}
         <div className="absolute right-2 top-1/2 -translate-y-1/2">
           <ManagedModeControls
             isEnabled={managedMode.isEnabled}
