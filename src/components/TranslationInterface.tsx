@@ -22,7 +22,6 @@ import { ProcessingIndicator } from "./ProcessingIndicator";
 import { WakeLockIndicator } from "./WakeLockIndicator";
 import { ManagedModeControls } from "./ManagedModeControls";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
 
 interface Message {
   id: string;
@@ -541,21 +540,6 @@ export const TranslationInterface = ({
 
       {/* Language Settings - Bottom Right */}
       <LanguageSettings onOpenSettings={() => setIsLanguageModalOpen(true)} />
-      
-      {/* Sign Out Button - Top Right */}
-      {onSignOut && (
-        <div className="absolute top-4 right-4 z-40">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onSignOut}
-            className="bg-background/80 backdrop-blur-sm"
-          >
-            <LogOut className="h-4 w-4 mr-1" />
-            Sign Out
-          </Button>
-        </div>
-      )}
 
       {/* Modals - Outside rotated areas */}
       <VoiceSelectionModal

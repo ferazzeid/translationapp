@@ -61,7 +61,7 @@ All colors MUST be HSL for maximum compatibility and theming.
 
     /* Translation app specific colors */
     --speaker-a: 213 94% 35%;  /* Primary blue for speaker A */
-    --speaker-b: 142 71% 45%;  /* Accent green for speaker B */
+    --speaker-b: 213 94% 35%;  /* Also primary blue for speaker B to avoid confusion */
     --listening-glow: 213 94% 55%;
     --connection-good: 142 71% 45%;
     --connection-poor: 45 93% 47%;
