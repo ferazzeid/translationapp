@@ -226,7 +226,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen theme-bg">
+    <div className="min-h-screen theme-bg pwa-app-interface">
       {renderCurrentView()}
     </div>
   );
