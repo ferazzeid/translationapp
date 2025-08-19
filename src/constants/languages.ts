@@ -68,76 +68,17 @@ export const LANGUAGES = [
   "Welsh"
 ];
 
+// PROTECTED FUNCTION - DO NOT MODIFY
+// This language mapping is critical for proper speech-to-text and translation
+// Any changes can break OpenAI API integration and language detection
 export const getLanguageCode = (language: string): string => {
-  const languageMap: { [key: string]: string } = {
-    "Afrikaans": "AF",
-    "Albanian": "SQ", 
-    "Arabic": "AR",
-    "Armenian": "HY",
-    "Azerbaijani": "AZ",
-    "Basque": "EU",
-    "Belarusian": "BE",
-    "Bengali": "BN",
-    "Bosnian": "BS",
-    "Bulgarian": "BG",
-    "Catalan": "CA",
-    "Chinese (Simplified)": "ZH",
-    "Chinese (Traditional)": "ZH",
-    "Croatian": "HR",
-    "Czech": "CS",
-    "Danish": "DA",
-    "Dutch": "NL",
-    "English": "EN",
-    "Estonian": "ET",
-    "Filipino": "FI",
-    "Finnish": "FI",
-    "French": "FR",
-    "Galician": "GL",
-    "Georgian": "KA",
-    "German": "DE",
-    "Greek": "EL",
-    "Gujarati": "GU",
-    "Hebrew": "HE",
-    "Hindi": "HI",
-    "Hungarian": "HU",
-    "Icelandic": "IS",
-    "Indonesian": "ID",
-    "Irish": "GA",
-    "Italian": "IT",
-    "Japanese": "JA",
-    "Kannada": "KN",
-    "Kazakh": "KK",
-    "Korean": "KO",
-    "Latvian": "LV",
-    "Lithuanian": "LT",
-    "Luxembourgish": "LB",
-    "Macedonian": "MK",
-    "Malay": "MS",
-    "Malayalam": "ML",
-    "Maltese": "MT",
-    "Marathi": "MR",
-    "Norwegian": "NO",
-    "Persian": "FA",
-    "Polish": "PL",
-    "Portuguese": "PT",
-    "Punjabi": "PA",
-    "Romanian": "RO",
-    "Russian": "RU",
-    "Serbian": "SR",
-    "Slovak": "SK",
-    "Slovenian": "SL",
-    "Spanish": "ES",
-    "Swahili": "SW",
-    "Swedish": "SV",
-    "Tamil": "TA",
-    "Telugu": "TE",
-    "Thai": "TH",
-    "Turkish": "TR",
-    "Ukrainian": "UK",
-    "Urdu": "UR",
-    "Vietnamese": "VI",
-    "Welsh": "CY"
-  };
+  const { PROTECTED_LANGUAGE_MAPPING } = require('@/constants/protected');
   
-  return languageMap[language] || "EN";
+  // Validate the mapping exists and hasn't been corrupted
+  if (!PROTECTED_LANGUAGE_MAPPING[language as keyof typeof PROTECTED_LANGUAGE_MAPPING]) {
+    console.warn(`Language code not found for: ${language}, using EN as fallback`);
+    return "EN";
+  }
+  
+  return PROTECTED_LANGUAGE_MAPPING[language as keyof typeof PROTECTED_LANGUAGE_MAPPING] || "EN";
 };

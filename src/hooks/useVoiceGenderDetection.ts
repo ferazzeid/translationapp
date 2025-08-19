@@ -1,3 +1,6 @@
+// PROTECTED HOOK - Critical for voice processing stability
+// This hook manages voice gender detection and voice selection
+// DO NOT MODIFY without testing audio processing functionality
 import { useState, useCallback } from 'react';
 
 export interface VoiceGenderResult {
@@ -59,17 +62,20 @@ export const useVoiceGenderDetection = () => {
     }
   }, []);
 
+  // PROTECTED FUNCTION - DO NOT MODIFY
+  // Returns deterministic voice choices to prevent random assignment issues
+  // Male: "onyx", Female: "alloy" as specifically requested by user
   const getDefaultVoiceForGender = useCallback((gender: 'male' | 'female' | 'unknown'): string => {
-    const maleVoices = ['echo', 'fable', 'onyx'];
-    const femaleVoices = ['alloy', 'nova', 'shimmer'];
+    // Import constants synchronously to avoid async issues
+    const { PROTECTED_VOICE_DEFAULTS } = require('@/constants/protected');
     
     switch (gender) {
       case 'male':
-        return maleVoices[Math.floor(Math.random() * maleVoices.length)];
+        return PROTECTED_VOICE_DEFAULTS.MALE; // "onyx"
       case 'female':
-        return femaleVoices[Math.floor(Math.random() * femaleVoices.length)];
+        return PROTECTED_VOICE_DEFAULTS.FEMALE; // "alloy"
       default:
-        return 'alloy'; // Default fallback
+        return PROTECTED_VOICE_DEFAULTS.FALLBACK; // "alloy"
     }
   }, []);
 
