@@ -11,7 +11,7 @@ import { SpeechBubble } from "./SpeechBubble";
 import { MidSectionControls } from "./MidSectionControls";
 import { AdminControls } from "./AdminControls";
 import { LanguageSettings } from "./LanguageSettings";
-import { ConnectionStatus } from "./ConnectionStatus";
+
 import { SpeakerButton } from "./SpeakerButton";
 import { SpeakerControls } from "./SpeakerControls";
 import { SpeakerSection } from "./SpeakerSection";

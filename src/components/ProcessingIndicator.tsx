@@ -36,7 +36,7 @@ export const ProcessingIndicator = ({
   
   if (!isActive) return null;
 
-  // Position based on speaker
+  // Position based on speaker (centered per half)
   const isBottomHalf = speaker === "A";
   
   return (
@@ -44,11 +44,11 @@ export const ProcessingIndicator = ({
       className={cn(
         "fixed left-1/2 -translate-x-1/2 z-50 pointer-events-none",
         isBottomHalf 
-          ? "top-1/2 translate-y-4" // 16px below central divider
-          : "top-1/2 -translate-y-10" // 16px above central divider
+          ? "top-3/4" // Center of bottom half
+          : "top-1/4" // Center of top half
       )}
     >
-      <div className="h-6 flex items-center">
+      <div className="h-6 flex items-center justify-center">
         <WaveformBars />
       </div>
     </div>

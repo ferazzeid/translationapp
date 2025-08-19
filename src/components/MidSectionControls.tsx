@@ -22,9 +22,9 @@ export const MidSectionControls = ({
 }: MidSectionControlsProps) => {
   return (
     <div className="w-full h-full flex items-center justify-between px-5">
-      {/* Left: Volume Slider Extended */}
-      <div className="flex items-center justify-start w-1/2">
-        <div className="flex items-center gap-3 w-full max-w-md">
+      {/* Left: Extended Volume Slider (no connection indicators) */}
+      <div className="flex items-center justify-start flex-1">
+        <div className="flex items-center gap-3 w-full max-w-lg">
           <Volume2 className="h-4 w-4 theme-text flex-shrink-0" />
           <div className="flex-1">
             <Slider
@@ -38,29 +38,29 @@ export const MidSectionControls = ({
         </div>
       </div>
 
-      {/* Right: Pass Turn and Wipe Buttons */}
-      <div className="flex items-center justify-end w-1/2">
+      {/* Right: Action Buttons with Equal Spacing */}
+      <div className="flex items-center justify-end">
         <div className="flex items-center gap-4">
-           {/* Pass Turn Button - Themed Action Strong */}
+           {/* Pass Turn Button */}
            {isManagedMode && (
              <Button
-               variant="outline"
+               variant="ghost"
                size="icon"
                onClick={onPassTurn}
-               className="h-12 w-12 rounded-full theme-action-strong hover:opacity-90 transition-all duration-200"
+               className="min-h-[44px] min-w-[44px] h-12 w-12 rounded-full theme-action-strong hover:opacity-90 transition-all duration-200"
                title="Pass turn to other speaker"
              >
                <ArrowUpDown className="h-6 w-6" />
              </Button>
            )}
 
-           {/* Wipe Button - Themed Action Strong */}
+           {/* Wipe Button */}
            <Button
-             variant="outline"
+             variant="ghost"
              size="icon"
              onClick={onWipeMessages}
              disabled={!hasMessages}
-             className="h-12 w-12 rounded-full theme-action-strong hover:opacity-90 disabled:opacity-50 transition-all duration-200"
+             className="min-h-[44px] min-w-[44px] h-12 w-12 rounded-full theme-action-strong hover:opacity-90 disabled:opacity-50 transition-all duration-200"
              title="Clear all messages"
            >
              <Eraser className="h-6 w-6" />

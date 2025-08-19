@@ -19,6 +19,7 @@
   --theme-success: 18 183 106; /* #12B76A */
   --theme-danger: 255 59 48; /* #FF3B30 */
   --theme-focus-ring: 157 190 255; /* #9DBEFF */
+  --theme-divider: 230 230 230; /* #E6E6E6 */
   --theme-radius-lg: 28px;
   --theme-radius-md: 16px;
   --theme-shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.06);
@@ -56,6 +57,7 @@
   --theme-success: 18 183 106; /* #12B76A */
   --theme-danger: 255 59 48; /* #FF3B30 */
   --theme-focus-ring: 157 190 255; /* #9DBEFF */
+  --theme-divider: 230 230 230; /* #E6E6E6 */
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -87,6 +89,7 @@
   --theme-success: 18 183 106;
   --theme-danger: 255 59 48;
   --theme-focus-ring: 157 190 255;
+  --theme-divider: 230 230 230;
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -118,6 +121,7 @@
   --theme-success: 18 183 106;
   --theme-danger: 255 59 48;
   --theme-focus-ring: 157 190 255;
+  --theme-divider: 230 230 230;
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -178,4 +182,8 @@
 .theme-primary-weak { 
   background-color: hsl(var(--theme-primary-weak)); 
   color: hsl(var(--theme-text)); 
+}
+
+.theme-divider {
+  border-color: hsl(var(--theme-divider));
 }

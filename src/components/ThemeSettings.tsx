@@ -126,7 +126,7 @@ export const ThemeSettings = () => {
               {/* Action button */}
               <Button
                 size="sm"
-                className="w-full"
+                className="w-full min-h-[44px]"
                 onClick={() => handleApply(option.name)}
                 disabled={theme === option.name}
               >
@@ -137,9 +137,10 @@ export const ThemeSettings = () => {
         ))}
       </div>
 
-      <div className="pt-4 border-t">
+      <div className="pt-4 border-t theme-divider">
         <Button 
-          variant="outline" 
+          variant="ghost" 
+          className="min-h-[44px] theme-button"
           onClick={() => handleApply('neo-light')}
           disabled={theme === 'neo-light'}
         >

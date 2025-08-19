@@ -119,12 +119,12 @@ export const SpeakerButton = ({
           variant="ghost"
           disabled={isDisabled}
           className={cn(
-            "h-20 w-20 rounded-full transition-all duration-300 relative overflow-hidden",
+            "min-h-[44px] min-w-[44px] h-20 w-20 rounded-full transition-all duration-300 relative overflow-hidden",
             !isDisabled && "hover:scale-105",
             isListening ? [
               "theme-mic theme-mic-glow",
-              "hover:bg-[hsl(var(--theme-mic-bg))]", // Prevent hover changes when recording
-              "scale-110" // Recording scale without strobe
+              "hover:bg-[hsl(var(--theme-mic-bg))]",
+              "scale-110"
             ] : isDisabled ? [
               "bg-gray-400 text-gray-200 border-2 border-gray-300",
               "cursor-not-allowed opacity-50"
@@ -133,7 +133,7 @@ export const SpeakerButton = ({
               "hover:opacity-90",
               "shadow-[0_0_20px_hsl(var(--theme-mic-bg)/0.4)] hover:shadow-[0_0_25px_hsl(var(--theme-mic-bg)/0.6)]"
             ] : [
-              "theme-button border-2",
+              "theme-button",
               "shadow-[0_0_20px_hsl(var(--theme-border)/0.3)] hover:shadow-[0_0_25px_hsl(var(--theme-border)/0.5)]"
             ]
           )}

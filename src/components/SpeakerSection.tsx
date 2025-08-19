@@ -54,8 +54,8 @@ export const SpeakerSection = ({
 
       {/* Messages area with language indicator */}
       <div className="absolute inset-0 bottom-20 sm:bottom-24 overflow-hidden">
-        {/* Language Indicator - Top-left corner of message area */}
-        <div className="absolute top-2 left-5 z-40 theme-language-chip backdrop-blur-sm border theme-border rounded px-2 py-1">
+        {/* Language Indicator - 20px margin from left */}
+        <div className="absolute top-2 left-5 z-40 theme-language-chip backdrop-blur-sm border theme-divider rounded px-2 py-1">
           <span className="text-xs font-medium">
             {language.toUpperCase()}
           </span>
@@ -73,11 +73,11 @@ export const SpeakerSection = ({
         "absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center z-30",
         isActiveTurn ? "bg-transparent" : "theme-surface"
       )}>
-        {/* Left side: Repeat button aligned with other control buttons */}
+        {/* Left side: Repeat button with 20px margin */}
         <div className="absolute left-5 bottom-6 flex items-center">
           <button
             onClick={onRepeat}
-            className="h-10 w-10 rounded-full theme-button flex items-center justify-center transition-colors"
+            className="min-h-[44px] min-w-[44px] h-10 w-10 rounded-full theme-button flex items-center justify-center transition-colors shadow-sm"
             title="Repeat last message"
           >
             <svg 
