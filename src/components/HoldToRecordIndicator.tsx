@@ -13,10 +13,10 @@ export const HoldToRecordIndicator = ({
 }: HoldToRecordIndicatorProps) => {
   return (
     <div className={cn("absolute inset-0 rounded-full pointer-events-none", className)}>
-      {/* Progress Ring */}
+      {/* Progress Ring - Show when progress > 0 */}
       <svg
         className="absolute inset-0 w-full h-full -rotate-90 transition-opacity duration-200"
-        style={{ opacity: isRecording ? 1 : 0 }}
+        style={{ opacity: progress > 0 ? 1 : 0 }}
       >
         <circle
           cx="50%"

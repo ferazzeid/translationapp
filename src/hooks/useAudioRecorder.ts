@@ -214,10 +214,18 @@ export const useAudioRecorder = (): AudioRecorderHook => {
       // Clean up function
       const cleanupResources = () => {
         if (streamRef.current) {
-          streamRef.current.getTracks().forEach(track => track.stop());
+          streamRef.current.getTracks().forEach(track => {
+            track.stop();
+            console.log('Audio track stopped');
+          });
           streamRef.current = null;
         }
         chunksRef.current = [];
+        
+        // Clear any browser recording indicators
+        if (mediaRecorderRef.current) {
+          mediaRecorderRef.current = null;
+        }
       };
 
       try {

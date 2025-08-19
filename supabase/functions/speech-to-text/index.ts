@@ -73,13 +73,14 @@ serve(async (req) => {
     const openaiApiKey = settingsData.setting_value;
 
     // Convert base64 audio to binary
+    console.log(`Received audio data: ${audio.length} characters`);
     const binaryAudio = base64ToUint8Array(audio);
     
-    // Validate audio size (minimum 1KB to ensure it's not too short)
-    if (binaryAudio.length < 1000) {
+    // Validate audio size (minimum 500 bytes for webm header)
+    if (binaryAudio.length < 500) {
       console.log(`Audio data too small: ${binaryAudio.length} bytes`);
       return new Response(
-        JSON.stringify({ error: 'Audio recording too short, please speak for at least half a second' }),
+        JSON.stringify({ error: 'Audio recording too short, please speak longer' }),
         { 
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
