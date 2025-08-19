@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { ArrowLeft, Languages, Shield, User, Volume2, Palette, Info } from "lucide-react";
+import { ArrowLeft, Languages, Shield, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { AppSettings } from "./AppSettings";
 
 interface GeneralSettingsProps {
   onBack: () => void;
@@ -48,30 +49,9 @@ export const GeneralSettings = ({
       info: `You: ${getLanguageName(speakerALanguage)} → Other: ${getLanguageName(speakerBLanguage)}`
     },
     {
-      title: "Voice & Audio",
-      icon: Volume2,
-      description: "Voice selection and audio preferences",
-      action: () => {}, // TODO: Implement voice settings
-      info: "Configure voice preferences"
-    },
-    {
-      title: "Appearance",
-      icon: Palette,
-      description: "Theme and display options",
-      action: () => {}, // TODO: Implement theme settings
-      info: "Customize app appearance"
-    },
-    {
-      title: "About",
-      icon: Info,
-      description: "App information and help",
-      action: () => {}, // TODO: Implement about page
-      info: "Version info and support"
-    },
-    {
       title: "Admin Settings",
       icon: Shield,
-      description: "Administrative controls and configuration",
+      description: "API keys and landing page configuration",
       action: onOpenAdminSettings,
       info: "Advanced settings (admin access required)",
       isAdmin: true
@@ -122,11 +102,14 @@ export const GeneralSettings = ({
                 )}
                 disabled={!section.action || section.action === (() => {})}
               >
-                {section.action === (() => {}) ? "Coming Soon" : "Configure"}
+                Configure
               </Button>
             </CardContent>
           </Card>
         ))}
+
+        {/* App Settings Section */}
+        <AppSettings />
 
         <Separator className="my-6" />
 

@@ -21,9 +21,6 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
   const [showKey, setShowKey] = useState(false);
   const [loading, setLoading] = useState(false);
   const [testingKey, setTestingKey] = useState(false);
-  const [wakeLockEnabled, setWakeLockEnabled] = useState(true);
-  const [managedModeEnabled, setManagedModeEnabled] = useState(false);
-  const [holdToRecordEnabled, setHoldToRecordEnabled] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -35,24 +32,13 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
       const { data, error } = await supabase
         .from("admin_settings")
         .select("setting_key, setting_value")
-        .in("setting_key", ["openai_api_key", "wake_lock_enabled", "managed_mode_enabled", "hold_to_record_enabled"]);
+        .in("setting_key", ["openai_api_key"]);
 
       if (error) throw error;
 
       data?.forEach((setting) => {
-        switch (setting.setting_key) {
-          case "openai_api_key":
-            setOpenaiKey(setting.setting_value || "");
-            break;
-          case "wake_lock_enabled":
-            setWakeLockEnabled(setting.setting_value === "true");
-            break;
-          case "managed_mode_enabled":
-            setManagedModeEnabled(setting.setting_value === "true");
-            break;
-          case "hold_to_record_enabled":
-            setHoldToRecordEnabled(setting.setting_value === "true");
-            break;
+        if (setting.setting_key === "openai_api_key") {
+          setOpenaiKey(setting.setting_value || "");
         }
       });
     } catch (error: any) {
@@ -70,10 +56,7 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
 
       if (error) throw error;
 
-      const settingName = key === "openai_api_key" ? "API key" : 
-                         key === "wake_lock_enabled" ? "Wake lock setting" : 
-                         key === "managed_mode_enabled" ? "Managed mode setting" :
-                         "Hold to record setting";
+      const settingName = "API key";
 
       toast({
         title: "Success",
@@ -105,20 +88,6 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
     setLoading(false);
   };
 
-  const handleWakeLockToggle = async (enabled: boolean) => {
-    setWakeLockEnabled(enabled);
-    await updateSetting("wake_lock_enabled", enabled.toString());
-  };
-
-  const handleManagedModeToggle = async (enabled: boolean) => {
-    setManagedModeEnabled(enabled);
-    await updateSetting("managed_mode_enabled", enabled.toString());
-  };
-
-  const handleHoldToRecordToggle = async (enabled: boolean) => {
-    setHoldToRecordEnabled(enabled);
-    await updateSetting("hold_to_record_enabled", enabled.toString());
-  };
 
   const testOpenAIKey = async () => {
     if (!openaiKey.trim()) {
@@ -190,72 +159,58 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
         </div>
 
         <div className="flex-1 p-4 space-y-8 overflow-y-auto">
-
-          {/* Theme Settings */}
-          <div className="space-y-4">
-            <ThemeSettings />
-          </div>
-
-          {/* Wake Lock Settings */}
+          {/* OpenAI API Key Settings */}
           <div className="space-y-4">
             <div>
-              <h2 className="text-base font-medium text-foreground mb-1">Screen Wake Lock</h2>
+              <h2 className="text-base font-medium text-foreground mb-1">OpenAI API Key</h2>
               <p className="text-sm text-muted-foreground">
-                Prevents device screen from sleeping during conversations
+                Configure your OpenAI API key for translation and TTS services
               </p>
             </div>
             
-            <div className="flex items-center justify-between">
-              <Label htmlFor="wake-lock" className="text-sm text-foreground">
-                Enable Wake Lock
-              </Label>
-              <Switch
-                id="wake-lock"
-                checked={wakeLockEnabled}
-                onCheckedChange={handleWakeLockToggle}
-              />
-            </div>
-          </div>
-
-          {/* Managed Mode Settings */}
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-base font-medium text-foreground mb-1">Managed Mode</h2>
-              <p className="text-sm text-muted-foreground">
-                AI-managed turn-taking system with visual indicators (Beta feature)
-              </p>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <Label htmlFor="managed-mode" className="text-sm text-foreground">
-                Enable Managed Mode
-              </Label>
-              <Switch
-                id="managed-mode"
-                checked={managedModeEnabled}
-                onCheckedChange={handleManagedModeToggle}
-              />
-            </div>
-          </div>
-
-          {/* Hold to Record Settings */}
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-base font-medium text-foreground mb-1">Recording Mode</h2>
-              <p className="text-sm text-muted-foreground">
-                Choose between tap-to-record or hold-to-record interaction
-              </p>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <Label htmlFor="hold-to-record" className="text-sm text-foreground">
-                Hold to Record Mode
-              </Label>
-              <Switch
-                id="hold-to-record"
-                checked={holdToRecordEnabled}
-                onCheckedChange={handleHoldToRecordToggle}
-              />
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                <Input
+                  type={showKey ? "text" : "password"}
+                  placeholder="sk-..."
+                  value={openaiKey}
+                  onChange={(e) => setOpenaiKey(e.target.value)}
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setShowKey(!showKey)}
+                >
+                  {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
+              </div>
+              
+              {openaiKey && (
+                <p className="text-xs text-muted-foreground">
+                  Current: {maskedKey}
+                </p>
+              )}
+              
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleSaveOpenAIKey}
+                  disabled={loading}
+                  size="sm"
+                  className="flex-1"
+                >
+                  {loading ? "Saving..." : "Save Key"}
+                </Button>
+                <Button
+                  onClick={testOpenAIKey}
+                  disabled={testingKey || !openaiKey}
+                  variant="outline"
+                  size="sm"
+                >
+                  {testingKey ? "Testing..." : "Test"}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
