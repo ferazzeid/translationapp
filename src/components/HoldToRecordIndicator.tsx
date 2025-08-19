@@ -21,22 +21,21 @@ export const HoldToRecordIndicator = ({
         <circle
           cx="50%"
           cy="50%"
-          r="calc(50% - 4px)"
+          r="36"
           fill="none"
-          stroke="hsl(var(--accent))"
+          stroke="rgba(255,255,255,0.2)"
           strokeWidth="4"
-          strokeOpacity="0.2"
         />
         <circle
           cx="50%"
           cy="50%"
-          r="calc(50% - 4px)"
+          r="36"
           fill="none"
-          stroke="hsl(var(--primary))"
+          stroke="rgba(255,255,255,0.8)"
           strokeWidth="4"
           strokeLinecap="round"
-          strokeDasharray="calc(2 * 3.14159 * (50% - 4px))"
-          strokeDashoffset={`calc(2 * 3.14159 * (50% - 4px) * ${(100 - progress) / 100})`}
+          strokeDasharray={`${2 * Math.PI * 36}`}
+          strokeDashoffset={`${2 * Math.PI * 36 * (1 - progress / 100)}`}
           className="transition-all duration-150 ease-out"
         />
       </svg>
