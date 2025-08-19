@@ -17,6 +17,7 @@ export const SpeechBubble = ({
   isNew = false
 }: SpeechBubbleProps) => {
   const isLeftAligned = speaker === "A";
+  const isMostRecent = index === 0;
   
   return (
     <div className={cn(
@@ -28,7 +29,7 @@ export const SpeechBubble = ({
         className={cn(
           "max-w-[85%] rounded-2xl px-4 py-3 shadow-sm border",
           "theme-surface theme-text theme-border",
-          "text-base", // Consistent readable font size
+          isMostRecent ? "text-2xl" : "text-base", // Double size for most recent message
           isLeftAligned ? "bubble--theirs" : "bubble--mine"
         )}
       >
