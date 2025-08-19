@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { GeneralSettings } from "@/components/GeneralSettings";
 import { TranslationInterface } from "@/components/TranslationInterface";
 import { AdminAuth } from "@/components/AdminAuth";
 import { AdminSettings } from "@/components/AdminSettings";
@@ -13,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Settings, LogOut } from "lucide-react";
 import { usePWA } from "@/hooks/usePWA";
 
-type AppState = "auth" | "setup" | "translation" | "settings" | "admin-auth" | "admin-settings" | "admin-dashboard";
+type AppState = "auth" | "setup" | "translation" | "general-settings" | "language-settings" | "admin-auth" | "admin-settings" | "admin-dashboard";
 
 interface LanguageSelection {
   speakerA: string;
@@ -88,7 +89,7 @@ const Index = () => {
   };
 
   const handleOpenSettings = () => {
-    setCurrentState("settings");
+    setCurrentState("general-settings");
   };
 
   const handleAuthenticated = (user: User, session: Session) => {
@@ -156,13 +157,24 @@ const Index = () => {
             />
           );
         
-        case "settings":
+        case "general-settings":
+          return (
+            <GeneralSettings
+              onBack={() => setCurrentState("translation")}
+              onOpenLanguageSettings={() => setCurrentState("language-settings")}
+              onOpenAdminSettings={() => setCurrentState("admin-auth")}
+              onSignOut={handleSignOut}
+              speakerALanguage={selectedLanguages.speakerA}
+              speakerBLanguage={selectedLanguages.speakerB}
+            />
+          );
+        
+        case "language-settings":
           return (
             <LanguageSelector
               selectedLanguages={selectedLanguages}
               onLanguageChange={handleLanguageChange}
-              onContinue={() => setCurrentState("translation")}
-              onOpenSettings={() => setCurrentState("admin-auth")}
+              onContinue={() => setCurrentState("general-settings")}
               showAsSettings={true}
               onSignOut={handleSignOut}
             />
@@ -197,8 +209,8 @@ const Index = () => {
       }
     })();
 
-    // Don't wrap admin settings, dashboard, and auth in mobile frame
-    if (currentState === "admin-auth" || currentState === "admin-settings" || currentState === "admin-dashboard" || currentState === "auth") {
+    // Don't wrap admin settings, dashboard, general settings, language settings, and auth in mobile frame
+    if (currentState === "admin-auth" || currentState === "admin-settings" || currentState === "admin-dashboard" || currentState === "auth" || currentState === "general-settings" || currentState === "language-settings") {
       return content;
     }
 
