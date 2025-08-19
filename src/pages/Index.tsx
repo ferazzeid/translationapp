@@ -60,10 +60,6 @@ const Index = () => {
   };
 
   const handleSetupComplete = () => {
-    setCurrentState("introduction");
-  };
-
-  const handleContinueToTranslation = () => {
     setCurrentState("translation");
   };
 
@@ -102,14 +98,6 @@ const Index = () => {
             />
           );
         
-        case "introduction":
-          return (
-            <IntroductionMode
-              targetLanguage={selectedLanguages.speakerB}
-              onContinueToTranslation={handleContinueToTranslation}
-              onOpenSettings={handleOpenSettings}
-            />
-          );
         
         case "translation":
           return (
