@@ -28,13 +28,13 @@ const themeOptions: Array<{
     }
   },
   {
-    name: 'aqua-light',
-    label: 'Aqua Light',
-    description: 'Calm teal palette for relaxed conversations',
+    name: 'minimalist',
+    label: 'Minimalist',
+    description: 'Clean monochrome design with subtle grayscale tones',
     colors: {
-      primary: '#00BFA6',
-      micBg: '#00BFA6',
-      actionBg: '#2B2F31',
+      primary: '#333333',
+      micBg: '#2D2D2D',
+      actionBg: '#1A1A1A',
       surface: '#FFFFFF'
     }
   },
