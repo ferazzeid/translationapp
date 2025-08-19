@@ -314,10 +314,14 @@ export const TranslationInterface = ({
       setMessages(prev => [newMessage, ...prev]);
 
       // Step 4: Text to speech for the translation
+      // Use the ORIGINAL speaker's voice (the person who spoke), not the target listener's voice
+      const voiceToUse = speaker === "A" ? speakerAVoice : speakerBVoice;
+      
       const { data: ttsResponse, error: ttsError } = await supabase.functions.invoke('text-to-speech', {
         body: {
           text: translatedText,
-          language: targetLang
+          language: targetLang,
+          voice: voiceToUse
         }
       });
 
@@ -378,11 +382,14 @@ export const TranslationInterface = ({
         // Replay the translated text that was meant for the requesting speaker
         const textToRepeat = lastMessageFromOtherSpeaker.translatedText;
         const languageForRepeat = speakerRequesting === "A" ? speakerALanguage : speakerBLanguage;
+        // Use the original speaker's voice (who said the message being repeated)
+        const voiceForRepeat = lastMessageFromOtherSpeaker.speaker === "A" ? speakerAVoice : speakerBVoice;
         
         const { data: ttsResponse, error: ttsError } = await supabase.functions.invoke('text-to-speech', {
           body: {
             text: textToRepeat,
-            language: languageForRepeat
+            language: languageForRepeat,
+            voice: voiceForRepeat
           }
         });
 
