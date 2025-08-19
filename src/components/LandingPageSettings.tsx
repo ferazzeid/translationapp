@@ -20,6 +20,9 @@ interface LandingPageData {
   feature_3_description: string;
   app_name: string;
   google_play_url: string;
+  google_analytics_id: string;
+  meta_description: string;
+  meta_keywords: string;
 }
 
 export const LandingPageSettings = () => {
@@ -37,6 +40,9 @@ export const LandingPageSettings = () => {
     feature_3_description: "",
     app_name: "",
     google_play_url: "",
+    google_analytics_id: "",
+    meta_description: "",
+    meta_keywords: "",
   });
   
   const { toast } = useToast();
@@ -55,7 +61,8 @@ export const LandingPageSettings = () => {
           'feature_1_title', 'feature_1_description',
           'feature_2_title', 'feature_2_description', 
           'feature_3_title', 'feature_3_description',
-          'app_name', 'google_play_url'
+          'app_name', 'google_play_url', 'google_analytics_id',
+          'meta_description', 'meta_keywords'
         ]);
 
       if (error) throw error;
@@ -78,6 +85,9 @@ export const LandingPageSettings = () => {
           feature_3_description: settingsMap.feature_3_description || "Perfect for non-tech-savvy users. The app guides the conversation flow, making it reliable and easy to use together.",
           app_name: settingsMap.app_name || "TalkDuo",
           google_play_url: settingsMap.google_play_url || "https://play.google.com/store/apps/details?id=com.talkduo.app",
+          google_analytics_id: settingsMap.google_analytics_id || "",
+          meta_description: settingsMap.meta_description || "AI-powered real-time translation designed for one-on-one conversations. Two people, one device. Reliable, accurate, and simple enough for anyone to use together.",
+          meta_keywords: settingsMap.meta_keywords || "translation app, real-time translation, voice translation, one-on-one conversation, AI translation, managed conversation",
         });
       }
     } catch (error: any) {
@@ -180,6 +190,59 @@ export const LandingPageSettings = () => {
                 placeholder="https://play.google.com/store/apps/details?id=..."
                 className="theme-input"
               />
+            </div>
+            <div>
+              <Label htmlFor="google_analytics_id" className="theme-text">Google Analytics ID</Label>
+              <Input
+                id="google_analytics_id"
+                value={settings.google_analytics_id}
+                onChange={(e) => updateSetting('google_analytics_id', e.target.value)}
+                placeholder="G-XXXXXXXXXX"
+                className="theme-input"
+              />
+              <p className="text-xs theme-text-muted mt-1">
+                Enter your Google Analytics 4 measurement ID (starts with G-)
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* SEO Settings */}
+        <Card className="theme-surface theme-border">
+          <CardHeader>
+            <CardTitle className="theme-text">SEO Settings</CardTitle>
+            <CardDescription className="theme-text-muted">
+              Configure meta tags and SEO information
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="meta_description" className="theme-text">Meta Description</Label>
+              <Textarea
+                id="meta_description"
+                value={settings.meta_description}
+                onChange={(e) => updateSetting('meta_description', e.target.value)}
+                placeholder="Describe your app in 150-160 characters for search engines..."
+                className="theme-input"
+                rows={3}
+                maxLength={160}
+              />
+              <p className="text-xs theme-text-muted mt-1">
+                {settings.meta_description.length}/160 characters
+              </p>
+            </div>
+            <div>
+              <Label htmlFor="meta_keywords" className="theme-text">Meta Keywords</Label>
+              <Input
+                id="meta_keywords"
+                value={settings.meta_keywords}
+                onChange={(e) => updateSetting('meta_keywords', e.target.value)}
+                placeholder="keyword1, keyword2, keyword3..."
+                className="theme-input"
+              />
+              <p className="text-xs theme-text-muted mt-1">
+                Comma-separated keywords relevant to your app
+              </p>
             </div>
           </CardContent>
         </Card>

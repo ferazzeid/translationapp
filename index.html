@@ -7,6 +7,11 @@
     <meta name="description" content="AI-powered real-time translation designed for one-on-one conversations. Two people, one device. Reliable, accurate, and simple enough for anyone to use together." />
     <meta name="keywords" content="translation app, real-time translation, voice translation, one-on-one conversation, AI translation, managed conversation" />
     <meta name="author" content="TalkDuo" />
+    <link rel="canonical" href="https://talkduo.lovable.app/" />
+    
+    <!-- Robots Meta -->
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
 
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="/manifest.json" />
@@ -18,15 +23,42 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
 
-    <meta property="og:title" content="TalkDuo" />
-    <meta property="og:description" content="One device, two people, any language - AI-powered translation for one-on-one conversations" />
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="TalkDuo - One Device, Two People, Any Language" />
+    <meta property="og:description" content="AI-powered real-time translation designed for one-on-one conversations. Two people, one device. Reliable, accurate, and simple enough for anyone to use together." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/icon-512.png" />
+    <meta property="og:url" content="https://talkduo.lovable.app/" />
+    <meta property="og:image" content="https://talkduo.lovable.app/icon-512.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:site_name" content="TalkDuo" />
+    <meta property="og:locale" content="en_US" />
 
+    <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="TalkDuo" />
-    <meta name="twitter:description" content="One device, two people, any language - AI-powered translation for one-on-one conversations" />
-    <meta name="twitter:image" content="/icon-512.png" />
+    <meta name="twitter:title" content="TalkDuo - One Device, Two People, Any Language" />
+    <meta name="twitter:description" content="AI-powered real-time translation designed for one-on-one conversations. Two people, one device. Reliable, accurate, and simple enough for anyone to use together." />
+    <meta name="twitter:image" content="https://talkduo.lovable.app/icon-512.png" />
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+      // Initialize Google Analytics when measurement ID is available
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      
+      // This will be dynamically updated by the admin settings
+      const GA_ID = localStorage.getItem('ga_measurement_id');
+      if (GA_ID) {
+        gtag('config', GA_ID);
+        // Update the script src with the actual ID
+        const gaScript = document.querySelector('script[src*="googletagmanager"]');
+        if (gaScript) {
+          gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+        }
+      }
+    </script>
   </head>
 
   <body>
