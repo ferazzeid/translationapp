@@ -69,22 +69,25 @@ export const SpeakerButton = ({
           size="lg"
           variant="ghost"
           className={cn(
-            "h-20 w-20 rounded-full transition-all duration-300",
+            "h-20 w-20 rounded-full transition-all duration-300 relative overflow-hidden",
             "hover:scale-105",
             isListening ? [
-              "bg-destructive text-destructive-foreground border-0",
-              "hover:bg-destructive", // Prevent hover changes when recording
-              "recording-pulse" // Use our custom slow pulse animation
+              "bg-red-500 text-white border-2 border-red-400",
+              "hover:bg-red-500", // Prevent hover changes when recording
+              "animate-pulse scale-110" // Recording pulse
             ] : [
-              "bg-foreground text-background hover:bg-foreground/80 border border-border"
+              "bg-black text-white border-2 border-gray-700",
+              "hover:bg-gray-900 hover:border-gray-600",
+              "before:absolute before:inset-0 before:rounded-full before:bg-black before:opacity-50 before:animate-[pulse_2s_ease-in-out_infinite]",
+              "shadow-[0_0_20px_rgba(0,0,0,0.4)] hover:shadow-[0_0_25px_rgba(0,0,0,0.6)]"
             ]
           )}
           onClick={isListening ? onStop : onStart}
         >
           {isListening ? (
-            <Square className="h-8 w-8 fill-current" />
+            <Square className="h-8 w-8 fill-current relative z-10" />
           ) : (
-            <Mic className="h-8 w-8" />
+            <Mic className="h-8 w-8 relative z-10" />
           )}
         </Button>
         

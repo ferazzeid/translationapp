@@ -18,10 +18,12 @@ import { SpeakerControls } from "./SpeakerControls";
 import { SpeakerSection } from "./SpeakerSection";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
 import { SimpleLanguageModal } from "./SimpleLanguageModal";
+import { TurnIndicatorSettings } from "./TurnIndicatorSettings";
 import { ProcessingIndicator } from "./ProcessingIndicator";
 import { WakeLockIndicator } from "./WakeLockIndicator";
 import { ManagedModeControls } from "./ManagedModeControls";
 import { Button } from "@/components/ui/button";
+import { Palette } from "lucide-react";
 
 interface Message {
   id: string;
@@ -48,6 +50,7 @@ export const TranslationInterface = ({
   onSignOut,
   onLanguageChange
 }: TranslationInterfaceProps) => {
+  const [turnIndicatorColor, setTurnIndicatorColor] = useState("green");
   const [isListeningA, setIsListeningA] = useState(false);
   const [isListeningB, setIsListeningB] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -66,6 +69,7 @@ export const TranslationInterface = ({
   const [speakerBDarkMode, setSpeakerBDarkMode] = useState(false);
   const [activeVoiceModal, setActiveVoiceModal] = useState<"A" | "B" | null>(null);
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
+  const [isTurnSettingsOpen, setIsTurnSettingsOpen] = useState(false);
   
   const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
@@ -420,13 +424,23 @@ export const TranslationInterface = ({
       isRealMobile ? "h-[100dvh] w-full" : "h-full w-full"
     )}>
       {/* Speaker B Half - Top (Rotated 180°) - Other Person */}
-      <div className={cn(
-        "rotate-180 relative transition-all duration-500",
-        isRealMobile ? "h-[calc(50dvh-2.5rem)]" : "h-1/2",
-        managedMode.isEnabled && managedMode.currentTurn === "B" 
-          ? "bg-green-50 dark:bg-green-950/30" 
-          : ""
-      )}>
+      <div 
+        className={cn(
+          "rotate-180 relative transition-all duration-500",
+          isRealMobile ? "h-[calc(50dvh-2.5rem)]" : "h-1/2"
+        )}
+        style={{
+          backgroundColor: managedMode.isEnabled && managedMode.currentTurn === "B" 
+            ? turnIndicatorColor === "green" ? "#f0fdf4" 
+            : turnIndicatorColor === "blue" ? "#eff6ff"
+            : turnIndicatorColor === "purple" ? "#faf5ff"
+            : turnIndicatorColor === "yellow" ? "#fefce8"
+            : turnIndicatorColor === "pink" ? "#fdf2f8"
+            : turnIndicatorColor === "orange" ? "#fff7ed"
+            : "#f0fdf4"
+            : "transparent"
+        }}
+      >
         <SpeakerSection
           speaker="B"
           isListening={isListeningB}
@@ -511,13 +525,23 @@ export const TranslationInterface = ({
       </div>
 
       {/* Speaker A Half - Bottom (Normal) - You */}
-      <div className={cn(
-        "relative transition-all duration-500",
-        managedMode.isEnabled && managedMode.currentTurn === "A" 
-          ? "bg-green-50 dark:bg-green-950/30" 
-          : "",
-        isRealMobile ? "h-[calc(50dvh-2.5rem)]" : "h-1/2"
-      )}>
+      <div 
+        className={cn(
+          "relative transition-all duration-500",
+          isRealMobile ? "h-[calc(50dvh-2.5rem)]" : "h-1/2"
+        )}
+        style={{
+          backgroundColor: managedMode.isEnabled && managedMode.currentTurn === "A" 
+            ? turnIndicatorColor === "green" ? "#f0fdf4" 
+            : turnIndicatorColor === "blue" ? "#eff6ff"
+            : turnIndicatorColor === "purple" ? "#faf5ff"
+            : turnIndicatorColor === "yellow" ? "#fefce8"
+            : turnIndicatorColor === "pink" ? "#fdf2f8"
+            : turnIndicatorColor === "orange" ? "#fff7ed"
+            : "#f0fdf4"
+            : "transparent"
+        }}
+      >
         <SpeakerSection
           speaker="A"
           isListening={isListeningA}
@@ -583,6 +607,19 @@ export const TranslationInterface = ({
       {/* Language Settings - Bottom Right */}
       <LanguageSettings onOpenSettings={() => setIsLanguageModalOpen(true)} />
 
+      {/* Turn Indicator Settings - Bottom Center */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-40">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setIsTurnSettingsOpen(true)}
+          className="h-8 w-8 rounded-full bg-background/90 border border-border shadow-sm hover:bg-foreground hover:text-background"
+          title="Turn Indicator Settings"
+        >
+          <Palette className="h-3 w-3" />
+        </Button>
+      </div>
+
       {/* Modals - Outside rotated areas */}
       <VoiceSelectionModal
         isOpen={activeVoiceModal !== null}
@@ -610,6 +647,12 @@ export const TranslationInterface = ({
         }}
       />
 
+      <TurnIndicatorSettings
+        isOpen={isTurnSettingsOpen}
+        onClose={() => setIsTurnSettingsOpen(false)}
+        currentColor={turnIndicatorColor}
+        onColorChange={setTurnIndicatorColor}
+      />
     </div>
   );
 };
