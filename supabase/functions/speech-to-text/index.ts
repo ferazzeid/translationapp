@@ -12,6 +12,53 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+// Map language names to ISO-639-1 codes for OpenAI Whisper API
+function getLanguageCode(language: string): string {
+  const languageMap: { [key: string]: string } = {
+    'english': 'en',
+    'spanish': 'es',
+    'french': 'fr',
+    'german': 'de',
+    'italian': 'it',
+    'portuguese': 'pt',
+    'russian': 'ru',
+    'japanese': 'ja',
+    'korean': 'ko',
+    'chinese': 'zh',
+    'arabic': 'ar',
+    'hindi': 'hi',
+    'turkish': 'tr',
+    'polish': 'pl',
+    'dutch': 'nl',
+    'swedish': 'sv',
+    'danish': 'da',
+    'norwegian': 'no',
+    'finnish': 'fi',
+    'hungarian': 'hu',
+    'czech': 'cs',
+    'slovak': 'sk',
+    'slovenian': 'sl',
+    'croatian': 'hr',
+    'serbian': 'sr',
+    'bulgarian': 'bg',
+    'romanian': 'ro',
+    'ukrainian': 'uk',
+    'greek': 'el',
+    'hebrew': 'he',
+    'thai': 'th',
+    'vietnamese': 'vi',
+    'indonesian': 'id',
+    'malay': 'ms',
+    'tagalog': 'tl'
+  };
+  
+  // Convert to lowercase for matching
+  const lowerLang = language.toLowerCase();
+  
+  // Return mapped code or assume it's already in correct format
+  return languageMap[lowerLang] || language;
+}
+
 // Convert base64 to Uint8Array
 function base64ToUint8Array(base64String: string): Uint8Array {
   try {
@@ -121,9 +168,11 @@ serve(async (req) => {
     formData.append('model', 'whisper-1');
     formData.append('response_format', 'json');
     
-    // Add language parameter if specified
+    // Add language parameter if specified, convert to proper ISO code
     if (language && language !== 'auto-detect') {
-      formData.append('language', language);
+      const languageCode = getLanguageCode(language);
+      console.log(`Language conversion: ${language} -> ${languageCode}`);
+      formData.append('language', languageCode);
     }
 
     console.log('Sending to OpenAI Whisper API...');
