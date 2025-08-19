@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -53,30 +53,14 @@ const themeOptions: Array<{
 
 export const ThemeSettings = () => {
   const { theme, setTheme, enableThemes } = useTheme();
-  const [previewTheme, setPreviewTheme] = useState<ThemeName | null>(null);
 
   if (!enableThemes) {
     return null;
   }
 
-  const handlePreview = (themeName: ThemeName) => {
-    setPreviewTheme(themeName);
-    document.documentElement.dataset.theme = themeName;
-  };
-
   const handleApply = (themeName: ThemeName) => {
     setTheme(themeName);
-    setPreviewTheme(null);
   };
-
-  const handleReset = () => {
-    if (previewTheme) {
-      document.documentElement.dataset.theme = theme;
-      setPreviewTheme(null);
-    }
-  };
-
-  const currentTheme = previewTheme || theme;
 
   return (
     <div className="space-y-6">
@@ -87,40 +71,12 @@ export const ThemeSettings = () => {
         </p>
       </div>
 
-      {previewTheme && (
-        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-blue-900">Preview Mode</p>
-              <p className="text-sm text-blue-700">
-                Previewing {themeOptions.find(t => t.name === previewTheme)?.label}
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <Button 
-                size="sm" 
-                variant="outline" 
-                onClick={handleReset}
-              >
-                Cancel
-              </Button>
-              <Button 
-                size="sm" 
-                onClick={() => handleApply(previewTheme)}
-              >
-                Apply
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {themeOptions.map((option) => (
           <Card 
             key={option.name} 
             className={`cursor-pointer transition-all ${
-              currentTheme === option.name 
+              theme === option.name 
                 ? 'ring-2 ring-primary' 
                 : 'hover:shadow-md'
             }`}
@@ -128,9 +84,9 @@ export const ThemeSettings = () => {
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base">{option.label}</CardTitle>
-                {currentTheme === option.name && (
+                {theme === option.name && (
                   <Badge variant="default" className="text-xs">
-                    {previewTheme ? 'Preview' : 'Active'}
+                    Active
                   </Badge>
                 )}
               </div>
@@ -167,26 +123,15 @@ export const ThemeSettings = () => {
                 </div>
               </div>
 
-              {/* Action buttons */}
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => handlePreview(option.name)}
-                  disabled={currentTheme === option.name}
-                >
-                  Preview
-                </Button>
-                <Button
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => handleApply(option.name)}
-                  disabled={theme === option.name && !previewTheme}
-                >
-                  Apply
-                </Button>
-              </div>
+              {/* Action button */}
+              <Button
+                size="sm"
+                className="w-full"
+                onClick={() => handleApply(option.name)}
+                disabled={theme === option.name}
+              >
+                Apply
+              </Button>
             </CardContent>
           </Card>
         ))}
@@ -196,7 +141,7 @@ export const ThemeSettings = () => {
         <Button 
           variant="outline" 
           onClick={() => handleApply('neo-light')}
-          disabled={theme === 'neo-light' && !previewTheme}
+          disabled={theme === 'neo-light'}
         >
           Reset to Default
         </Button>
