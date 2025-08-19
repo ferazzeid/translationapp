@@ -2,7 +2,7 @@ import { Volume2, Eraser, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
-import { CentralStatusDisplay } from "./CentralStatusDisplay";
+import { CentralLoadingAnimation } from "./CentralLoadingAnimation";
 
 interface MidSectionControlsProps {
   volume: number;
@@ -45,13 +45,11 @@ export const MidSectionControls = ({
         </div>
       </div>
 
-      {/* Center: Status Display */}
+      {/* Center: Loading Animation Only */}
       <div className="flex-1 flex items-center justify-center">
-        <CentralStatusDisplay
+        <CentralLoadingAnimation
           isProcessing={isProcessing}
           isRecording={isRecording}
-          currentStep={currentStep}
-          speaker={speaker}
         />
       </div>
 

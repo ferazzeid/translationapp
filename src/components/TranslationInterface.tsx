@@ -530,6 +530,8 @@ export const TranslationInterface = ({
           onHoldStart={() => handleHoldStart("B")}
           onHoldEnd={() => handleHoldEnd("B")}
           recordingDuration={audioRecorderB.recordingDuration}
+          isProcessing={isProcessing}
+          activeSpeaker={isListeningA ? "A" : isListeningB ? "B" : undefined}
           messages={getRecentMessages("B").map((message, index) => (
             <SpeechBubble
               key={`${message.id}-${index}`}
@@ -602,6 +604,8 @@ export const TranslationInterface = ({
           onHoldStart={() => handleHoldStart("A")}
           onHoldEnd={() => handleHoldEnd("A")}
           recordingDuration={audioRecorderA.recordingDuration}
+          isProcessing={isProcessing}
+          activeSpeaker={isListeningA ? "A" : isListeningB ? "B" : undefined}
           messages={getRecentMessages("A").map((message, index) => (
             <SpeechBubble
               key={`${message.id}-${index}`}

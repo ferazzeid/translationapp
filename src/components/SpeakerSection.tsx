@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { SpeakerButton } from "./SpeakerButton";
 import { MessageArea } from "./MessageArea";
 import { RecordingCountdown } from "./RecordingCountdown";
+import { SpeakerStatusMessage } from "./SpeakerStatusMessage";
 
 interface SpeakerSectionProps {
   speaker: "A" | "B";
@@ -21,6 +22,9 @@ interface SpeakerSectionProps {
   onHoldStart?: () => void;
   onHoldEnd?: () => void;
   recordingDuration?: number;
+  isProcessing?: boolean;
+  currentStep?: string;
+  activeSpeaker?: "A" | "B";
 }
 
 export const SpeakerSection = ({
@@ -39,7 +43,10 @@ export const SpeakerSection = ({
   holdProgress = 0,
   onHoldStart,
   onHoldEnd,
-  recordingDuration = 0
+  recordingDuration = 0,
+  isProcessing = false,
+  currentStep,
+  activeSpeaker
 }: SpeakerSectionProps) => {
   const showTurnIndicator = isManagedMode;
   const isActiveTurn = isManagedMode && isCurrentTurn;
@@ -100,6 +107,15 @@ export const SpeakerSection = ({
           )}
         </div>
       </div>
+
+      {/* Speaker Status Message */}
+      <SpeakerStatusMessage
+        isProcessing={isProcessing}
+        isRecording={isListening}
+        currentStep={currentStep}
+        speaker={activeSpeaker}
+        language={language}
+      />
 
       {/* Listening feedback overlay */}
       {isListening && (
