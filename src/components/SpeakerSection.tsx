@@ -73,8 +73,8 @@ export const SpeakerSection = ({
         "absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center z-30",
         isActiveTurn ? "bg-transparent" : "theme-surface"
       )}>
-        {/* Left side: Repeat button with 20px margin */}
-        <div className="absolute left-5 bottom-6 flex items-center">
+        {/* Right side: Repeat button with 20px margin to avoid admin button */}
+        <div className="absolute right-5 bottom-6 flex items-center">
           <button
             onClick={onRepeat}
             className="min-h-[44px] min-w-[44px] h-10 w-10 rounded-full theme-button flex items-center justify-center transition-colors shadow-sm"
