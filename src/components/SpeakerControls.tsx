@@ -20,7 +20,7 @@ export const SpeakerControls = ({
       {/* Left Control - Voice Selection */}
       <div className={cn(
         "absolute pointer-events-auto",
-        isTop ? "bottom-6 left-5" : "bottom-6 left-5"
+        isTop ? "bottom-8 left-5" : "bottom-8 left-5"
       )}>
         <Button
           variant="outline"
@@ -37,7 +37,7 @@ export const SpeakerControls = ({
       {speaker === "A" && onOpenSettings && (
         <div className={cn(
           "absolute pointer-events-auto",
-          isTop ? "bottom-6 right-5" : "bottom-6 right-5"
+          isTop ? "bottom-8 right-5" : "bottom-8 right-5"
         )}>
           <Button
             variant="outline"

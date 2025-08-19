@@ -105,12 +105,12 @@ export const SpeakerButton = ({
   return (
     <div className={cn("flex flex-col items-center", className)}>
       <div className="relative">
-        {/* Enhanced pulsing circles for active speaker */}
+        {/* Enhanced pulsing circles for active speaker - adjusted to stay within screen bounds */}
         {isActiveInManagedMode && (
           <>
-            <div className="absolute inset-0 rounded-full bg-[hsl(var(--theme-primary)/0.3)] animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite] scale-110" />
-            <div className="absolute inset-0 rounded-full bg-[hsl(var(--theme-primary)/0.2)] animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] scale-125" />
-            <div className="absolute inset-0 rounded-full bg-[hsl(var(--theme-primary)/0.1)] animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] scale-140" />
+            <div className="absolute inset-2 rounded-full bg-[hsl(var(--theme-primary)/0.3)] animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite] scale-105" />
+            <div className="absolute inset-1 rounded-full bg-[hsl(var(--theme-primary)/0.2)] animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] scale-110" />
+            <div className="absolute inset-0 rounded-full bg-[hsl(var(--theme-primary)/0.1)] animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] scale-115" />
           </>
         )}
         

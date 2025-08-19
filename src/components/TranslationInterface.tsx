@@ -587,6 +587,9 @@ export const TranslationInterface = ({
           }}
           hasMessages={messages.length > 0}
           isManagedMode={managedMode.isEnabled}
+          isProcessing={isProcessing}
+          isRecording={isListeningA || isListeningB}
+          speaker={isListeningA ? "A" : isListeningB ? "B" : undefined}
         />
       </div>
 

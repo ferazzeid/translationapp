@@ -2,6 +2,7 @@ import { Volume2, Eraser, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
+import { CentralStatusDisplay } from "./CentralStatusDisplay";
 
 interface MidSectionControlsProps {
   volume: number;
@@ -10,6 +11,10 @@ interface MidSectionControlsProps {
   onPassTurn: () => void;
   hasMessages: boolean;
   isManagedMode?: boolean;
+  isProcessing?: boolean;
+  isRecording?: boolean;
+  currentStep?: string;
+  speaker?: "A" | "B";
 }
 
 export const MidSectionControls = ({
@@ -18,7 +23,11 @@ export const MidSectionControls = ({
   onWipeMessages,
   onPassTurn,
   hasMessages,
-  isManagedMode = false
+  isManagedMode = false,
+  isProcessing = false,
+  isRecording = false,
+  currentStep,
+  speaker
 }: MidSectionControlsProps) => {
   return (
     <div className="w-full h-full flex items-center justify-between px-5">
@@ -34,6 +43,16 @@ export const MidSectionControls = ({
             className="w-full"
           />
         </div>
+      </div>
+
+      {/* Center: Status Display */}
+      <div className="flex-1 flex items-center justify-center">
+        <CentralStatusDisplay
+          isProcessing={isProcessing}
+          isRecording={isRecording}
+          currentStep={currentStep}
+          speaker={speaker}
+        />
       </div>
 
       {/* Right: Action Buttons - Fixed position with proper spacing */}
