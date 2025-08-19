@@ -67,11 +67,12 @@ export const SpeakerSection = ({
 
       {/* Fixed microphone and repeat button area */}
       <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center bg-background z-30 border-t border-border">
-        {/* Repeat Button - Close to microphone button */}
-        <div className="absolute -left-16 top-1/2 -translate-y-1/2">
+        {/* Container for microphone and repeat button */}
+        <div className="flex items-center gap-3">
+          {/* Repeat Button - Left of microphone */}
           <button
             onClick={onRepeat}
-            className="h-10 w-10 rounded-full bg-muted hover:bg-muted/80 border border-border shadow-sm flex items-center justify-center transition-colors"
+            className="h-12 w-12 rounded-full bg-muted hover:bg-muted/80 border border-border shadow-sm flex items-center justify-center transition-colors"
             title="Repeat last message"
           >
             <svg 
@@ -88,17 +89,17 @@ export const SpeakerSection = ({
               />
             </svg>
           </button>
-        </div>
 
-        {/* Main Microphone Button - Center */}
-        <SpeakerButton
-          speaker={speaker}
-          isListening={isListening}
-          onStart={onStart}
-          onStop={onStop}
-          language={language}
-          flag={flag}
-        />
+          {/* Main Microphone Button */}
+          <SpeakerButton
+            speaker={speaker}
+            isListening={isListening}
+            onStart={onStart}
+            onStop={onStop}
+            language={language}
+            flag={flag}
+          />
+        </div>
       </div>
 
       {/* Listening feedback overlay */}
