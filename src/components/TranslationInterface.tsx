@@ -427,13 +427,13 @@ export const TranslationInterface = ({
         )}
         style={{
           backgroundColor: managedMode.isEnabled && managedMode.currentTurn === "B" 
-            ? turnIndicatorColor === "green" ? "#f0fdf4" 
-            : turnIndicatorColor === "blue" ? "#eff6ff"
-            : turnIndicatorColor === "purple" ? "#faf5ff"
-            : turnIndicatorColor === "yellow" ? "#fefce8"
-            : turnIndicatorColor === "pink" ? "#fdf2f8"
-            : turnIndicatorColor === "orange" ? "#fff7ed"
-            : "#f0fdf4"
+            ? turnIndicatorColor === "green" ? "#dcfce7" 
+            : turnIndicatorColor === "blue" ? "#dbeafe"
+            : turnIndicatorColor === "purple" ? "#f3e8ff"
+            : turnIndicatorColor === "yellow" ? "#fef3c7"
+            : turnIndicatorColor === "pink" ? "#fce7f3"
+            : turnIndicatorColor === "orange" ? "#fed7aa"
+            : "#dcfce7"
             : "transparent"
         }}
       >
@@ -516,13 +516,13 @@ export const TranslationInterface = ({
         )}
         style={{
           backgroundColor: managedMode.isEnabled && managedMode.currentTurn === "A" 
-            ? turnIndicatorColor === "green" ? "#f0fdf4" 
-            : turnIndicatorColor === "blue" ? "#eff6ff"
-            : turnIndicatorColor === "purple" ? "#faf5ff"
-            : turnIndicatorColor === "yellow" ? "#fefce8"
-            : turnIndicatorColor === "pink" ? "#fdf2f8"
-            : turnIndicatorColor === "orange" ? "#fff7ed"
-            : "#f0fdf4"
+            ? turnIndicatorColor === "green" ? "#dcfce7" 
+            : turnIndicatorColor === "blue" ? "#dbeafe"
+            : turnIndicatorColor === "purple" ? "#f3e8ff"
+            : turnIndicatorColor === "yellow" ? "#fef3c7"
+            : turnIndicatorColor === "pink" ? "#fce7f3"
+            : turnIndicatorColor === "orange" ? "#fed7aa"
+            : "#dcfce7"
             : "transparent"
         }}
       >
