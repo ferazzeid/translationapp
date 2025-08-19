@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Upload, Settings, Palette, X } from "lucide-react";
 import { MobileFrame } from "./MobileFrame";
+import { LandingPageSettings } from "./LandingPageSettings";
 
 interface AdminDashboardProps {
   onBackToSettings: () => void;
@@ -542,6 +543,9 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
               </Button>
             </CardContent>
           </Card>
+
+          {/* Landing Page Settings */}
+          <LandingPageSettings />
 
         </div>
       </div>

@@ -1,0 +1,303 @@
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Loader2, Save } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+
+interface LandingPageData {
+  hero_title: string;
+  hero_subtitle: string;
+  hero_cta_text: string;
+  feature_1_title: string;
+  feature_1_description: string;
+  feature_2_title: string;
+  feature_2_description: string;
+  feature_3_title: string;
+  feature_3_description: string;
+  app_name: string;
+  google_play_url: string;
+}
+
+export const LandingPageSettings = () => {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [settings, setSettings] = useState<LandingPageData>({
+    hero_title: "",
+    hero_subtitle: "",
+    hero_cta_text: "",
+    feature_1_title: "",
+    feature_1_description: "",
+    feature_2_title: "",
+    feature_2_description: "",
+    feature_3_title: "",
+    feature_3_description: "",
+    app_name: "",
+    google_play_url: "",
+  });
+  
+  const { toast } = useToast();
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('admin_settings')
+        .select('setting_key, setting_value')
+        .in('setting_key', [
+          'hero_title', 'hero_subtitle', 'hero_cta_text',
+          'feature_1_title', 'feature_1_description',
+          'feature_2_title', 'feature_2_description', 
+          'feature_3_title', 'feature_3_description',
+          'app_name', 'google_play_url'
+        ]);
+
+      if (error) throw error;
+
+      if (data) {
+        const settingsMap = data.reduce((acc, item) => {
+          acc[item.setting_key] = item.setting_value || "";
+          return acc;
+        }, {} as Record<string, string>);
+
+        setSettings({
+          hero_title: settingsMap.hero_title || "Your Amazing App",
+          hero_subtitle: settingsMap.hero_subtitle || "Experience the future of communication",
+          hero_cta_text: settingsMap.hero_cta_text || "Try Web App",
+          feature_1_title: settingsMap.feature_1_title || "Real-time Translation",
+          feature_1_description: settingsMap.feature_1_description || "Instantly translate conversations between languages",
+          feature_2_title: settingsMap.feature_2_title || "Voice Recognition",
+          feature_2_description: settingsMap.feature_2_description || "Advanced speech-to-text technology",
+          feature_3_title: settingsMap.feature_3_title || "Cross-platform",
+          feature_3_description: settingsMap.feature_3_description || "Available on web and mobile devices",
+          app_name: settingsMap.app_name || "Translation App",
+          google_play_url: settingsMap.google_play_url || "",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: `Failed to load settings: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      // Save each setting individually
+      const promises = Object.entries(settings).map(([key, value]) =>
+        supabase.rpc('set_admin_setting', {
+          key_name: key,
+          value: value,
+          encrypted: false
+        })
+      );
+
+      const results = await Promise.all(promises);
+      const errors = results.filter(result => result.error);
+      
+      if (errors.length > 0) {
+        throw new Error(`Failed to save ${errors.length} settings`);
+      }
+
+      toast({
+        title: "Success",
+        description: "Landing page settings saved successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: `Failed to save settings: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const updateSetting = (key: keyof LandingPageData, value: string) => {
+    setSettings(prev => ({ ...prev, [key]: value }));
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-6 w-6 animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-semibold theme-text">Landing Page Content</h2>
+          <p className="text-sm theme-text-muted">Customize the content shown on your landing page</p>
+        </div>
+        <Button onClick={handleSave} disabled={saving} className="theme-button">
+          {saving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+          <Save className="h-4 w-4 mr-2" />
+          Save Changes
+        </Button>
+      </div>
+
+      <div className="grid gap-6">
+        {/* App Branding */}
+        <Card className="theme-surface theme-border">
+          <CardHeader>
+            <CardTitle className="theme-text">App Branding</CardTitle>
+            <CardDescription className="theme-text-muted">
+              Configure your app's branding and external links
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="app_name" className="theme-text">App Name</Label>
+              <Input
+                id="app_name"
+                value={settings.app_name}
+                onChange={(e) => updateSetting('app_name', e.target.value)}
+                placeholder="Your App Name"
+                className="theme-input"
+              />
+            </div>
+            <div>
+              <Label htmlFor="google_play_url" className="theme-text">Google Play Store URL</Label>
+              <Input
+                id="google_play_url"
+                value={settings.google_play_url}
+                onChange={(e) => updateSetting('google_play_url', e.target.value)}
+                placeholder="https://play.google.com/store/apps/details?id=..."
+                className="theme-input"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Hero Section */}
+        <Card className="theme-surface theme-border">
+          <CardHeader>
+            <CardTitle className="theme-text">Hero Section</CardTitle>
+            <CardDescription className="theme-text-muted">
+              The main banner that visitors see first
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="hero_title" className="theme-text">Hero Title</Label>
+              <Input
+                id="hero_title"
+                value={settings.hero_title}
+                onChange={(e) => updateSetting('hero_title', e.target.value)}
+                placeholder="Your Amazing App"
+                className="theme-input"
+              />
+            </div>
+            <div>
+              <Label htmlFor="hero_subtitle" className="theme-text">Hero Subtitle</Label>
+              <Textarea
+                id="hero_subtitle"
+                value={settings.hero_subtitle}
+                onChange={(e) => updateSetting('hero_subtitle', e.target.value)}
+                placeholder="Describe what makes your app special..."
+                className="theme-input"
+                rows={3}
+              />
+            </div>
+            <div>
+              <Label htmlFor="hero_cta_text" className="theme-text">Call-to-Action Button Text</Label>
+              <Input
+                id="hero_cta_text"
+                value={settings.hero_cta_text}
+                onChange={(e) => updateSetting('hero_cta_text', e.target.value)}
+                placeholder="Try Web App"
+                className="theme-input"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Features Section */}
+        <Card className="theme-surface theme-border">
+          <CardHeader>
+            <CardTitle className="theme-text">Features Section</CardTitle>
+            <CardDescription className="theme-text-muted">
+              Highlight your app's key features
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Feature 1 */}
+            <div className="space-y-2">
+              <h4 className="font-medium theme-text">Feature 1</h4>
+              <div className="space-y-2">
+                <Input
+                  value={settings.feature_1_title}
+                  onChange={(e) => updateSetting('feature_1_title', e.target.value)}
+                  placeholder="Feature title"
+                  className="theme-input"
+                />
+                <Textarea
+                  value={settings.feature_1_description}
+                  onChange={(e) => updateSetting('feature_1_description', e.target.value)}
+                  placeholder="Feature description"
+                  className="theme-input"
+                  rows={2}
+                />
+              </div>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="space-y-2">
+              <h4 className="font-medium theme-text">Feature 2</h4>
+              <div className="space-y-2">
+                <Input
+                  value={settings.feature_2_title}
+                  onChange={(e) => updateSetting('feature_2_title', e.target.value)}
+                  placeholder="Feature title"
+                  className="theme-input"
+                />
+                <Textarea
+                  value={settings.feature_2_description}
+                  onChange={(e) => updateSetting('feature_2_description', e.target.value)}
+                  placeholder="Feature description"
+                  className="theme-input"
+                  rows={2}
+                />
+              </div>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="space-y-2">
+              <h4 className="font-medium theme-text">Feature 3</h4>
+              <div className="space-y-2">
+                <Input
+                  value={settings.feature_3_title}
+                  onChange={(e) => updateSetting('feature_3_title', e.target.value)}
+                  placeholder="Feature title"
+                  className="theme-input"
+                />
+                <Textarea
+                  value={settings.feature_3_description}
+                  onChange={(e) => updateSetting('feature_3_description', e.target.value)}
+                  placeholder="Feature description"
+                  className="theme-input"
+                  rows={2}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
