@@ -136,35 +136,12 @@ const Index = () => {
         
         case "setup":
           return (
-            <div className="relative">
-              {isAuthenticated && (
-                <div className="absolute top-4 right-4 flex gap-2 z-50">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentState("admin-auth")}
-                  >
-                    <Settings className="h-4 w-4 mr-1" />
-                    Admin
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleSignOut}
-                  >
-                    <LogOut className="h-4 w-4 mr-1" />
-                    Sign Out
-                  </Button>
-                </div>
-              )}
-              
-              <LanguageSelector
-                selectedLanguages={selectedLanguages}
-                onLanguageChange={handleLanguageChange}
-                onContinue={handleSetupComplete}
-                onOpenSettings={handleOpenSettings}
-              />
-            </div>
+            <LanguageSelector
+              selectedLanguages={selectedLanguages}
+              onLanguageChange={handleLanguageChange}
+              onContinue={handleSetupComplete}
+              onOpenSettings={handleOpenSettings}
+            />
           );
         
         case "translation":

@@ -64,8 +64,8 @@ export const LanguageSelector = ({
             <Button
               variant="outline"
               className={cn(
-                "w-full justify-between h-12 text-left theme-border theme-text hover:theme-surface-alt focus-visible:ring-1 focus-visible:ring-theme-primary focus-visible:ring-offset-0",
-                expandedSelector === "speakerB" && "theme-surface-alt"
+                "w-full justify-between h-12 text-left theme-button border-2 theme-border hover:theme-surface-alt focus-visible:ring-2 focus-visible:ring-theme-primary focus-visible:ring-offset-0",
+                expandedSelector === "speakerB" && "theme-surface-alt border-theme-primary"
               )}
               onClick={() => setExpandedSelector(expandedSelector === "speakerB" ? null : "speakerB")}
             >
@@ -77,12 +77,12 @@ export const LanguageSelector = ({
             </Button>
 
             {expandedSelector === "speakerB" && (
-              <div className="grid grid-cols-1 gap-1 mt-2 max-h-60 overflow-y-auto border theme-border rounded-md">
+              <div className="grid grid-cols-1 gap-1 mt-2 max-h-60 overflow-y-auto border-2 theme-border rounded-md theme-surface">
                 {LANGUAGES.map((lang) => (
                   <Button
                     key={lang.code}
                     variant="ghost"
-                    className="h-10 justify-start text-base theme-text hover:theme-surface-alt focus-visible:ring-1 focus-visible:ring-theme-primary focus-visible:ring-offset-0"
+                    className="h-10 justify-start text-base theme-button border-0 hover:theme-surface-alt focus-visible:ring-2 focus-visible:ring-theme-primary focus-visible:ring-offset-0"
                     onClick={() => {
                       onLanguageChange("speakerB", lang.code);
                       setExpandedSelector(null);
@@ -102,8 +102,8 @@ export const LanguageSelector = ({
             <Button
               variant="outline"
               className={cn(
-                "w-full justify-between h-12 text-left theme-border theme-text hover:theme-surface-alt focus-visible:ring-1 focus-visible:ring-theme-primary focus-visible:ring-offset-0",
-                expandedSelector === "speakerA" && "theme-surface-alt"
+                "w-full justify-between h-12 text-left theme-button border-2 theme-border hover:theme-surface-alt focus-visible:ring-2 focus-visible:ring-theme-primary focus-visible:ring-offset-0",
+                expandedSelector === "speakerA" && "theme-surface-alt border-theme-primary"
               )}
               onClick={() => setExpandedSelector(expandedSelector === "speakerA" ? null : "speakerA")}
             >
@@ -115,12 +115,12 @@ export const LanguageSelector = ({
             </Button>
 
             {expandedSelector === "speakerA" && (
-              <div className="grid grid-cols-1 gap-1 mt-2 max-h-60 overflow-y-auto border theme-border rounded-md">
+              <div className="grid grid-cols-1 gap-1 mt-2 max-h-60 overflow-y-auto border-2 theme-border rounded-md theme-surface">
                 {LANGUAGES.map((lang) => (
                   <Button
                     key={lang.code}
                     variant="ghost"
-                    className="h-10 justify-start text-base theme-text hover:theme-surface-alt focus-visible:ring-1 focus-visible:ring-theme-primary focus-visible:ring-offset-0"
+                    className="h-10 justify-start text-base theme-button border-0 hover:theme-surface-alt focus-visible:ring-2 focus-visible:ring-theme-primary focus-visible:ring-offset-0"
                     onClick={() => {
                       onLanguageChange("speakerA", lang.code);
                       setExpandedSelector(null);
