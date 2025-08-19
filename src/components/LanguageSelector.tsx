@@ -3,25 +3,7 @@ import { ChevronDown, Languages, Settings, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-
-interface Language {
-  code: string;
-  name: string;
-  flag: string;
-}
-
-const LANGUAGES: Language[] = [
-  { code: "en", name: "English", flag: "EN" },
-  { code: "hu", name: "Hungarian", flag: "🇭🇺" },
-  { code: "es", name: "Spanish", flag: "🇪🇸" },
-  { code: "fr", name: "French", flag: "🇫🇷" },
-  { code: "de", name: "German", flag: "🇩🇪" },
-  { code: "it", name: "Italian", flag: "🇮🇹" },
-  { code: "pt", name: "Portuguese", flag: "🇵🇹" },
-  { code: "zh", name: "Chinese", flag: "🇨🇳" },
-  { code: "ja", name: "Japanese", flag: "🇯🇵" },
-  { code: "ko", name: "Korean", flag: "🇰🇷" },
-];
+import { LANGUAGES, getLanguageName, type Language } from "@/constants/languages";
 
 interface LanguageSelectorProps {
   selectedLanguages: { speakerA: string; speakerB: string };
@@ -41,10 +23,6 @@ export const LanguageSelector = ({
   onSignOut
 }: LanguageSelectorProps) => {
   const [expandedSelector, setExpandedSelector] = useState<"speakerA" | "speakerB" | null>(null);
-
-  const getLanguageName = (code: string) => {
-    return LANGUAGES.find(lang => lang.code === code)?.name || "Select Language";
-  };
 
   const isReady = selectedLanguages.speakerA && selectedLanguages.speakerB;
 

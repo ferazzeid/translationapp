@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { AppSettings } from "./AppSettings";
+import { getLanguageName } from "@/constants/languages";
 
 interface GeneralSettingsProps {
   onBack: () => void;
@@ -15,19 +16,6 @@ interface GeneralSettingsProps {
   speakerBLanguage: string;
 }
 
-const LANGUAGES = [
-  { code: "en", name: "English", flag: "EN" },
-  { code: "hu", name: "Hungarian", flag: "🇭🇺" },
-  { code: "es", name: "Spanish", flag: "🇪🇸" },
-  { code: "fr", name: "French", flag: "🇫🇷" },
-  { code: "de", name: "German", flag: "🇩🇪" },
-  { code: "it", name: "Italian", flag: "🇮🇹" },
-  { code: "pt", name: "Portuguese", flag: "🇵🇹" },
-  { code: "zh", name: "Chinese", flag: "🇨🇳" },
-  { code: "ja", name: "Japanese", flag: "🇯🇵" },
-  { code: "ko", name: "Korean", flag: "🇰🇷" },
-];
-
 export const GeneralSettings = ({
   onBack,
   onOpenLanguageSettings,
@@ -36,9 +24,6 @@ export const GeneralSettings = ({
   speakerALanguage,
   speakerBLanguage
 }: GeneralSettingsProps) => {
-  const getLanguageName = (code: string) => {
-    return LANGUAGES.find(lang => lang.code === code)?.name || "Unknown";
-  };
 
   const settingsSections = [
     {

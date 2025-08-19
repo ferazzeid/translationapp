@@ -7,9 +7,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { usePWA } from "@/hooks/usePWA";
 import { useWakeLock } from "@/hooks/useWakeLock";
 import { useManagedMode } from "@/hooks/useManagedMode";
+import { getLanguageFlag } from "@/constants/languages";
 import { SpeechBubble } from "./SpeechBubble";
 import { MidSectionControls } from "./MidSectionControls";
-
 import { SpeakerButton } from "./SpeakerButton";
 import { SpeakerControls } from "./SpeakerControls";
 import { SpeakerSection } from "./SpeakerSection";
@@ -76,39 +76,7 @@ export const TranslationInterface = ({
   // Determine if we're on a real mobile device (not desktop with mobile frame)
   const isRealMobile = isMobile || isStandalone;
 
-  // Language code to name mapping
-  const getLanguageName = (code: string) => {
-    const languages: Record<string, string> = {
-      en: "English",
-      hu: "Hungarian",
-      es: "Spanish",
-      fr: "French",
-      de: "German",
-      it: "Italian",
-      pt: "Portuguese",
-      zh: "Chinese",
-      ja: "Japanese",
-      ko: "Korean"
-    };
-    return languages[code] || code.toUpperCase();
-  };
 
-  // Language code to flag mapping  
-  const getLanguageFlag = (code: string) => {
-    const flags: Record<string, string> = {
-      en: "EN",
-      hu: "HU", 
-      es: "ES",
-      fr: "FR",
-      de: "DE",
-      it: "IT",
-      pt: "PT",
-      zh: "ZH",
-      ja: "JA",
-      ko: "KO"
-    };
-    return flags[code] || "??";
-  };
 
   // Load admin settings and manage features
   useEffect(() => {
