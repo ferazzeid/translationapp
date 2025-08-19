@@ -419,8 +419,11 @@ export const TranslationInterface = ({
     )}>
       {/* Speaker B Half - Top (Rotated 180°) - Other Person */}
       <div className={cn(
-        "rotate-180 relative",
-        isRealMobile ? "h-[calc(50dvh-2.5rem)]" : "h-1/2"
+        "rotate-180 relative transition-all duration-300",
+        isRealMobile ? "h-[calc(50dvh-2.5rem)]" : "h-1/2",
+        managedMode.isEnabled && managedMode.currentTurn === "B" 
+          ? "bg-primary/5 shadow-inner" 
+          : ""
       )}>
         <SpeakerSection
           speaker="B"
@@ -463,6 +466,21 @@ export const TranslationInterface = ({
           onToggleDarkMode={() => setSpeakerBDarkMode(!speakerBDarkMode)}
           isTop={true}
         />
+
+        {/* Managed Mode Controls for Speaker B - Inside rotated section */}
+        {managedMode.isEnabled && (
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+            <ManagedModeControls
+              isEnabled={managedMode.isEnabled}
+              currentTurn={managedMode.currentTurn}
+              onSwitchTurn={managedMode.switchTurn}
+              speakerALanguage={speakerALanguage}
+              speakerBLanguage={speakerBLanguage}
+              speaker="B"
+              className="rotate-180"
+            />
+          </div>
+        )}
       </div>
 
       {/* Central Controls Strip */}
@@ -485,19 +503,17 @@ export const TranslationInterface = ({
           isProcessing={isProcessing}
         />
         
-        {/* Managed Mode Controls - Right Side */}
+        {/* Right side space for symmetry */}
         <div className="absolute right-2 top-1/2 -translate-y-1/2">
-          <ManagedModeControls
-            isEnabled={managedMode.isEnabled}
-            currentTurn={managedMode.currentTurn}
-            onSwitchTurn={managedMode.switchTurn}
-          />
         </div>
       </div>
 
       {/* Speaker A Half - Bottom (Normal) - You */}
       <div className={cn(
-        "relative",
+        "relative transition-all duration-300",
+        managedMode.isEnabled && managedMode.currentTurn === "A" 
+          ? "bg-primary/5 shadow-inner" 
+          : "",
         isRealMobile ? "h-[calc(50dvh-2.5rem)]" : "h-1/2"
       )}>
         <SpeakerSection
@@ -541,6 +557,20 @@ export const TranslationInterface = ({
           onToggleDarkMode={() => setSpeakerADarkMode(!speakerADarkMode)}
           isTop={false}
         />
+
+        {/* Managed Mode Controls for Speaker A - Inside section */}
+        {managedMode.isEnabled && (
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+            <ManagedModeControls
+              isEnabled={managedMode.isEnabled}
+              currentTurn={managedMode.currentTurn}
+              onSwitchTurn={managedMode.switchTurn}
+              speakerALanguage={speakerALanguage}
+              speakerBLanguage={speakerBLanguage}
+              speaker="A"
+            />
+          </div>
+        )}
       </div>
 
       {/* Admin Settings - Bottom Left */}
