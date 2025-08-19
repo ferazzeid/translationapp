@@ -1,6 +1,6 @@
 {
-  "name": "Translation Bridge",
-  "short_name": "TransBridge",
+  "name": "TalkDuo",
+  "short_name": "TalkDuo",
   "description": "Real-time translation app for seamless communication",
   "start_url": "/",
   "display": "standalone",

@@ -141,10 +141,10 @@ export const SpeakerButton = ({
           onPointerLeave={holdToRecordMode ? handlePointerUp : undefined}
         >
           {isListening ? (
-            <Square className="!h-16 !w-16 fill-current relative z-10 icon" />
+            <Square className="!h-8 !w-8 fill-current relative z-10 icon" />
           ) : (
             <Mic className={cn(
-              "!h-16 !w-16 relative z-10 icon",
+              "!h-8 !w-8 relative z-10 icon",
               isDisabled ? "theme-icon-disabled" : isActiveInManagedMode ? "theme-icon-active" : "theme-icon theme-icon-hover"
             )}
             style={{
@@ -152,7 +152,7 @@ export const SpeakerButton = ({
                 ? "drop-shadow(0 0 2px rgba(0,0,0,0.8))" 
                 : "none"
             }}
-            strokeWidth={isActiveInManagedMode ? 2.5 : 2}
+            strokeWidth={2}
             />
           )}
           

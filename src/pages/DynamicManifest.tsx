@@ -8,26 +8,26 @@ export const DynamicManifest = () => {
         // Generate dynamic manifest
         const manifest = await generateDynamicManifest();
         
-        // Create blob URL for the manifest
+        // Create blob URL for the manifest with cache busting
         const manifestBlob = new Blob([JSON.stringify(manifest, null, 2)], {
           type: 'application/json'
         });
         const manifestUrl = URL.createObjectURL(manifestBlob);
         
-        // Update manifest link
-        let manifestLink = document.querySelector('link[rel="manifest"]') as HTMLLinkElement;
-        if (!manifestLink) {
-          manifestLink = document.createElement('link');
-          manifestLink.rel = 'manifest';
-          document.head.appendChild(manifestLink);
-        }
+        // Remove existing manifest links to ensure clean override
+        const existingLinks = document.querySelectorAll('link[rel="manifest"]');
+        existingLinks.forEach(link => link.remove());
         
-        // Clean up previous blob URL
-        if (manifestLink.href.startsWith('blob:')) {
-          URL.revokeObjectURL(manifestLink.href);
-        }
+        // Create new manifest link with cache busting
+        const manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = `${manifestUrl}?v=${Date.now()}`;
+        document.head.appendChild(manifestLink);
         
-        manifestLink.href = manifestUrl;
+        // Also update page title immediately if available
+        if (manifest.name && manifest.name !== 'TalkDuo') {
+          document.title = manifest.name;
+        }
         
         // Update favicon links
         await updateFaviconLinks();
