@@ -5,14 +5,14 @@ import { cn } from "@/lib/utils";
 interface SpeakerControlsProps {
   speaker: "A" | "B";
   onOpenVoiceSelection: () => void;
-  onOpenAdminSettings?: () => void;
+  onOpenSettings?: () => void;
   isTop?: boolean;
 }
 
 export const SpeakerControls = ({
   speaker,
   onOpenVoiceSelection,
-  onOpenAdminSettings,
+  onOpenSettings,
   isTop = false
 }: SpeakerControlsProps) => {
   return (
@@ -33,8 +33,8 @@ export const SpeakerControls = ({
         </Button>
       </div>
       
-      {/* Right Control - Admin Settings (only show for one speaker to avoid duplication) */}
-      {speaker === "A" && onOpenAdminSettings && (
+      {/* Right Control - Settings (only show for one speaker to avoid duplication) */}
+      {speaker === "A" && onOpenSettings && (
         <div className={cn(
           "absolute pointer-events-auto",
           isTop ? "bottom-6 right-5" : "bottom-6 right-5"
@@ -42,9 +42,9 @@ export const SpeakerControls = ({
           <Button
             variant="outline"
             size="icon"
-            onClick={onOpenAdminSettings}
+            onClick={onOpenSettings}
             className="h-10 w-10 rounded-full theme-icon-button hover:theme-icon-button-hover"
-            title="Admin Settings"
+            title="Settings"
           >
             <Settings className="h-4 w-4 theme-icon theme-icon-hover" />
           </Button>

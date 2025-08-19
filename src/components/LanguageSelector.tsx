@@ -135,8 +135,8 @@ export const LanguageSelector = ({
         </div>
       </div>
 
-      {/* Fixed bottom button */}
-      <div className="p-6">
+      {/* Fixed bottom actions */}
+      <div className="p-6 space-y-3">
         <Button
           className="w-full h-12 button--strong hover:opacity-90 text-base font-medium"
           disabled={!isReady}
@@ -144,6 +144,28 @@ export const LanguageSelector = ({
         >
           {showAsSettings ? "Save" : "Continue"}
         </Button>
+        
+        {/* Admin Access Button - Only shown in settings mode */}
+        {showAsSettings && onOpenSettings && (
+          <Button
+            variant="outline"
+            className="w-full h-10 text-sm font-medium theme-button border border-border hover:theme-surface-alt"
+            onClick={onOpenSettings}
+          >
+            Admin Access
+          </Button>
+        )}
+        
+        {/* Sign Out Button - Only shown in settings mode */}
+        {showAsSettings && onSignOut && (
+          <Button
+            variant="outline"
+            className="w-full h-10 text-sm font-medium theme-button border border-border hover:theme-surface-alt text-destructive hover:text-destructive"
+            onClick={onSignOut}
+          >
+            Sign Out
+          </Button>
+        )}
       </div>
     </div>
   );

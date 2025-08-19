@@ -565,7 +565,7 @@ export const TranslationInterface = ({
         <SpeakerControls
           speaker="B"
           onOpenVoiceSelection={() => setActiveVoiceModal("B")}
-          onOpenAdminSettings={onOpenAdminSettings}
+          onOpenSettings={onOpenSettings}
           isTop={true}
         />
 
@@ -633,7 +633,7 @@ export const TranslationInterface = ({
         <SpeakerControls
           speaker="A"
           onOpenVoiceSelection={() => setActiveVoiceModal("A")}
-          onOpenAdminSettings={onOpenAdminSettings}
+          onOpenSettings={onOpenSettings}
           isTop={false}
         />
 
