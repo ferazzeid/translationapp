@@ -17,6 +17,8 @@ import { SpeakerSection } from "./SpeakerSection";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
 import { SimpleLanguageModal } from "./SimpleLanguageModal";
 import { ProcessingIndicator } from "./ProcessingIndicator";
+import { Button } from "@/components/ui/button";
+import { LogOut } from "lucide-react";
 
 interface Message {
   id: string;
@@ -31,13 +33,15 @@ interface TranslationInterfaceProps {
   speakerBLanguage: string;
   onOpenSettings: () => void;
   onOpenAdminSettings?: () => void;
+  onSignOut?: () => void;
 }
 
 export const TranslationInterface = ({
   speakerALanguage,
   speakerBLanguage,
   onOpenSettings,
-  onOpenAdminSettings
+  onOpenAdminSettings,
+  onSignOut
 }: TranslationInterfaceProps) => {
   const [isListeningA, setIsListeningA] = useState(false);
   const [isListeningB, setIsListeningB] = useState(false);
@@ -457,6 +461,21 @@ export const TranslationInterface = ({
 
       {/* Language Settings - Bottom Right */}
       <LanguageSettings onOpenSettings={() => setIsLanguageModalOpen(true)} />
+      
+      {/* Sign Out Button - Top Right */}
+      {onSignOut && (
+        <div className="absolute top-4 right-4 z-40">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onSignOut}
+            className="bg-background/80 backdrop-blur-sm"
+          >
+            <LogOut className="h-4 w-4 mr-1" />
+            Sign Out
+          </Button>
+        </div>
+      )}
 
       {/* Modals - Outside rotated areas */}
       <VoiceSelectionModal

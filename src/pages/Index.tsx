@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { IntroductionMode } from "@/components/IntroductionMode";
 import { TranslationInterface } from "@/components/TranslationInterface";
 import { AdminAuth } from "@/components/AdminAuth";
 import { AdminSettings } from "@/components/AdminSettings";
+import { AuthPage } from "@/components/AuthPage";
 import { MobileFrame } from "@/components/MobileFrame";
-import { supabase } from "@/integrations/supabase/client";
-import { User } from "@supabase/supabase-js";
+import { useAuth } from "@/hooks/useAuth";
+import { User, Session } from "@supabase/supabase-js";
+import { Button } from "@/components/ui/button";
+import { Settings, LogOut } from "lucide-react";
 import { usePWA } from "@/hooks/usePWA";
 
-type AppState = "setup" | "introduction" | "translation" | "settings" | "admin-auth" | "admin-settings";
+type AppState = "auth" | "setup" | "translation" | "settings" | "admin-auth" | "admin-settings";
 
 interface LanguageSelection {
   speakerA: string;
@@ -43,12 +45,24 @@ const saveLanguages = (languages: LanguageSelection) => {
 };
 
 const Index = () => {
+  const { user, session, loading, signOut, isAuthenticated } = useAuth();
   const [selectedLanguages, setSelectedLanguages] = useState<LanguageSelection>(loadSavedLanguages);
-  const [currentState, setCurrentState] = useState<AppState>(
-    selectedLanguages.speakerA && selectedLanguages.speakerB ? "translation" : "setup"
-  );
+  const [currentState, setCurrentState] = useState<AppState>("auth");
   const [adminUser, setAdminUser] = useState<User | null>(null);
   const { isStandalone } = usePWA();
+
+  // Update state based on authentication
+  useEffect(() => {
+    if (loading) return;
+    
+    if (!isAuthenticated) {
+      setCurrentState("auth");
+    } else {
+      setCurrentState(
+        selectedLanguages.speakerA && selectedLanguages.speakerB ? "translation" : "setup"
+      );
+    }
+  }, [isAuthenticated, loading, selectedLanguages]);
 
   const handleLanguageChange = (speaker: "speakerA" | "speakerB", language: string) => {
     const newLanguages = {
@@ -67,8 +81,19 @@ const Index = () => {
     setCurrentState("settings");
   };
 
-  const handleOpenAdminSettings = () => {
-    setCurrentState("admin-auth");
+  const handleAuthenticated = (user: User, session: Session) => {
+    setCurrentState(
+      selectedLanguages.speakerA && selectedLanguages.speakerB ? "translation" : "setup"
+    );
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    setCurrentState("auth");
+    setAdminUser(null);
+    // Clear saved languages on sign out for privacy
+    localStorage.removeItem(STORAGE_KEY);
+    setSelectedLanguages({ speakerA: "", speakerB: "" });
   };
 
   const handleAdminAuthenticated = (user: User) => {
@@ -86,18 +111,50 @@ const Index = () => {
   };
 
   const renderCurrentView = () => {
+    if (loading) {
+      return (
+        <div className="min-h-dvh bg-gradient-surface flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      );
+    }
+
     const content = (() => {
       switch (currentState) {
+        case "auth":
+          return <AuthPage onAuthenticated={handleAuthenticated} />;
+        
         case "setup":
           return (
-            <LanguageSelector
-              selectedLanguages={selectedLanguages}
-              onLanguageChange={handleLanguageChange}
-              onContinue={handleSetupComplete}
-              onOpenSettings={handleOpenSettings}
-            />
+            <div className="relative">
+              {isAuthenticated && (
+                <div className="absolute top-4 right-4 flex gap-2 z-50">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentState("admin-auth")}
+                  >
+                    <Settings className="h-4 w-4 mr-1" />
+                    Admin
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSignOut}
+                  >
+                    <LogOut className="h-4 w-4 mr-1" />
+                    Sign Out
+                  </Button>
+                </div>
+              )}
+              <LanguageSelector
+                selectedLanguages={selectedLanguages}
+                onLanguageChange={handleLanguageChange}
+                onContinue={handleSetupComplete}
+                onOpenSettings={handleOpenSettings}
+              />
+            </div>
           );
-        
         
         case "translation":
           return (
@@ -105,7 +162,8 @@ const Index = () => {
               speakerALanguage={selectedLanguages.speakerA}
               speakerBLanguage={selectedLanguages.speakerB}
               onOpenSettings={handleOpenSettings}
-              onOpenAdminSettings={handleOpenAdminSettings}
+              onOpenAdminSettings={() => setCurrentState("admin-auth")}
+              onSignOut={handleSignOut}
             />
           );
         
@@ -115,8 +173,9 @@ const Index = () => {
               selectedLanguages={selectedLanguages}
               onLanguageChange={handleLanguageChange}
               onContinue={() => setCurrentState("translation")}
-              onOpenSettings={handleOpenAdminSettings}
+              onOpenSettings={() => setCurrentState("admin-auth")}
               showAsSettings={true}
+              onSignOut={handleSignOut}
             />
           );
         
@@ -142,7 +201,7 @@ const Index = () => {
     })();
 
     // Don't wrap admin settings and auth in mobile frame
-    if (currentState === "admin-auth" || currentState === "admin-settings") {
+    if (currentState === "admin-auth" || currentState === "admin-settings" || currentState === "auth") {
       return content;
     }
 

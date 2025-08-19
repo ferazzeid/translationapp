@@ -29,6 +29,7 @@ interface LanguageSelectorProps {
   onContinue: () => void;
   onOpenSettings?: () => void;
   showAsSettings?: boolean;
+  onSignOut?: () => void;
 }
 
 export const LanguageSelector = ({ 
@@ -36,7 +37,8 @@ export const LanguageSelector = ({
   onLanguageChange, 
   onContinue,
   onOpenSettings,
-  showAsSettings = false
+  showAsSettings = false,
+  onSignOut
 }: LanguageSelectorProps) => {
   const [expandedSelector, setExpandedSelector] = useState<"speakerA" | "speakerB" | null>(null);
 
