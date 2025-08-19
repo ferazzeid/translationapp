@@ -20,7 +20,7 @@ import { VoiceSelectionModal } from "./VoiceSelectionModal";
 import { SimpleLanguageModal } from "./SimpleLanguageModal";
 import { ProcessingIndicator } from "./ProcessingIndicator";
 import { WakeLockIndicator } from "./WakeLockIndicator";
-import { ManagedModeControls } from "./ManagedModeControls";
+
 
 interface Message {
   id: string;
@@ -479,20 +479,6 @@ export const TranslationInterface = ({
           isTop={true}
         />
 
-        {/* Managed Mode Controls for Speaker B - Inside rotated section */}
-        {managedMode.isEnabled && (
-          <div className="absolute top-4 right-4">
-            <ManagedModeControls
-              isEnabled={managedMode.isEnabled}
-              currentTurn={managedMode.currentTurn}
-              onSwitchTurn={managedMode.switchTurn}
-              speakerALanguage={speakerALanguage}
-              speakerBLanguage={speakerBLanguage}
-              speaker="B"
-              className="rotate-180"
-            />
-          </div>
-        )}
       </div>
 
       {/* Central Controls Strip */}
@@ -582,19 +568,6 @@ export const TranslationInterface = ({
           isTop={false}
         />
 
-        {/* Managed Mode Controls for Speaker A - Inside section */}
-        {managedMode.isEnabled && (
-          <div className="absolute top-4 right-4">
-            <ManagedModeControls
-              isEnabled={managedMode.isEnabled}
-              currentTurn={managedMode.currentTurn}
-              onSwitchTurn={managedMode.switchTurn}
-              speakerALanguage={speakerALanguage}
-              speakerBLanguage={speakerBLanguage}
-              speaker="A"
-            />
-          </div>
-        )}
       </div>
 
       {/* Admin Settings - Bottom Left */}
