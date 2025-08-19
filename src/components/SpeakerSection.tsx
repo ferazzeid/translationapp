@@ -40,7 +40,7 @@ export const SpeakerSection = ({
     <div className={cn(
       "h-full w-full relative bg-background overflow-hidden",
       isActiveTurn && "ring-1 ring-primary/30",
-      isInactiveTurn && "opacity-70",
+      
       className
     )}>
       {(() => {
@@ -90,6 +90,8 @@ export const SpeakerSection = ({
             onStop={onStop}
             language={language}
             flag={flag}
+            isManagedMode={isManagedMode}
+            isMyTurn={isCurrentTurn}
           />
         </div>
       </div>
