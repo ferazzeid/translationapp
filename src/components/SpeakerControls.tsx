@@ -22,13 +22,13 @@ export const SpeakerControls = ({
       {/* Left Control - Voice Selection */}
       <div className={cn(
         "absolute pointer-events-auto",
-        isTop ? "bottom-6 left-6" : "bottom-6 left-6"
+        isTop ? "bottom-6 left-5" : "bottom-6 left-5"
       )}>
         <Button
           variant="outline"
           size="icon"
           onClick={onOpenVoiceSelection}
-          className="h-10 w-10 rounded-full theme-button border-2"
+          className="h-10 w-10 rounded-full theme-button"
           title={`Voice Selection for Speaker ${speaker}`}
         >
           <MessageCircle className="h-4 w-4" />
@@ -38,13 +38,13 @@ export const SpeakerControls = ({
       {/* Right Control - Dark/Light Mode */}
       <div className={cn(
         "absolute pointer-events-auto",
-        isTop ? "bottom-6 right-6" : "bottom-6 right-6"
+        isTop ? "bottom-6 right-5" : "bottom-6 right-5"
       )}>
         <Button
           variant="outline"
           size="icon"
           onClick={onToggleDarkMode}
-          className="h-10 w-10 rounded-full theme-button border-2"
+          className="h-10 w-10 rounded-full theme-button"
           title={isDarkMode ? "Switch to Light Bubbles" : "Switch to Dark Bubbles"}
         >
           {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}

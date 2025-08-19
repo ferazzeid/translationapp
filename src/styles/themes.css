@@ -126,7 +126,7 @@
 .theme-button {
   background-color: hsl(var(--theme-surface));
   color: hsl(var(--theme-text));
-  border: 1px solid hsl(var(--theme-border));
+  border: none;
   box-shadow: var(--theme-shadow-sm);
 }
 
