@@ -78,13 +78,13 @@ export const VoiceSelectionModal = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className={cn(
-        "max-w-xs bg-background border border-border shadow-lg p-0",
+        "max-w-xs theme-modal-bg theme-modal-border shadow-lg p-0",
         speaker === "B" && "rotate-180"
       )}>
         <DialogTitle className="sr-only">Voice Selection</DialogTitle>
         {/* Header */}
-        <div className="flex items-center justify-center p-4 border-b border-border">
-          <span className="text-sm font-medium text-foreground">Voice Selection</span>
+        <div className="flex items-center justify-center p-4 border-b theme-modal-border theme-modal-header-bg">
+          <span className="text-sm font-medium theme-text">Voice Selection</span>
         </div>
         
         {/* Voice List */}
@@ -95,31 +95,31 @@ export const VoiceSelectionModal = ({
               className={cn(
                 "flex items-center justify-between p-3 rounded border cursor-pointer transition-colors",
                 selectedVoice === voice.id
-                  ? "border-foreground bg-muted"
-                  : "border-border hover:bg-muted/50"
+                  ? "theme-modal-border theme-surface-alt"
+                  : "theme-modal-border hover:theme-dropdown-hover"
               )}
               onClick={() => handleVoiceSelect(voice.id)}
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-medium text-foreground text-sm">{voice.name}</span>
-                  <span className="text-xs text-muted-foreground">({voice.gender})</span>
+                  <span className="font-medium theme-text text-sm">{voice.name}</span>
+                  <span className="text-xs theme-text-muted">({voice.gender})</span>
                 </div>
               </div>
               
               <Button
                 variant="ghost"
                 size="icon"
-                className="ml-2 h-6 w-6 text-foreground hover:bg-foreground hover:text-background"
+                className="ml-2 h-6 w-6 theme-icon theme-icon-hover hover:theme-surface-alt"
                 onClick={(e) => {
                   e.stopPropagation();
                   handlePreviewVoice(voice.id);
                 }}
               >
                 {playingVoice === voice.id ? (
-                  <Pause className="h-3 w-3" />
+                  <Pause className="h-3 w-3 theme-icon" />
                 ) : (
-                  <Play className="h-3 w-3" />
+                  <Play className="h-3 w-3 theme-icon" />
                 )}
               </Button>
             </div>

@@ -66,29 +66,29 @@ export const SimpleLanguageModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleCancel}>
-      <DialogContent className="max-w-sm bg-background border border-border shadow-lg p-0">
+      <DialogContent className="max-w-sm theme-modal-bg theme-modal-border shadow-lg p-0">
         <DialogTitle className="sr-only">Language Selection</DialogTitle>
         
         {/* Header */}
-        <div className="flex items-center justify-center p-4 border-b border-border">
-          <span className="text-sm font-medium text-foreground">Language Selection</span>
+        <div className="flex items-center justify-center p-4 border-b theme-modal-border theme-modal-header-bg">
+          <span className="text-sm font-medium theme-text">Language Selection</span>
         </div>
 
         {/* Content */}
         <div className="p-4 space-y-6">
           {/* You speak - Speaker A */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">You speak</label>
+            <label className="text-sm font-medium theme-text">You speak</label>
             <Select value={tempSpeakerA} onValueChange={setTempSpeakerA}>
-              <SelectTrigger className="w-full bg-background border border-border text-foreground">
+              <SelectTrigger className="w-full theme-dropdown-bg theme-dropdown-border theme-text">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-background border border-border z-50">
+              <SelectContent className="theme-dropdown-bg theme-dropdown-border z-50">
                 {LANGUAGES.map((lang) => (
                   <SelectItem 
                     key={lang.code} 
                     value={lang.code}
-                    className="text-foreground hover:bg-muted focus:bg-muted"
+                    className="theme-text hover:theme-dropdown-hover focus:theme-dropdown-hover"
                   >
                     {lang.name}
                   </SelectItem>
@@ -99,17 +99,17 @@ export const SimpleLanguageModal = ({
 
           {/* Other person speaks - Speaker B */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Other person speaks</label>
+            <label className="text-sm font-medium theme-text">Other person speaks</label>
             <Select value={tempSpeakerB} onValueChange={setTempSpeakerB}>
-              <SelectTrigger className="w-full bg-background border border-border text-foreground">
+              <SelectTrigger className="w-full theme-dropdown-bg theme-dropdown-border theme-text">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-background border border-border z-50">
+              <SelectContent className="theme-dropdown-bg theme-dropdown-border z-50">
                 {LANGUAGES.map((lang) => (
                   <SelectItem 
                     key={lang.code} 
                     value={lang.code}
-                    className="text-foreground hover:bg-muted focus:bg-muted"
+                    className="theme-text hover:theme-dropdown-hover focus:theme-dropdown-hover"
                   >
                     {lang.name}
                   </SelectItem>
@@ -120,7 +120,7 @@ export const SimpleLanguageModal = ({
         </div>
 
         {/* Footer with buttons */}
-        <div className="p-4 border-t border-border flex gap-2">
+        <div className="p-4 border-t theme-modal-border flex gap-2">
           <Button
             variant="outline"
             className="flex-1"

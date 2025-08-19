@@ -77,6 +77,22 @@
   --theme-icon-color-active: 0 0% 100%; /* Active/selected icon color */
   --theme-icon-color-muted: 0 0% 50%; /* Muted icon color */
   
+  /* Icon colors for buttons and indicators */
+  --theme-icon-color: 0 0% 20%; /* Default icon color */
+  --theme-icon-color-hover: 0 0% 10%; /* Icon hover color */
+  --theme-icon-color-disabled: 0 0% 60%; /* Disabled icon color */
+  --theme-icon-color-active: 0 0% 100%; /* Active/selected icon color */
+  --theme-icon-color-muted: 0 0% 50%; /* Muted icon color */
+
+  /* Modal/Dialog theming */
+  --theme-modal-bg: 0 0% 100%; /* Modal background */
+  --theme-modal-border: 0 0% 85%; /* Modal border */
+  --theme-modal-header-bg: 0 0% 98%; /* Modal header background */
+  --theme-modal-overlay: 0 0% 0%; /* Modal overlay/backdrop */
+  --theme-dropdown-bg: 0 0% 100%; /* Dropdown background */
+  --theme-dropdown-border: 0 0% 85%; /* Dropdown border */
+  --theme-dropdown-hover: 0 0% 96%; /* Dropdown hover */
+  
   /* Console prominent background */
   --theme-console-prominent-bg: 0 0% 94%; /* Prominent console background */
   
@@ -141,6 +157,15 @@
   --theme-icon-color-disabled: 215.4 16.3% 65%; /* Light gray disabled */
   --theme-icon-color-active: 210 40% 98%; /* Light text for active */
   --theme-icon-color-muted: 215.4 16.3% 55%; /* Muted icons */
+
+  /* Neo modal theming */
+  --theme-modal-bg: 210 40% 98%; /* Light blue-gray modal */
+  --theme-modal-border: 214.3 31.8% 91.4%; /* Blue-gray border */
+  --theme-modal-header-bg: 210 40% 96%; /* Header background */
+  --theme-modal-overlay: 222.2 84% 4.9%; /* Dark overlay */
+  --theme-dropdown-bg: 210 40% 98%; /* Dropdown background */
+  --theme-dropdown-border: 214.3 31.8% 91.4%; /* Dropdown border */
+  --theme-dropdown-hover: 210 40% 94%; /* Dropdown hover */
 
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -224,6 +249,15 @@
   --theme-icon-color-disabled: 180 15% 65%; /* Light disabled */
   --theme-icon-color-active: 0 0% 100%; /* White for active */
   --theme-icon-color-muted: 180 15% 50%; /* Muted aqua */
+
+  /* Aqua modal theming */
+  --theme-modal-bg: 180 25% 97%; /* Light aqua modal */
+  --theme-modal-border: 180 15% 88%; /* Aqua border */
+  --theme-modal-header-bg: 180 25% 95%; /* Aqua header */
+  --theme-modal-overlay: 180 15% 15%; /* Dark aqua overlay */
+  --theme-dropdown-bg: 180 25% 97%; /* Aqua dropdown */
+  --theme-dropdown-border: 180 15% 88%; /* Aqua dropdown border */
+  --theme-dropdown-hover: 180 30% 94%; /* Aqua hover */
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -307,6 +341,15 @@
   --theme-icon-color-disabled: 265 20% 65%; /* Light disabled */
   --theme-icon-color-active: 0 0% 100%; /* White for active */
   --theme-icon-color-muted: 265 25% 50%; /* Muted violet */
+
+  /* Violet modal theming */
+  --theme-modal-bg: 270 15% 97%; /* Light violet modal */
+  --theme-modal-border: 270 10% 87%; /* Violet border */
+  --theme-modal-header-bg: 270 15% 95%; /* Violet header */
+  --theme-modal-overlay: 270 25% 15%; /* Dark violet overlay */
+  --theme-dropdown-bg: 270 15% 97%; /* Violet dropdown */
+  --theme-dropdown-border: 270 10% 87%; /* Violet dropdown border */
+  --theme-dropdown-hover: 270 20% 94%; /* Violet hover */
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -536,4 +579,33 @@
 
 .theme-icon-muted {
   color: hsl(var(--theme-icon-color-muted, 0 0% 50%));
+}
+
+/* Modal/Dialog utilities */
+.theme-modal-bg {
+  background-color: hsl(var(--theme-modal-bg, 0 0% 100%));
+}
+
+.theme-modal-border {
+  border-color: hsl(var(--theme-modal-border, 0 0% 85%));
+}
+
+.theme-modal-header-bg {
+  background-color: hsl(var(--theme-modal-header-bg, 0 0% 98%));
+}
+
+.theme-modal-overlay {
+  background-color: hsl(var(--theme-modal-overlay, 0 0% 0%) / 0.5);
+}
+
+.theme-dropdown-bg {
+  background-color: hsl(var(--theme-dropdown-bg, 0 0% 100%));
+}
+
+.theme-dropdown-border {
+  border-color: hsl(var(--theme-dropdown-border, 0 0% 85%));
+}
+
+.theme-dropdown-hover {
+  background-color: hsl(var(--theme-dropdown-hover, 0 0% 96%));
 }
