@@ -15,7 +15,7 @@ import { SpeakerButton } from "./SpeakerButton";
 import { SpeakerControls } from "./SpeakerControls";
 import { SpeakerSection } from "./SpeakerSection";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
-import { ProcessingIndicator } from "./ProcessingIndicator";
+
 import { RecordingCountdown } from "./RecordingCountdown";
 
 
@@ -700,15 +700,6 @@ export const TranslationInterface = ({
         }}
       />
 
-      {/* Processing/Recording Indicator - Only show when there's actual activity */}
-      {(isProcessing || isListeningA || isListeningB) && (
-        <ProcessingIndicator 
-          isProcessing={isProcessing}
-          isRecording={isListeningA || isListeningB}
-          speaker={isListeningA ? "A" : isListeningB ? "B" : "A"}
-          type={isListeningA || isListeningB ? "recording" : "processing"}
-        />
-      )}
 
     </div>
   );
