@@ -22,25 +22,22 @@ export const MidSectionControls = ({
 }: MidSectionControlsProps) => {
   return (
     <div className="w-full h-full flex items-center justify-between px-5">
-      {/* Left: Extended Volume Slider (no connection indicators) */}
-      <div className="flex items-center justify-start flex-1">
-        <div className="flex items-center gap-3 w-full max-w-xs">
-          <Volume2 className="h-4 w-4 theme-icon theme-icon-hover flex-shrink-0" />
-          <div className="flex-1">
-            <Slider
-              value={[Math.round(volume * 100)]}
-              onValueChange={(value) => onVolumeChange(value[0] / 100)}
-              max={100}
-              step={5}
-              className="w-full"
-            />
-          </div>
+      {/* Left: Volume Slider - Fixed width, not flexible */}
+      <div className="flex items-center gap-3 w-60">
+        <Volume2 className="h-4 w-4 theme-icon theme-icon-hover flex-shrink-0" />
+        <div className="flex-1">
+          <Slider
+            value={[Math.round(volume * 100)]}
+            onValueChange={(value) => onVolumeChange(value[0] / 100)}
+            max={100}
+            step={5}
+            className="w-full"
+          />
         </div>
       </div>
 
-      {/* Right: Action Buttons with Equal Spacing */}
-      <div className="flex items-center justify-end">
-        <div className="flex items-center gap-6">
+      {/* Right: Action Buttons - Fixed position with proper spacing */}
+      <div className="flex items-center gap-6">
            {/* Pass Turn Button */}
            {isManagedMode && (
               <Button
@@ -66,7 +63,6 @@ export const MidSectionControls = ({
               <Eraser className="h-5 w-5 theme-icon theme-icon-hover" />
             </Button>
         </div>
-      </div>
     </div>
   );
 };
