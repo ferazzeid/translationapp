@@ -35,7 +35,7 @@ export const VerticalVolumeControl = ({
           onClick={onToggleSpeaker}
           className={cn(
             "h-8 w-8 rounded-full p-0",
-            isSpeakerEnabled ? "text-foreground" : "text-muted-foreground"
+            isSpeakerEnabled ? "theme-text" : "theme-text-muted"
           )}
           title={isSpeakerEnabled ? "Disable Speaker" : "Enable Speaker"}
         >
@@ -50,7 +50,7 @@ export const VerticalVolumeControl = ({
             max={100}
             step={5}
             orientation="vertical"
-            className="h-full [&_[role=slider]]:bg-foreground [&_[data-orientation=vertical]]:bg-border"
+            className="h-full"
             disabled={!isSpeakerEnabled}
           />
         </div>

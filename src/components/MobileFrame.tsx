@@ -13,7 +13,7 @@ export const MobileFrame = ({ children, className }: MobileFrameProps) => {
         "relative",
         "w-full max-w-sm", // Mobile width constraint
         "h-[800px]", // Fixed mobile height
-        "bg-background",
+        "theme-surface",
         "rounded-[2.5rem]", // Large border radius for phone-like appearance
         "border-8 theme-frame-border", // Phone bezel - uniform all around
         "shadow-2xl",

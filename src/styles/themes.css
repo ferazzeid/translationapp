@@ -25,6 +25,30 @@
   --theme-active-ring: 152 69% 40%; /* Green ring for active turn */
   --theme-frame-bg: 220 9% 11%; /* Dark gray for mobile frame */
   --theme-frame-border: 220 9% 16%; /* Darker gray for frame border */
+  
+  /* Console and UI backgrounds */
+  --theme-console-bg: 0 0% 96%; /* Light gray console background */
+  --theme-console-border: 0 0% 85%; /* Console border */
+  
+  /* Slider components */
+  --theme-slider-track: 0 0% 92%; /* Slider track background */
+  --theme-slider-range: 218 100% 58%; /* Slider fill - matches primary */
+  --theme-slider-thumb: 0 0% 100%; /* Slider thumb background */
+  --theme-slider-thumb-border: 218 100% 58%; /* Slider thumb border */
+  
+  /* Button variants */
+  --theme-button-primary: 218 100% 58%; /* Primary button background */
+  --theme-button-primary-hover: 218 100% 52%; /* Primary button hover */
+  --theme-button-primary-fg: 0 0% 100%; /* Primary button text */
+  --theme-button-secondary: 0 0% 96%; /* Secondary button background */
+  --theme-button-secondary-hover: 0 0% 92%; /* Secondary button hover */
+  --theme-button-secondary-fg: 0 0% 13%; /* Secondary button text */
+  --theme-button-outline-bg: 0 0% 100%; /* Outline button background */
+  --theme-button-outline-hover: 0 0% 96%; /* Outline button hover */
+  --theme-button-outline-fg: 0 0% 13%; /* Outline button text */
+  --theme-button-ghost-hover: 0 0% 96%; /* Ghost button hover */
+  --theme-button-ghost-fg: 0 0% 13%; /* Ghost button text */
+  
   --theme-radius-lg: 28px;
   --theme-radius-md: 16px;
   --theme-shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.06);
@@ -101,6 +125,29 @@
   --theme-frame-bg: 200 25% 15%; /* Dark teal frame */
   --theme-frame-border: 200 25% 20%; /* Teal frame border */
   
+  /* Console and UI backgrounds - Aqua theme */
+  --theme-console-bg: 180 30% 94%; /* Light aqua console background */
+  --theme-console-border: 180 25% 85%; /* Aqua console border */
+  
+  /* Slider components - Aqua theme */
+  --theme-slider-track: 180 25% 90%; /* Aqua slider track */
+  --theme-slider-range: 180 100% 36%; /* Aqua slider fill */
+  --theme-slider-thumb: 180 25% 98%; /* Light aqua thumb */
+  --theme-slider-thumb-border: 180 100% 36%; /* Aqua thumb border */
+  
+  /* Button variants - Aqua theme */
+  --theme-button-primary: 180 100% 36%; /* Aqua primary button */
+  --theme-button-primary-hover: 180 100% 32%; /* Aqua primary hover */
+  --theme-button-primary-fg: 0 0% 100%; /* White text */
+  --theme-button-secondary: 180 30% 94%; /* Light aqua secondary */
+  --theme-button-secondary-hover: 180 35% 90%; /* Aqua secondary hover */
+  --theme-button-secondary-fg: 200 25% 15%; /* Dark teal text */
+  --theme-button-outline-bg: 180 25% 98%; /* Very light aqua outline */
+  --theme-button-outline-hover: 180 30% 94%; /* Light aqua outline hover */
+  --theme-button-outline-fg: 200 25% 15%; /* Dark teal text */
+  --theme-button-ghost-hover: 180 30% 94%; /* Light aqua ghost hover */
+  --theme-button-ghost-fg: 200 25% 15%; /* Dark teal text */
+  
   /* Radius and shadows */
   --theme-radius-lg: 28px;
   --theme-radius-md: 16px;
@@ -137,6 +184,29 @@
   --theme-active-ring: 265 100% 48%; /* Violet ring for active turn */
   --theme-frame-bg: 265 30% 15%; /* Dark purple frame */
   --theme-frame-border: 265 30% 20%; /* Purple frame border */
+  
+  /* Console and UI backgrounds - Violet theme */
+  --theme-console-bg: 265 20% 94%; /* Light purple console background */
+  --theme-console-border: 265 20% 85%; /* Purple console border */
+  
+  /* Slider components - Violet theme */
+  --theme-slider-track: 265 20% 90%; /* Light purple slider track */
+  --theme-slider-range: 265 100% 48%; /* Violet slider fill */
+  --theme-slider-thumb: 265 15% 98%; /* Very light purple thumb */
+  --theme-slider-thumb-border: 265 100% 48%; /* Violet thumb border */
+  
+  /* Button variants - Violet theme */
+  --theme-button-primary: 265 100% 48%; /* Violet primary button */
+  --theme-button-primary-hover: 265 100% 44%; /* Violet primary hover */
+  --theme-button-primary-fg: 0 0% 100%; /* White text */
+  --theme-button-secondary: 265 20% 94%; /* Light purple secondary */
+  --theme-button-secondary-hover: 265 25% 90%; /* Purple secondary hover */
+  --theme-button-secondary-fg: 265 30% 20%; /* Dark purple text */
+  --theme-button-outline-bg: 265 15% 98%; /* Very light purple outline */
+  --theme-button-outline-hover: 265 20% 94%; /* Light purple outline hover */
+  --theme-button-outline-fg: 265 30% 20%; /* Dark purple text */
+  --theme-button-ghost-hover: 265 20% 94%; /* Light purple ghost hover */
+  --theme-button-ghost-fg: 265 30% 20%; /* Dark purple text */
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -240,4 +310,63 @@
 
 .theme-active-ring {
   --tw-ring-color: hsl(var(--theme-active-ring, 152 69% 40%) / 0.6);
+}
+
+/* Console and UI utility classes */
+.theme-console-bg {
+  background-color: hsl(var(--theme-console-bg, 0 0% 96%));
+}
+
+.theme-console-border {
+  border-color: hsl(var(--theme-console-border, 0 0% 85%));
+}
+
+/* Slider utility classes */
+.theme-slider-track {
+  background-color: hsl(var(--theme-slider-track, 0 0% 92%));
+}
+
+.theme-slider-range {
+  background-color: hsl(var(--theme-slider-range, 218 100% 58%));
+}
+
+.theme-slider-thumb {
+  background-color: hsl(var(--theme-slider-thumb, 0 0% 100%));
+  border-color: hsl(var(--theme-slider-thumb-border, 218 100% 58%));
+}
+
+/* Button utility classes */
+.theme-button-primary {
+  background-color: hsl(var(--theme-button-primary, 218 100% 58%));
+  color: hsl(var(--theme-button-primary-fg, 0 0% 100%));
+}
+
+.theme-button-primary:hover {
+  background-color: hsl(var(--theme-button-primary-hover, 218 100% 52%));
+}
+
+.theme-button-secondary {
+  background-color: hsl(var(--theme-button-secondary, 0 0% 96%));
+  color: hsl(var(--theme-button-secondary-fg, 0 0% 13%));
+}
+
+.theme-button-secondary:hover {
+  background-color: hsl(var(--theme-button-secondary-hover, 0 0% 92%));
+}
+
+.theme-button-outline {
+  background-color: hsl(var(--theme-button-outline-bg, 0 0% 100%));
+  color: hsl(var(--theme-button-outline-fg, 0 0% 13%));
+}
+
+.theme-button-outline:hover {
+  background-color: hsl(var(--theme-button-outline-hover, 0 0% 96%));
+}
+
+.theme-button-ghost {
+  color: hsl(var(--theme-button-ghost-fg, 0 0% 13%));
+}
+
+.theme-button-ghost:hover {
+  background-color: hsl(var(--theme-button-ghost-hover, 0 0% 96%));
 }
