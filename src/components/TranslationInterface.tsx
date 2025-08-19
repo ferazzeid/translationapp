@@ -233,9 +233,8 @@ export const TranslationInterface = ({
         
         // Switch turn in managed mode after successful processing
         if (managedMode.isEnabled) {
-          console.log('🔄 SWITCHING TURN: from', managedMode.currentTurn, 'to', managedMode.currentTurn === "A" ? "B" : "A");
+          console.log('🔄 SWITCHING TURN after successful processing');
           managedMode.switchTurn();
-          console.log('✅ Turn switched to:', managedMode.currentTurn);
         }
       } else {
         console.log('⚠️ No audio data to process, skipping turn switch');
@@ -516,10 +515,8 @@ export const TranslationInterface = ({
         isProcessing={isProcessing}
         isManagedMode={managedMode.isEnabled}
         onSwitchTurn={() => {
-          console.log('🔄 MANUAL TURN SWITCH clicked, current turn:', managedMode.currentTurn);
-          const oldTurn = managedMode.currentTurn;
+          console.log('🔄 MANUAL TURN SWITCH clicked');
           managedMode.switchTurn();
-          console.log('🔄 Manual turn switched from', oldTurn, 'to:', managedMode.currentTurn);
         }}
       />
         
