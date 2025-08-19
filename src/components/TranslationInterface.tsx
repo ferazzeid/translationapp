@@ -421,10 +421,10 @@ export const TranslationInterface = ({
     )}>
       {/* Speaker B Half - Top (Rotated 180°) - Other Person */}
       <div className={cn(
-        "rotate-180 relative transition-all duration-300",
+        "rotate-180 relative transition-all duration-500",
         isRealMobile ? "h-[calc(50dvh-2.5rem)]" : "h-1/2",
         managedMode.isEnabled && managedMode.currentTurn === "B" 
-          ? "bg-primary/5 shadow-inner" 
+          ? "bg-green-50 dark:bg-green-950/30" 
           : ""
       )}>
         <SpeakerSection
@@ -471,7 +471,7 @@ export const TranslationInterface = ({
 
         {/* Managed Mode Controls for Speaker B - Inside rotated section */}
         {managedMode.isEnabled && (
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+          <div className="absolute top-4 right-4">
             <ManagedModeControls
               isEnabled={managedMode.isEnabled}
               currentTurn={managedMode.currentTurn}
@@ -512,9 +512,9 @@ export const TranslationInterface = ({
 
       {/* Speaker A Half - Bottom (Normal) - You */}
       <div className={cn(
-        "relative transition-all duration-300",
+        "relative transition-all duration-500",
         managedMode.isEnabled && managedMode.currentTurn === "A" 
-          ? "bg-primary/5 shadow-inner" 
+          ? "bg-green-50 dark:bg-green-950/30" 
           : "",
         isRealMobile ? "h-[calc(50dvh-2.5rem)]" : "h-1/2"
       )}>
@@ -562,7 +562,7 @@ export const TranslationInterface = ({
 
         {/* Managed Mode Controls for Speaker A - Inside section */}
         {managedMode.isEnabled && (
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+          <div className="absolute top-4 right-4">
             <ManagedModeControls
               isEnabled={managedMode.isEnabled}
               currentTurn={managedMode.currentTurn}
@@ -610,11 +610,6 @@ export const TranslationInterface = ({
         }}
       />
 
-      <WakeLockIndicator 
-        isActive={wakeLock.isActive} 
-        isSupported={wakeLock.isSupported}
-        onToggle={wakeLock.isActive ? wakeLock.release : wakeLock.request}
-      />
     </div>
   );
 };

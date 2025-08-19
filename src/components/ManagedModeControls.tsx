@@ -89,44 +89,21 @@ export const ManagedModeControls = ({
   if (!isEnabled) return null;
 
   const isMyTurn = currentTurn === speaker;
-  const userLanguage = speaker === "A" ? speakerALanguage : speakerBLanguage;
-  const translations = MANAGED_MODE_TRANSLATIONS[userLanguage as keyof typeof MANAGED_MODE_TRANSLATIONS] || MANAGED_MODE_TRANSLATIONS.en;
+
+  // Only show for current speaker and keep it minimal
+  if (!isMyTurn) return null;
 
   return (
-    <div className={cn("flex flex-col items-center gap-3 p-4", className)}>
-      {/* Turn Status with background indication */}
-      <div className={cn(
-        "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 animate-fade-in",
-        isMyTurn 
-          ? "bg-primary/20 text-primary border-2 border-primary/30 animate-pulse" 
-          : "bg-muted/50 text-muted-foreground border border-muted"
-      )}>
-        <div className="flex items-center gap-2">
-          <MessageCircle className="h-4 w-4" />
-          <span>{isMyTurn ? translations.yourTurn : translations.waitTurn}</span>
-        </div>
-      </div>
-
-      {/* Pass Turn Button - only show for current speaker */}
-      {isMyTurn && (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onSwitchTurn}
-          className="h-8 bg-background/90 border border-border shadow-sm hover:bg-foreground hover:text-background animate-scale-in"
-          title={translations.passTurn}
-        >
-          <ArrowUpDown className="h-3 w-3 mr-1" />
-          {translations.passTurn}
-        </Button>
-      )}
-
-      {/* Speaking instructions */}
-      {isMyTurn && (
-        <p className="text-xs text-muted-foreground text-center animate-fade-in">
-          {translations.tapToSpeak}
-        </p>
-      )}
+    <div className={cn("flex items-center justify-center", className)}>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={onSwitchTurn}
+        className="h-6 px-2 text-xs bg-background/90 border border-border shadow-sm hover:bg-foreground hover:text-background"
+        title="Pass turn"
+      >
+        <ArrowUpDown className="h-3 w-3" />
+      </Button>
     </div>
   );
 };
