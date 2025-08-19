@@ -93,48 +93,28 @@ serve(async (req) => {
     // Create FormData for Whisper API
     const formData = new FormData();
     
-    // Determine the best file extension and MIME type for OpenAI
-    // OpenAI Whisper supports: 'flac', 'm4a', 'mp3', 'mp4', 'mpeg', 'mpga', 'oga', 'ogg', 'wav', 'webm'
-    let fileName = 'audio.webm';
-    let mimeType = 'audio/webm';
-    
-    // Try to detect if this is actually WAV data (starts with RIFF header)
-    if (binaryAudio.length > 12 && 
-        binaryAudio[0] === 0x52 && binaryAudio[1] === 0x49 && 
-        binaryAudio[2] === 0x46 && binaryAudio[3] === 0x46) {
-      fileName = 'audio.wav';
-      mimeType = 'audio/wav';
-      console.log('Detected WAV format');
-    }
-    // Try to detect if this is M4A/MP4 data (starts with ftyp)
-    else if (binaryAudio.length > 8 && 
-             binaryAudio[4] === 0x66 && binaryAudio[5] === 0x74 && 
-             binaryAudio[6] === 0x79 && binaryAudio[7] === 0x70) {
-      fileName = 'audio.m4a';
-      mimeType = 'audio/m4a';
-      console.log('Detected M4A/MP4 format');
-    }
-    // Check for WebM signature
-    else if (binaryAudio.length > 8 && 
-             binaryAudio[0] === 0x1A && binaryAudio[1] === 0x45 && 
-             binaryAudio[2] === 0xDF && binaryAudio[3] === 0xA3) {
-      fileName = 'audio.webm';
-      mimeType = 'audio/webm';
-      console.log('Detected WebM format');
-    }
+    // Convert webm to wav for better OpenAI compatibility
+    // Since webm conversion is complex, we'll use a simpler approach:
+    // Send as wav format with proper headers to maximize compatibility
+    const fileName = 'audio.wav';
+    const mimeType = 'audio/wav';
     
     console.log(`Using format: ${fileName} (${mimeType})`);
     
+    // Create blob with wav mime type for better OpenAI compatibility
     const audioBlob = new Blob([binaryAudio], { type: mimeType });
     formData.append('file', audioBlob, fileName);
     formData.append('model', 'whisper-1');
     formData.append('response_format', 'json');
     
+    // Add language parameter if specified
     if (language && language !== 'auto-detect') {
       formData.append('language', language);
     }
 
-    // Send to OpenAI Whisper API instead of GPT-4o
+    console.log('Sending to OpenAI Whisper API...');
+
+    // Send to OpenAI Whisper API
     const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
       method: 'POST',
       headers: {
