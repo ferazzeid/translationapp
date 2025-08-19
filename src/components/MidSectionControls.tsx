@@ -47,8 +47,8 @@ export const MidSectionControls = ({
   isManagedMode = false
 }: MidSectionControlsProps) => {
   return (
-    <div className="w-full h-full flex items-center justify-between px-6">
-      {/* Left: 5-Step Connection Indicator */}
+    <div className="w-full h-full flex items-center justify-between px-4">
+      {/* Left: 5-Step Connection Indicator - Consistent 16px padding */}
       <div className="flex items-center justify-start w-1/3">
         <div className="flex items-center gap-3">
           <ConnectionStrengthIndicator isOnline={isOnline} />
@@ -70,7 +70,7 @@ export const MidSectionControls = ({
               onValueChange={(value) => onVolumeChange(value[0] / 100)}
               max={100}
               step={5}
-              className="w-full [&_.bg-primary]:bg-gray-800 [&_.bg-secondary]:bg-gray-300 [&_[data-state=active]]:bg-gray-800"
+              className="w-full [&_[role=slider]]:bg-gray-800 [&_[role=slider]]:border-gray-700 [&_.bg-primary]:bg-gray-800 [&_.bg-secondary]:bg-gray-300 [&_[data-state=active]]:bg-gray-800"
             />
           </div>
           <span className="text-xs font-medium text-muted-foreground min-w-[2rem] text-center">
@@ -82,26 +82,26 @@ export const MidSectionControls = ({
       {/* Right: Pass Turn and Wipe Buttons */}
       <div className="flex items-center justify-end w-1/3">
         <div className="flex items-center gap-4">
-          {/* Pass Turn Button - Large and Prominent */}
+          {/* Pass Turn Button - Large with Black Background */}
           {isManagedMode && (
             <Button
               variant="outline"
               size="icon"
               onClick={onPassTurn}
-              className="h-12 w-12 rounded-full bg-gray-800 text-white border-2 border-gray-600 hover:bg-gray-700 transition-all duration-200"
+              className="h-12 w-12 rounded-full bg-black text-white border-2 border-black hover:bg-gray-900 transition-all duration-200"
               title="Pass turn to other speaker"
             >
               <ArrowUpDown className="h-6 w-6" />
             </Button>
           )}
 
-          {/* Wipe Button - Same prominence as Pass Turn */}
+          {/* Wipe Button - Large with Black Background */}
           <Button
             variant="outline"
             size="icon"
             onClick={onWipeMessages}
             disabled={!hasMessages}
-            className="h-12 w-12 rounded-full bg-gray-600 text-white border-2 border-gray-500 hover:bg-gray-500 disabled:opacity-50 disabled:bg-gray-400 transition-all duration-200"
+            className="h-12 w-12 rounded-full bg-black text-white border-2 border-black hover:bg-gray-900 disabled:opacity-50 disabled:bg-gray-800 transition-all duration-200"
             title="Clear all messages"
           >
             <Eraser className="h-6 w-6" />
