@@ -442,28 +442,6 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
             </CardContent>
           </Card>
 
-          {/* Upload Instructions Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Upload className="h-4 w-4" />
-                Upload Instructions
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <p><strong>Easy Upload:</strong> Use the upload buttons above to directly upload your logo and favicon files.</p>
-              <p><strong>Manual URL:</strong> You can also enter URLs manually if you have files hosted elsewhere.</p>
-              <div className="text-xs space-y-1">
-                <p><strong>File Requirements:</strong></p>
-                <ul className="list-disc list-inside ml-2 space-y-1">
-                  <li>Supported formats: PNG, JPG, WEBP, GIF</li>
-                  <li>Maximum file size: 5MB</li>
-                  <li>Logo recommended size: 512x512px</li>
-                  <li>Favicon recommended size: 32x32px or 64x64px</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </MobileFrame>

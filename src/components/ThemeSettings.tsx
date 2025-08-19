@@ -39,17 +39,6 @@ const themeOptions: Array<{
     }
   },
   {
-    name: 'violet-material',
-    label: 'Violet Material',
-    description: 'Material-inspired purple theme',
-    colors: {
-      primary: '#6200EE',
-      micBg: '#6200EE',
-      actionBg: '#2C2C2C',
-      surface: '#FFFFFF'
-    }
-  },
-  {
     name: 'dark',
     label: 'Dark',
     description: 'Elegant dark mode with blue accents',
