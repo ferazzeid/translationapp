@@ -54,7 +54,7 @@ export const SpeakerSection = ({
     )}>
 
       {/* Messages area with language indicator */}
-      <div className="absolute inset-0 bottom-20 sm:bottom-24 overflow-hidden">
+      <div className="absolute inset-0 bottom-28 sm:bottom-32 overflow-hidden">
         {/* Language Indicator - smaller and positioned right */}
         <div className="absolute top-2 right-3 z-40 theme-language-chip backdrop-blur-sm border theme-divider rounded px-1.5 py-0.5 text-center min-w-[32px]">
           <span className="text-xs font-medium theme-icon leading-none block">
@@ -71,7 +71,7 @@ export const SpeakerSection = ({
 
       {/* Fixed microphone and control area */}
       <div className={cn(
-        "absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center z-30",
+        "absolute bottom-4 left-0 right-0 h-20 sm:h-24 flex items-center justify-center z-30",
         isActiveTurn ? "theme-speaker-active-bg" : "theme-speaker-inactive-bg"
       )}>
         {/* Center: Main Microphone Button - Perfectly centered */}

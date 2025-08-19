@@ -226,7 +226,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen theme-bg pwa-app-interface">
+    <div className={`min-h-screen theme-bg ${currentState === "translation" ? "pwa-app-interface" : ""}`}>
       {renderCurrentView()}
     </div>
   );
