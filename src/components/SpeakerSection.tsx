@@ -73,8 +73,8 @@ export const SpeakerSection = ({
         "absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center z-30",
         isActiveTurn ? "bg-transparent" : "bg-background"
       )}>
-        {/* Left side: Repeat button with proper spacing from voice button */}
-        <div className="absolute left-20 flex items-center">
+        {/* Left side: Repeat button aligned with other control buttons */}
+        <div className="absolute left-20 bottom-6 flex items-center">
           <button
             onClick={onRepeat}
             className="h-10 w-10 rounded-full bg-white text-gray-600 hover:bg-gray-100 border-2 border-gray-300 shadow-sm flex items-center justify-center transition-colors"

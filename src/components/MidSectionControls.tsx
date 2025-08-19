@@ -35,9 +35,6 @@ export const MidSectionControls = ({
               className="w-full [&_[role=slider]]:bg-gray-800 [&_[role=slider]]:border-gray-700 [&_.bg-primary]:bg-gray-800 [&_.bg-secondary]:bg-gray-300 [&_[data-state=active]]:bg-gray-800"
             />
           </div>
-          <span className="text-xs font-medium text-muted-foreground min-w-[2rem] text-center">
-            {Math.round(volume * 100)}%
-          </span>
         </div>
       </div>
 
