@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-export type ThemeName = 'neo-light' | 'aqua-light' | 'violet-material';
+export type ThemeName = 'corporate' | 'aqua-light' | 'violet-material';
 
 interface ThemeContextType {
   theme: ThemeName;
@@ -20,7 +20,7 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   
   const [theme, setThemeState] = useState<ThemeName>(() => {
     const saved = localStorage.getItem('ui.theme');
-    return (saved as ThemeName) || 'neo-light';
+    return (saved as ThemeName) || 'corporate';
   });
 
   const setTheme = (newTheme: ThemeName) => {

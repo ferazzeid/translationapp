@@ -17,13 +17,13 @@ const themeOptions: Array<{
   };
 }> = [
   {
-    name: 'neo-light',
-    label: 'Neo Light',
-    description: 'Clean neutral design with blue accents',
+    name: 'corporate',
+    label: 'Corporate',
+    description: 'Polished Apple/Google hybrid design',
     colors: {
-      primary: '#2979FF',
-      micBg: '#2979FF',
-      actionBg: '#222222',
+      primary: '#4338CA',
+      micBg: '#4338CA',
+      actionBg: '#1F2937',
       surface: '#FFFFFF'
     }
   },

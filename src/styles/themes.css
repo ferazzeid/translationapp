@@ -100,76 +100,114 @@
   --theme-shadow-md: 0 6px 20px hsl(0 0% 0% / 0.12);
 }
 
-/* Default theme: neo-light */
-:root[data-theme="neo-light"] {
-  /* Backgrounds */
-  --theme-bg: 0 0% 98%; /* #FAFAFA */
-  --theme-surface: 0 0% 100%; /* #FFFFFF */
-  --theme-surface-alt: 220 9% 96%; /* #F2F3F5 */
-  
-  /* Text */
-  --theme-text: 0 0% 13%; /* #222222 */
-  --theme-text-muted: 0 0% 40%; /* #666666 */
-  
-  /* Borders */
-  --theme-border: 0 0% 90%; /* #E6E6E6 */
-  
-  /* Primary colors */
-  --theme-primary: 218 100% 58%; /* #2979FF */
-  --theme-primary-weak: 210 100% 94%; /* #E3F2FD */
-  
-  /* Action buttons (Pass/Wipe buttons) */
-  --theme-action-strong-bg: 0 0% 13%; /* #222222 */
-  --theme-action-strong-fg: 0 0% 100%; /* #FFFFFF */
-  
-  /* Microphone */
-  --theme-mic-bg: 218 100% 58%; /* #2979FF */
-  --theme-mic-fg: 0 0% 100%; /* #FFFFFF */
-  --theme-mic-glow: 218 100% 58%; /* #2979FF with opacity */
-  
-  /* Status colors */
-  --theme-success: 152 69% 40%; /* #12B76A */
-  --theme-danger: 4 86% 60%; /* #FF3B30 */
-  --theme-focus-ring: 220 100% 80%; /* #9DBEFF */
-  --theme-divider: 0 0% 90%; /* #E6E6E6 */
-  
-  /* Neo theme icon buttons */
-  --theme-icon-button-bg: 210 40% 92%; /* Light gray-blue */
-  --theme-icon-button-fg: 215.4 16.3% 46.9%; /* Muted blue-gray */
-  --theme-icon-button-hover: 221.2 83.2% 53.3%; /* Primary blue */
-  --theme-language-chip-bg: 210 40% 98%; /* Very light blue */
-  --theme-language-chip-fg: 222.2 84% 4.9%; /* Dark text */
-  --theme-mic-inactive-bg: 210 40% 92%; /* Light gray-blue */
-  --theme-mic-inactive-fg: 215.4 16.3% 46.9%; /* Muted text */
-  --theme-mic-inactive-hover: 210 40% 88%; /* Slightly darker */
-  --theme-console-prominent-bg: 210 40% 94%; /* Prominent console */
+/* Corporate theme - Cupertino–Material Light hybrid */
+:root[data-theme="corporate"] {
+  /* 🎨 Backgrounds & Surfaces */
+  --theme-bg: 210 20% 98%;                     /* hsl(210 20% 98%) */
+  --theme-surface: 0 0% 100%;                  /* hsl(0 0% 100%) */
+  --theme-surface-alt: 220 20% 96%;            /* hsl(220 20% 96%) */
+  --theme-speaker-inactive-bg: 210 16% 97%;    /* hsl(210 16% 97%) */
+  --theme-speaker-active-bg: 222 100% 97%;     /* hsl(222 100% 97%) */
+  --theme-speaker-listening-overlay: 222 90% 56%; /* hsl(222 90% 56%) with opacity */
 
-  /* Neo speaker sections */
-  --theme-speaker-inactive-bg: 210 40% 96%; /* Light blue-gray inactive */
-  --theme-speaker-active-bg: 210 40% 98%; /* Very light blue-gray active */
-  --theme-speaker-listening-overlay: 221.2 83.2% 53.3%; /* Primary blue overlay */
+  /* ✍️ Text */
+  --theme-text: 220 15% 12%;                   /* hsl(220 15% 12%) */
+  --theme-text-muted: 220 10% 40%;             /* hsl(220 10% 40%) */
 
-  /* Neo theme icon colors */
-  --theme-icon-color: 215.4 16.3% 46.9%; /* Muted blue-gray icons */
-  --theme-icon-color-hover: 221.2 83.2% 53.3%; /* Primary blue on hover */
-  --theme-icon-color-disabled: 215.4 16.3% 65%; /* Light gray disabled */
-  --theme-icon-color-active: 210 40% 98%; /* Light text for active */
-  --theme-icon-color-muted: 215.4 16.3% 55%; /* Muted icons */
+  /* ─ Borders & Dividers */
+  --theme-border: 220 14% 88%;                 /* hsl(220 14% 88%) */
+  --theme-divider: 220 14% 92%;                /* hsl(220 14% 92%) */
 
-  /* Neo modal theming */
-  --theme-modal-bg: 210 40% 98%; /* Light blue-gray modal */
-  --theme-modal-border: 214.3 31.8% 91.4%; /* Blue-gray border */
-  --theme-modal-header-bg: 210 40% 96%; /* Header background */
-  --theme-modal-overlay: 222.2 84% 4.9%; /* Dark overlay */
-  --theme-dropdown-bg: 210 40% 98%; /* Dropdown background */
-  --theme-dropdown-border: 214.3 31.8% 91.4%; /* Dropdown border */
-  --theme-dropdown-hover: 210 40% 94%; /* Dropdown hover */
+  /* 🔵 Primary */
+  --theme-primary: 222 89% 56%;                /* hsl(222 89% 56%) */
+  --theme-primary-weak: 222 100% 96%;          /* hsl(222 100% 96%) */
 
-  /* Radius and shadows */
+  /* ✅ Status */
+  --theme-success: 152 60% 40%;                /* hsl(152 60% 40%) */
+  --theme-danger: 4 85% 58%;                   /* hsl(4 85% 58%) */
+  --theme-focus-ring: 222 100% 85%;            /* hsl(222 100% 85%) */
+  --theme-active-ring: 222 89% 56%;            /* hsl(222 89% 56%) */
+
+  /* 🧲 Strong Action Buttons (Pass / Wipe) */
+  --theme-action-strong-bg: 220 15% 15%;       /* hsl(220 15% 15%) */
+  --theme-action-strong-fg: 0 0% 100%;         /* hsl(0 0% 100%) */
+
+  /* 🎤 Microphone States */
+  --theme-mic-bg: 222 89% 56%;                 /* hsl(222 89% 56%) */
+  --theme-mic-fg: 0 0% 100%;                   /* hsl(0 0% 100%) */
+  --theme-mic-glow: 222 89% 56%;               /* hsl(222 89% 56%) with opacity */
+  --theme-mic-inactive-bg: 220 16% 92%;        /* hsl(220 16% 92%) */
+  --theme-mic-inactive-fg: 220 10% 35%;        /* hsl(220 10% 35%) */
+  --theme-mic-inactive-hover: 220 16% 88%;     /* hsl(220 16% 88%) */
+
+  /* 🔘 Button Variants */
+  /* Primary */
+  --theme-button-primary: 222 89% 56%;         /* hsl(222 89% 56%) */
+  --theme-button-primary-hover: 222 89% 51%;   /* hsl(222 89% 51%) */
+  --theme-button-primary-fg: 0 0% 100%;        /* hsl(0 0% 100%) */
+  /* Secondary */
+  --theme-button-secondary: 220 16% 94%;       /* hsl(220 16% 94%) */
+  --theme-button-secondary-hover: 220 16% 90%; /* hsl(220 16% 90%) */
+  --theme-button-secondary-fg: 220 15% 12%;    /* hsl(220 15% 12%) */
+  /* Outline */
+  --theme-button-outline-bg: 0 0% 100%;        /* hsl(0 0% 100%) */
+  --theme-button-outline-hover: 220 16% 97%;   /* hsl(220 16% 97%) */
+  --theme-button-outline-fg: 220 15% 12%;      /* hsl(220 15% 12%) */
+  /* Ghost */
+  --theme-button-ghost-hover: 220 16% 95%;     /* hsl(220 16% 95%) */
+  --theme-button-ghost-fg: 220 15% 12%;        /* hsl(220 15% 12%) */
+
+  /* ⭕ Icon Buttons (Circular) */
+  --theme-icon-button-bg: 0 0% 100%;           /* hsl(0 0% 100%) */
+  --theme-icon-button-fg: 220 15% 12%;         /* hsl(220 15% 12%) */
+  --theme-icon-button-hover: 220 16% 95%;      /* hsl(220 16% 95%) */
+  --theme-icon-button-border: 220 14% 92%;     /* hsl(220 14% 92%) */
+
+  /* 🎯 Icon Colors */
+  --theme-icon-color: 220 10% 35%;             /* hsl(220 10% 35%) */
+  --theme-icon-color-hover: 220 10% 20%;       /* hsl(220 10% 20%) */
+  --theme-icon-color-disabled: 220 10% 70%;    /* hsl(220 10% 70%) */
+  --theme-icon-color-active: 222 89% 56%;      /* hsl(222 89% 56%) */
+  --theme-icon-color-muted: 220 10% 55%;       /* hsl(220 10% 55%) */
+  /* Light Icon Variants */
+  --theme-icon-color-light: 0 0% 100%;         /* hsl(0 0% 100%) */
+  --theme-icon-color-light-hover: 0 0% 92%;    /* hsl(0 0% 92%) */
+  --theme-icon-color-light-muted: 0 0% 70%;    /* hsl(0 0% 70%) */
+
+  /* 🏷️ Language Chips */
+  --theme-language-chip-bg: 222 100% 96%;      /* hsl(222 100% 96%) */
+  --theme-language-chip-fg: 220 25% 20%;       /* hsl(220 25% 20%) */
+  --theme-language-chip-border: 222 100% 90%;  /* hsl(222 100% 90%) */
+
+  /* 🎚️ Slider */
+  --theme-slider-track: 220 14% 90%;           /* hsl(220 14% 90%) */
+  --theme-slider-range: 222 89% 56%;           /* hsl(222 89% 56%) */
+  --theme-slider-thumb: 220 15% 20%;           /* hsl(220 15% 20%) */
+  --theme-slider-thumb-border: 0 0% 100%;      /* hsl(0 0% 100%) */
+
+  /* 🖥️ Console & UI */
+  --theme-console-bg: 220 16% 97%;             /* hsl(220 16% 97%) */
+  --theme-console-border: 220 14% 88%;         /* hsl(220 14% 88%) */
+  --theme-console-prominent-bg: 220 16% 94%;   /* hsl(220 16% 94%) */
+
+  /* 📱 Mobile Frame (for mockups) */
+  --theme-frame-bg: 220 14% 10%;               /* hsl(220 14% 10%) */
+  --theme-frame-border: 220 14% 20%;           /* hsl(220 14% 20%) */
+
+  /* 🪟 Modals & Dropdowns */
+  --theme-modal-bg: 0 0% 100%;                 /* hsl(0 0% 100%) */
+  --theme-modal-border: 220 14% 88%;           /* hsl(220 14% 88%) */
+  --theme-modal-header-bg: 220 20% 96%;        /* hsl(220 20% 96%) */
+  --theme-modal-overlay: 220 14% 10%;          /* hsl(220 14% 10%) */
+  --theme-dropdown-bg: 0 0% 100%;              /* hsl(0 0% 100%) */
+  --theme-dropdown-border: 220 14% 88%;        /* hsl(220 14% 88%) */
+  --theme-dropdown-hover: 220 16% 96%;         /* hsl(220 16% 96%) */
+
+  /* 🧩 Design Tokens */
   --theme-radius-lg: 28px;
   --theme-radius-md: 16px;
-  --theme-shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.06);
-  --theme-shadow-md: 0 6px 20px hsl(0 0% 0% / 0.12);
+  --theme-shadow-sm: 0 1px 2px hsl(220 20% 10% / 0.06);
+  --theme-shadow-md: 0 8px 24px hsl(220 20% 10% / 0.12);
 }
 
 /* Aqua theme */
