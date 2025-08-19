@@ -25,6 +25,11 @@
   --theme-active-ring: 152 69% 40%; /* Green ring for active turn */
   --theme-frame-bg: 220 9% 11%; /* Dark gray for mobile frame */
   --theme-frame-border: 220 9% 16%; /* Darker gray for frame border */
+
+  /* Speaker section backgrounds */
+  --theme-speaker-inactive-bg: 0 0% 97%; /* Inactive speaker background */
+  --theme-speaker-active-bg: 0 0% 100%; /* Active speaker background */
+  --theme-speaker-listening-overlay: 218 100% 58%; /* Listening pulse overlay */
   
   /* Console and UI backgrounds */
   --theme-console-bg: 0 0% 96%; /* Light gray console background */
@@ -118,6 +123,11 @@
   --theme-mic-inactive-hover: 210 40% 88%; /* Slightly darker */
   --theme-console-prominent-bg: 210 40% 94%; /* Prominent console */
 
+  /* Neo speaker sections */
+  --theme-speaker-inactive-bg: 210 40% 96%; /* Light blue-gray inactive */
+  --theme-speaker-active-bg: 210 40% 98%; /* Very light blue-gray active */
+  --theme-speaker-listening-overlay: 221.2 83.2% 53.3%; /* Primary blue overlay */
+
   /* Radius and shadows */
   --theme-radius-lg: 28px;
   --theme-radius-md: 16px;
@@ -188,6 +198,11 @@
   --theme-mic-inactive-fg: 180 15% 45%; /* Muted aqua text */
   --theme-mic-inactive-hover: 185 85% 75%; /* Medium aqua */
   --theme-console-prominent-bg: 185 85% 88%; /* Prominent aqua console */
+
+  /* Aqua speaker sections */
+  --theme-speaker-inactive-bg: 180 25% 95%; /* Light aqua inactive */
+  --theme-speaker-active-bg: 180 25% 97%; /* Very light aqua active */
+  --theme-speaker-listening-overlay: 185 85% 45%; /* Aqua overlay */
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -259,6 +274,11 @@
   --theme-mic-inactive-fg: 270 25% 45%; /* Muted violet text */
   --theme-mic-inactive-hover: 262 83% 75%; /* Medium violet */
   --theme-console-prominent-bg: 262 83% 88%; /* Prominent violet console */
+
+  /* Violet speaker sections */
+  --theme-speaker-inactive-bg: 270 15% 95%; /* Light violet inactive */
+  --theme-speaker-active-bg: 270 15% 97%; /* Very light violet active */
+  --theme-speaker-listening-overlay: 262 83% 58%; /* Violet overlay */
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -454,4 +474,17 @@
 /* Console prominent background */
 .theme-console-prominent-bg {
   background-color: hsl(var(--theme-console-prominent-bg, 0 0% 94%));
+}
+
+/* Speaker section utilities */
+.theme-speaker-inactive-bg {
+  background-color: hsl(var(--theme-speaker-inactive-bg, 0 0% 97%));
+}
+
+.theme-speaker-active-bg {
+  background-color: hsl(var(--theme-speaker-active-bg, 0 0% 100%));
+}
+
+.theme-speaker-listening-overlay {
+  background-color: hsl(var(--theme-speaker-listening-overlay, 218 100% 58%) / 0.1);
 }

@@ -45,7 +45,7 @@ export const SpeakerSection = ({
   return (
     <div className={cn(
       "h-full w-full relative overflow-hidden",
-      isActiveTurn ? "" : "theme-surface", // Only apply bg when not active turn
+      isActiveTurn ? "theme-speaker-active-bg" : "theme-speaker-inactive-bg",
       isActiveTurn && "ring-2 theme-active-ring",
       className
     )}>
@@ -69,7 +69,7 @@ export const SpeakerSection = ({
       {/* Fixed microphone and control area */}
       <div className={cn(
         "absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center z-30",
-        isActiveTurn ? "bg-transparent" : "theme-surface"
+        isActiveTurn ? "theme-speaker-active-bg" : "theme-speaker-inactive-bg"
       )}>
         {/* Center: Main Microphone Button - Perfectly centered */}
         <div className="flex items-center justify-center">
@@ -93,8 +93,7 @@ export const SpeakerSection = ({
       {/* Listening feedback overlay */}
       {isListening && (
         <div className={cn(
-          "absolute inset-0 animate-pulse pointer-events-none z-10",
-          speaker === "A" ? "bg-speaker-a/5" : "bg-speaker-b/5"
+          "absolute inset-0 animate-pulse pointer-events-none z-10 theme-speaker-listening-overlay"
         )} />
       )}
     </div>
