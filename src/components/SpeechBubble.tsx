@@ -28,7 +28,8 @@ export const SpeechBubble = ({
         className={cn(
           "max-w-[85%] rounded-2xl px-4 py-3 shadow-sm border",
           "theme-surface theme-text theme-border",
-          "text-base" // Consistent readable font size
+          "text-base", // Consistent readable font size
+          isLeftAligned ? "bubble--theirs" : "bubble--mine"
         )}
       >
         <p className="leading-relaxed whitespace-pre-wrap break-words">

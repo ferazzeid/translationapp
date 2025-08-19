@@ -138,7 +138,7 @@ export const LanguageSelector = ({
       {/* Fixed bottom button */}
       <div className="p-6">
         <Button
-          className="w-full h-12 theme-action-strong hover:opacity-90 text-base font-medium"
+          className="w-full h-12 button--strong hover:opacity-90 text-base font-medium"
           disabled={!isReady}
           onClick={onContinue}
         >

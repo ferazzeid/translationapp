@@ -44,10 +44,10 @@ export const MidSectionControls = ({
                 variant="ghost"
                 size="icon"
                 onClick={onPassTurn}
-                className="min-h-[44px] min-w-[44px] h-12 w-12 rounded-full theme-icon-button hover:theme-icon-button-hover border theme-icon-button-border transition-all duration-200"
+                className="min-h-[44px] min-w-[44px] h-12 w-12 rounded-full button--strong transition-all duration-200"
                 title="Pass turn to other speaker"
               >
-                <ArrowUpDown className="h-5 w-5 theme-icon theme-icon-hover" />
+                <ArrowUpDown className="h-5 w-5" />
               </Button>
            )}
 
@@ -57,10 +57,10 @@ export const MidSectionControls = ({
               size="icon"
               onClick={onWipeMessages}
               disabled={!hasMessages}
-              className="min-h-[44px] min-w-[44px] h-12 w-12 rounded-full theme-icon-button hover:theme-icon-button-hover disabled:opacity-50 border theme-icon-button-border transition-all duration-200"
+              className="min-h-[44px] min-w-[44px] h-12 w-12 rounded-full button--strong disabled:opacity-50 transition-all duration-200"
               title="Clear all messages"
             >
-              <Eraser className="h-5 w-5 theme-icon theme-icon-hover" />
+              <Eraser className="h-5 w-5" />
             </Button>
         </div>
     </div>

@@ -122,17 +122,17 @@ export const SpeakerButton = ({
             "min-h-[44px] min-w-[44px] h-20 w-20 rounded-full transition-all duration-300 relative overflow-hidden",
             !isDisabled && "hover:scale-105",
             isListening ? [
-              "theme-mic theme-mic-glow",
+              "mic",
               "hover:bg-[hsl(var(--theme-mic-bg))]",
               "scale-110"
             ] : isDisabled ? [
-              "theme-mic-inactive border-2 theme-border",
+              "mic--inactive border-2 theme-border",
               "cursor-not-allowed opacity-50"
             ] : isActiveInManagedMode ? [
-              "theme-mic border-2",
+              "mic border-2",
               "hover:opacity-90"
             ] : [
-              "theme-mic-inactive hover:theme-mic-inactive-hover border-2 theme-border"
+              "mic--inactive hover:theme-mic-inactive-hover border-2 theme-border"
             ]
           )}
           onClick={holdToRecordMode ? undefined : handleClick}
@@ -141,10 +141,10 @@ export const SpeakerButton = ({
           onPointerLeave={holdToRecordMode ? handlePointerUp : undefined}
         >
           {isListening ? (
-            <Square className="h-8 w-8 fill-current relative z-10 theme-icon-active" />
+            <Square className="h-8 w-8 fill-current relative z-10 icon" />
           ) : (
             <Mic className={cn(
-              "h-8 w-8 relative z-10",
+              "h-8 w-8 relative z-10 icon",
               isDisabled ? "theme-icon-disabled" : isActiveInManagedMode ? "theme-icon-active" : "theme-icon theme-icon-hover"
             )} />
           )}

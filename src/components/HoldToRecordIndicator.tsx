@@ -12,7 +12,7 @@ export const HoldToRecordIndicator = ({
   className 
 }: HoldToRecordIndicatorProps) => {
   return (
-    <div className={cn("absolute inset-0 rounded-full pointer-events-none", className)}>
+    <div className={cn("absolute inset-0 rounded-full pointer-events-none recording-indicator", className)}>
       {/* Progress Ring - Show when progress > 0 */}
       <svg
         className="absolute inset-0 w-full h-full -rotate-90 transition-opacity duration-200"
@@ -46,11 +46,12 @@ export const HoldToRecordIndicator = ({
           {[...Array(5)].map((_, i) => (
             <div
               key={i}
-              className="w-1 bg-primary rounded-full animate-pulse"
+              className="w-1 rounded-full animate-pulse recording-indicator"
               style={{
                 height: `${12 + Math.sin(Date.now() / 200 + i) * 8}px`,
                 animationDelay: `${i * 100}ms`,
-                animationDuration: '1s'
+                animationDuration: '1s',
+                backgroundColor: 'currentColor'
               }}
             />
           ))}
