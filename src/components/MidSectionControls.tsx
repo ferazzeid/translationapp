@@ -70,7 +70,7 @@ export const MidSectionControls = ({
               onValueChange={(value) => onVolumeChange(value[0] / 100)}
               max={100}
               step={5}
-              className="w-full"
+              className="w-full [&_.bg-primary]:bg-gray-800 [&_.bg-secondary]:bg-gray-300 [&_[data-state=active]]:bg-gray-800"
             />
           </div>
           <span className="text-xs font-medium text-muted-foreground min-w-[2rem] text-center">
@@ -88,7 +88,7 @@ export const MidSectionControls = ({
               variant="outline"
               size="icon"
               onClick={onPassTurn}
-              className="h-12 w-12 rounded-full bg-primary text-primary-foreground border-2 border-primary hover:bg-primary/90 hover:text-primary-foreground transition-all duration-200 shadow-lg"
+              className="h-12 w-12 rounded-full bg-gray-800 text-white border-2 border-gray-600 hover:bg-gray-700 transition-all duration-200"
               title="Pass turn to other speaker"
             >
               <ArrowUpDown className="h-6 w-6" />
@@ -101,7 +101,7 @@ export const MidSectionControls = ({
             size="icon"
             onClick={onWipeMessages}
             disabled={!hasMessages}
-            className="h-12 w-12 rounded-full bg-muted text-foreground border-2 border-border hover:bg-muted/80 disabled:opacity-50 transition-all duration-200 shadow-lg"
+            className="h-12 w-12 rounded-full bg-gray-600 text-white border-2 border-gray-500 hover:bg-gray-500 disabled:opacity-50 disabled:bg-gray-400 transition-all duration-200"
             title="Clear all messages"
           >
             <Eraser className="h-6 w-6" />

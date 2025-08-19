@@ -48,13 +48,20 @@ export const SpeakerSection = ({
     <div className={cn(
       "h-full w-full relative overflow-hidden",
       isActiveTurn ? "" : "bg-background", // Only apply bg when not active turn
-      isActiveTurn && "ring-2 ring-green-400/60",
+      isActiveTurn && "ring-2 ring-green-500/60",
       className
     )}>
 
-      {/* Messages area - absolutely contained, can't push anything */}
+      {/* Messages area with language indicator */}
       <div className="absolute inset-0 bottom-20 sm:bottom-24 overflow-hidden">
-        <div className="h-full p-2 sm:p-4 overflow-y-auto flex flex-col-reverse">
+        {/* Language Indicator - Top-left corner of message area */}
+        <div className="absolute top-2 left-2 z-40 bg-background/80 backdrop-blur-sm border border-border rounded px-2 py-1">
+          <span className="text-xs font-medium text-foreground">
+            {language.toUpperCase()}
+          </span>
+        </div>
+        
+        <div className="h-full p-2 sm:p-4 pt-12 overflow-y-auto flex flex-col-reverse">
           <div className="space-y-2 sm:space-y-3 min-h-0">
             {messages}
           </div>
@@ -71,11 +78,11 @@ export const SpeakerSection = ({
           {/* Repeat Button - Left of microphone */}
           <button
             onClick={onRepeat}
-            className="h-12 w-12 rounded-full bg-muted hover:bg-muted/80 border border-border shadow-sm flex items-center justify-center transition-colors"
+            className="h-12 w-12 rounded-full bg-gray-600 text-white hover:bg-gray-500 border-2 border-gray-500 shadow-sm flex items-center justify-center transition-colors"
             title="Repeat last message"
           >
             <svg 
-              className="h-4 w-4 text-muted-foreground" 
+              className="h-5 w-5 text-white" 
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"

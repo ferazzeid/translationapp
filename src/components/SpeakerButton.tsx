@@ -158,11 +158,6 @@ export const SpeakerButton = ({
             />
           )}
         </Button>
-        
-        {/* Language Code */}
-        <div className="absolute -bottom-1 -right-1 bg-background border border-border rounded px-1.5 py-0.5 text-xs font-medium text-foreground">
-          {getLanguageCode(language)}
-        </div>
       </div>
     </div>
   );

@@ -9,15 +9,15 @@ export const LanguageSettings = ({
   onOpenSettings
 }: LanguageSettingsProps) => {
   return (
-    <div className="absolute bottom-20 right-4 z-40">
+    <div className="absolute bottom-20 right-6 z-40">
       <Button
         variant="outline"
         size="icon"
         onClick={onOpenSettings}
-        className="h-8 w-8 rounded-full bg-background/90 border border-border shadow-sm hover:bg-foreground hover:text-background"
+        className="h-10 w-10 rounded-full bg-gray-600 text-white border-2 border-gray-500 hover:bg-gray-500 shadow-sm"
         title="Language Settings"
       >
-        <Globe className="h-3 w-3" />
+        <Globe className="h-4 w-4" />
       </Button>
     </div>
   );
