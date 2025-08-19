@@ -137,7 +137,9 @@ export const TranslationInterface = ({
               }
               break;
             case "managed_mode_enabled":
-              managedMode.setEnabled(setting.setting_value === "true");
+              const shouldEnable = setting.setting_value === "true";
+              console.log('Admin settings: managed_mode_enabled =', shouldEnable, 'current enabled =', managedMode.isEnabled);
+              managedMode.setEnabled(shouldEnable);
               break;
             case "hold_to_record_enabled":
               setHoldToRecordMode(setting.setting_value === "true");

@@ -16,19 +16,27 @@ export const useManagedMode = (initialEnabled: boolean = false): ManagedModeStat
   const [currentTurn, setCurrentTurn] = useState<Speaker>("A");
 
   const setEnabled = useCallback((enabled: boolean) => {
-    setIsEnabled(enabled);
-    // Reset to Speaker A when enabling managed mode
-    if (enabled) {
-      setCurrentTurn("A");
-    }
+    setIsEnabled(prevEnabled => {
+      // Only reset to Speaker A when transitioning FROM disabled TO enabled
+      // Don't reset if already enabled (prevents admin settings from overriding user choices)
+      if (enabled && !prevEnabled) {
+        console.log('useManagedMode: Enabling managed mode and resetting to Speaker A');
+        setCurrentTurn("A");
+      } else if (enabled && prevEnabled) {
+        console.log('useManagedMode: Managed mode already enabled, preserving current turn');
+      }
+      return enabled;
+    });
   }, []);
 
   const switchTurn = useCallback(() => {
-    console.log('useManagedMode: switchTurn called, current turn:', currentTurn);
-    const newTurn = currentTurn === "A" ? "B" : "A";
-    setCurrentTurn(newTurn);
-    console.log('useManagedMode: turn switched to:', newTurn);
-  }, [currentTurn]);
+    setCurrentTurn(prevTurn => {
+      console.log('useManagedMode: switchTurn called, current turn:', prevTurn);
+      const newTurn = prevTurn === "A" ? "B" : "A";
+      console.log('useManagedMode: turn switched to:', newTurn);
+      return newTurn;
+    });
+  }, []);
 
   const canSpeak = useCallback((speaker: Speaker) => {
     // In standard mode, both speakers can always speak
