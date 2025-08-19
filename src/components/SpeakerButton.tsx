@@ -108,9 +108,9 @@ export const SpeakerButton = ({
         {/* Enhanced pulsing circles for active speaker */}
         {isActiveInManagedMode && (
           <>
-            <div className="absolute inset-0 rounded-full bg-black/20 animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite] scale-110" />
-            <div className="absolute inset-0 rounded-full bg-black/10 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] scale-125" />
-            <div className="absolute inset-0 rounded-full bg-black/5 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] scale-140" />
+            <div className="absolute inset-0 rounded-full bg-gray-400/20 animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite] scale-110" />
+            <div className="absolute inset-0 rounded-full bg-gray-400/10 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] scale-125" />
+            <div className="absolute inset-0 rounded-full bg-gray-400/5 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] scale-140" />
           </>
         )}
         
@@ -122,20 +122,20 @@ export const SpeakerButton = ({
             "h-20 w-20 rounded-full transition-all duration-300 relative overflow-hidden",
             !isDisabled && "hover:scale-105",
             isListening ? [
-              "bg-red-500 text-white border-2 border-red-400",
-              "hover:bg-red-500", // Prevent hover changes when recording
+              "bg-black text-white border-2 border-gray-600",
+              "hover:bg-black", // Prevent hover changes when recording
               "scale-110" // Recording scale without strobe
             ] : isDisabled ? [
               "bg-gray-400 text-gray-200 border-2 border-gray-300",
               "cursor-not-allowed opacity-50"
             ] : isActiveInManagedMode ? [
-              "bg-black text-white border-2 border-gray-700",
-              "hover:bg-gray-900 hover:border-gray-600",
+              "bg-black text-white border-2 border-gray-600",
+              "hover:bg-gray-900 hover:border-gray-500",
               "shadow-[0_0_20px_rgba(0,0,0,0.4)] hover:shadow-[0_0_25px_rgba(0,0,0,0.6)]"
             ] : [
-              "bg-black text-white border-2 border-gray-700",
-              "hover:bg-gray-900 hover:border-gray-600",
-              "shadow-[0_0_20px_rgba(0,0,0,0.4)] hover:shadow-[0_0_25px_rgba(0,0,0,0.6)]"
+              "bg-white text-black border-2 border-gray-300",
+              "hover:bg-gray-100 hover:border-gray-400",
+              "shadow-[0_0_20px_rgba(0,0,0,0.1)] hover:shadow-[0_0_25px_rgba(0,0,0,0.2)]"
             ]
           )}
           onClick={holdToRecordMode ? undefined : handleClick}

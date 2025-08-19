@@ -6,6 +6,7 @@ import { AdminSettings } from "@/components/AdminSettings";
 import { AdminDashboard } from "@/components/AdminDashboard";
 import { AuthPage } from "@/components/AuthPage";
 import { MobileFrame } from "@/components/MobileFrame";
+import { SubscriptionStatus } from "@/components/SubscriptionStatus";
 import { useAuth } from "@/hooks/useAuth";
 import { User, Session } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
@@ -156,6 +157,14 @@ const Index = () => {
                   </Button>
                 </div>
               )}
+              
+              {/* Subscription Status */}
+              {isAuthenticated && (
+                <div className="absolute top-20 right-4 w-80 z-40">
+                  <SubscriptionStatus />
+                </div>
+              )}
+              
               <LanguageSelector
                 selectedLanguages={selectedLanguages}
                 onLanguageChange={handleLanguageChange}

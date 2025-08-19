@@ -61,49 +61,28 @@ export const SpeakerSection = ({
         </div>
       </div>
 
-      {/* Fixed microphone and repeat button area */}
+      {/* Fixed microphone area - centered with ample padding */}
       <div className={cn(
-        "absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center z-30 border-t border-border",
+        "absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center z-30",
         isActiveTurn ? "bg-transparent" : "bg-background"
       )}>
-        {/* Container for microphone and repeat button */}
-        <div className="flex items-center gap-3">
-          {/* Repeat Button - Left of microphone */}
-          <button
-            onClick={onRepeat}
-            className="h-12 w-12 rounded-full bg-muted hover:bg-muted/80 border border-border shadow-sm flex items-center justify-center transition-colors"
-            title="Repeat last message"
-          >
-            <svg 
-              className="h-4 w-4 text-muted-foreground" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
-              />
-            </svg>
-          </button>
-
-          {/* Main Microphone Button */}
-            <SpeakerButton
-              speaker={speaker}
-              isListening={isListening}
-              onStart={onStart}
-              onStop={onStop}
-              language={language}
-              flag={flag}
-              isManagedMode={isManagedMode}
-              isMyTurn={isCurrentTurn}
-              holdToRecordMode={holdToRecordMode}
-              holdProgress={holdProgress}
-              onHoldStart={onHoldStart}
-              onHoldEnd={onHoldEnd}
-            />
+        {/* Container for microphone - centered with padding for animations */}
+        <div className="flex items-center justify-center p-8">
+          {/* Main Microphone Button - Primary focal element */}
+          <SpeakerButton
+            speaker={speaker}
+            isListening={isListening}
+            onStart={onStart}
+            onStop={onStop}
+            language={language}
+            flag={flag}
+            isManagedMode={isManagedMode}
+            isMyTurn={isCurrentTurn}
+            holdToRecordMode={holdToRecordMode}
+            holdProgress={holdProgress}
+            onHoldStart={onHoldStart}
+            onHoldEnd={onHoldEnd}
+          />
         </div>
       </div>
 

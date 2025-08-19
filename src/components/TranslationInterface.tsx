@@ -8,8 +8,7 @@ import { usePWA } from "@/hooks/usePWA";
 import { useWakeLock } from "@/hooks/useWakeLock";
 import { useManagedMode } from "@/hooks/useManagedMode";
 import { SpeechBubble } from "./SpeechBubble";
-import { CentralVolumeControl } from "./CentralVolumeControl";
-import { HorizontalVolumeControl } from "./HorizontalVolumeControl";
+import { MidSectionControls } from "./MidSectionControls";
 import { AdminControls } from "./AdminControls";
 import { LanguageSettings } from "./LanguageSettings";
 import { ConnectionStatus } from "./ConnectionStatus";
@@ -568,33 +567,22 @@ export const TranslationInterface = ({
 
       {/* Central Controls Strip */}
       <div className={cn(
-        "flex-shrink-0 bg-background z-30 flex items-center justify-center relative border-t border-b border-border",
+        "flex-shrink-0 bg-muted z-30 border-t border-b border-border/30",
         isRealMobile ? "h-20" : "h-20"
       )}>
-        {/* Connection Status - Left Side */}
-        <div className="absolute left-2 top-1/2 -translate-y-1/2">
-          <CentralVolumeControl isOnline={isOnline} />
-        </div>
-        
-        {/* Volume Control - Center */}
-      <HorizontalVolumeControl
-        volume={volume}
-        onVolumeChange={setVolume}
-        isSpeakerEnabled={isSpeakerEnabled}
-        onToggleSpeaker={() => setIsSpeakerEnabled(!isSpeakerEnabled)}
-        onClearMessages={clearAllMessages}
-        isProcessing={isProcessing}
-        isManagedMode={managedMode.isEnabled}
-        onSwitchTurn={() => {
-          console.log('Switch turn button clicked. Current turn:', managedMode.currentTurn);
-          managedMode.switchTurn();
-          console.log('New turn:', managedMode.currentTurn === "A" ? "B" : "A");
-        }}
-      />
-        
-        {/* Right side space for symmetry */}
-        <div className="absolute right-2 top-1/2 -translate-y-1/2">
-        </div>
+        <MidSectionControls
+          volume={volume}
+          onVolumeChange={setVolume}
+          isOnline={isOnline}
+          onWipeMessages={clearAllMessages}
+          onPassTurn={() => {
+            console.log('Switch turn button clicked. Current turn:', managedMode.currentTurn);
+            managedMode.switchTurn();
+            console.log('New turn:', managedMode.currentTurn === "A" ? "B" : "A");
+          }}
+          hasMessages={messages.length > 0}
+          isManagedMode={managedMode.isEnabled}
+        />
       </div>
 
       {/* Speaker A Half - Bottom (Normal) - You */}
