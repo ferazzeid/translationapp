@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Download, Smartphone, Globe, Users } from "lucide-react";
+import { ArrowRight, Globe, MessageCircle, Brain } from "lucide-react";
+import googlePlayButton from "@/assets/google-play-button.png";
 const landingHeroBg = "/lovable-uploads/7d33a979-ef4a-4ab9-84af-a3cdfa66b285.png";
 
 const LandingPage = () => {
@@ -19,45 +20,25 @@ const LandingPage = () => {
         <div className="container mx-auto px-4 text-center text-white">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              Break Language
-              <span className="block text-primary">Barriers</span>
+              One Device
+              <span className="block text-primary">Two People</span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 opacity-90 max-w-2xl mx-auto">
-              Real-time translation that brings people together. Communicate seamlessly across languages with our powerful translation bridge.
+              AI-powered real-time translation designed for one-on-one conversations. Reliable, accurate, and simple enough for anyone to use together.
             </p>
             
-            {/* Download Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <Button 
-                size="lg" 
-                className="bg-white text-black hover:bg-gray-100 text-lg px-8 py-4 h-auto"
-                onClick={() => window.open('https://play.google.com/store', '_blank')}
+            {/* Google Play Button */}
+            <div className="flex justify-center mb-12">
+              <button 
+                onClick={() => window.open('https://play.google.com/store/apps/details?id=com.talkduo.app', '_blank')}
+                className="transition-transform hover:scale-105"
               >
-                <Download className="mr-2" />
-                Get on Google Play
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="border-white text-white hover:bg-white hover:text-black text-lg px-8 py-4 h-auto"
-                onClick={() => window.open('https://apps.apple.com', '_blank')}
-              >
-                <Smartphone className="mr-2" />
-                Download for iOS
-              </Button>
-            </div>
-
-            {/* Try Web Version */}
-            <div className="mb-8">
-              <Button 
-                variant="secondary"
-                size="lg"
-                className="text-lg px-8 py-4 h-auto"
-                onClick={() => window.location.href = '/app'}
-              >
-                Try Web Version
-                <ArrowRight className="ml-2" />
-              </Button>
+                <img 
+                  src={googlePlayButton} 
+                  alt="Get it on Google Play" 
+                  className="h-16 md:h-20"
+                />
+              </button>
             </div>
           </div>
         </div>
@@ -75,10 +56,10 @@ const LandingPage = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 theme-text-primary">
-              Why Choose Translation Bridge?
+              Why Choose TalkDuo?
             </h2>
             <p className="text-xl theme-text-secondary max-w-2xl mx-auto">
-              Experience the future of cross-language communication with our cutting-edge features.
+              Designed for real conversations between two people using one device. Simple, reliable, and AI-powered.
             </p>
           </div>
 
@@ -87,29 +68,29 @@ const LandingPage = () => {
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
                 <Globe className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 theme-text-primary">Real-Time Translation</h3>
+              <h3 className="text-2xl font-bold mb-4 theme-text-primary">Any Language</h3>
               <p className="theme-text-secondary leading-relaxed">
-                Instant voice and text translation across 100+ languages with AI-powered accuracy.
+                Real-time translation across 100+ languages with AI-powered accuracy. No language barriers.
               </p>
             </div>
 
             <div className="text-center p-8 rounded-2xl theme-surface border theme-border">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
-                <Users className="w-8 h-8 text-white" />
+                <MessageCircle className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 theme-text-primary">Group Conversations</h3>
+              <h3 className="text-2xl font-bold mb-4 theme-text-primary">One-on-One Conversations</h3>
               <p className="theme-text-secondary leading-relaxed">
-                Connect multiple people speaking different languages in seamless group conversations.
+                Two people, one device. Share the screen and have natural conversations with instant translation.
               </p>
             </div>
 
             <div className="text-center p-8 rounded-2xl theme-surface border theme-border">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
-                <Smartphone className="w-8 h-8 text-white" />
+                <Brain className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 theme-text-primary">Cross-Platform</h3>
+              <h3 className="text-2xl font-bold mb-4 theme-text-primary">Managed Mode</h3>
               <p className="theme-text-secondary leading-relaxed">
-                Available on web, iOS, and Android. Start on one device, continue on another.
+                Perfect for non-tech-savvy users. The app guides the conversation flow, making it reliable and easy to use together.
               </p>
             </div>
           </div>
@@ -120,22 +101,23 @@ const LandingPage = () => {
       <section className="py-20 bg-primary text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Ready to Connect?
+            Ready to Talk?
           </h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Join millions of users breaking down language barriers every day.
+            Experience reliable, AI-powered conversations that work for everyone.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
-              size="lg" 
-              variant="secondary"
-              className="text-lg px-8 py-4 h-auto"
-              onClick={() => window.location.href = '/app'}
+          <div className="flex justify-center">
+            <button 
+              onClick={() => window.open('https://play.google.com/store/apps/details?id=com.talkduo.app', '_blank')}
+              className="transition-transform hover:scale-105"
             >
-              Start Translating Now
-              <ArrowRight className="ml-2" />
-            </Button>
+              <img 
+                src={googlePlayButton} 
+                alt="Get it on Google Play" 
+                className="h-16 md:h-20"
+              />
+            </button>
           </div>
         </div>
       </section>
@@ -143,19 +125,16 @@ const LandingPage = () => {
       {/* Footer */}
       <footer className="py-12 theme-surface border-t theme-border">
         <div className="container mx-auto px-4 text-center">
-          <h3 className="text-2xl font-bold mb-4 theme-text-primary">Translation Bridge</h3>
+          <h3 className="text-2xl font-bold mb-4 theme-text-primary">TalkDuo</h3>
           <p className="theme-text-secondary mb-6">
-            Breaking language barriers, building connections.
+            One device, two people, any language.
           </p>
           <div className="flex justify-center space-x-8">
-            <a href="/app" className="theme-text-secondary hover:theme-text-primary transition-colors">
-              Web App
-            </a>
-            <a href="mailto:support@translationbridge.com" className="theme-text-secondary hover:theme-text-primary transition-colors">
-              Support
-            </a>
             <a href="/privacy" className="theme-text-secondary hover:theme-text-primary transition-colors">
-              Privacy
+              Privacy Policy
+            </a>
+            <a href="/terms" className="theme-text-secondary hover:theme-text-primary transition-colors">
+              Terms & Conditions
             </a>
           </div>
         </div>
