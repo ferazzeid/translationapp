@@ -20,40 +20,82 @@ export const AppSettings = () => {
 
   const loadSettings = async () => {
     try {
+      console.log('AppSettings: Loading settings from database...');
       const { data, error } = await supabase
         .from("admin_settings")
         .select("setting_key, setting_value")
         .in("setting_key", ["wake_lock_enabled", "managed_mode_enabled", "hold_to_record_enabled"]);
 
-      if (error) throw error;
+      if (error) {
+        console.error('AppSettings: Error loading settings:', error);
+        throw error;
+      }
 
+      console.log('AppSettings: Loaded settings data:', data);
+
+      // Set defaults first
+      setWakeLockEnabled(true);
+      setManagedModeEnabled(false);
+      setHoldToRecordEnabled(false);
+
+      // Then update with actual values from database
       data?.forEach((setting) => {
+        const value = setting.setting_value === "true";
+        console.log(`AppSettings: Setting ${setting.setting_key} to ${value}`);
+        
         switch (setting.setting_key) {
           case "wake_lock_enabled":
-            setWakeLockEnabled(setting.setting_value === "true");
+            setWakeLockEnabled(value);
             break;
           case "managed_mode_enabled":
-            setManagedModeEnabled(setting.setting_value === "true");
+            setManagedModeEnabled(value);
             break;
           case "hold_to_record_enabled":
-            setHoldToRecordEnabled(setting.setting_value === "true");
+            setHoldToRecordEnabled(value);
             break;
         }
       });
     } catch (error: any) {
-      console.error('Error loading settings:', error);
+      console.error('AppSettings: Error loading settings:', error);
+      toast({
+        title: "Error Loading Settings",
+        description: `Failed to load settings: ${error.message}`,
+        variant: "destructive",
+      });
     }
   };
 
   const updateSetting = async (key: string, value: string) => {
     try {
-      const { error } = await supabase.rpc("set_admin_setting", {
-        key_name: key,
-        value: value,
-        encrypted: false
-      });
+      console.log(`AppSettings: Updating ${key} to ${value}`);
+      
+      // First try to update existing record
+      const { error: updateError } = await supabase
+        .from("admin_settings")
+        .update({ setting_value: value, updated_at: new Date().toISOString() })
+        .eq("setting_key", key);
 
-      if (error) throw error;
+      if (updateError) {
+        console.log(`AppSettings: Update failed, trying insert. Error:`, updateError);
+        
+        // If update fails (no existing record), try insert
+        const { error: insertError } = await supabase
+          .from("admin_settings")
+          .insert({ 
+            setting_key: key, 
+            setting_value: value,
+            description: `User preference for ${key}`,
+            is_encrypted: false
+          });
+
+        if (insertError) {
+          console.error(`AppSettings: Insert also failed:`, insertError);
+          throw insertError;
+        }
+        console.log(`AppSettings: Successfully inserted ${key} = ${value}`);
+      } else {
+        console.log(`AppSettings: Successfully updated ${key} = ${value}`);
+      }
 
       const settingName = key === "wake_lock_enabled" ? "Wake lock setting" : 
                          key === "managed_mode_enabled" ? "Managed mode setting" :
@@ -64,6 +106,7 @@ export const AppSettings = () => {
         description: `${settingName} saved successfully`,
       });
     } catch (error: any) {
+      console.error(`AppSettings: Failed to save ${key}:`, error);
       toast({
         title: "Error",
         description: `Failed to save setting: ${error.message}`,
