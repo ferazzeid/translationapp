@@ -15,19 +15,15 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  // Check if themes are enabled via environment variable
-  const enableThemes = import.meta.env.VITE_ENABLE_THEMES === 'true';
+  // Always enable themes
+  const enableThemes = true;
   
   const [theme, setThemeState] = useState<ThemeName>(() => {
-    if (!enableThemes) return 'neo-light';
-    
     const saved = localStorage.getItem('ui.theme');
     return (saved as ThemeName) || 'neo-light';
   });
 
   const setTheme = (newTheme: ThemeName) => {
-    if (!enableThemes) return;
-    
     setThemeState(newTheme);
     localStorage.setItem('ui.theme', newTheme);
     
@@ -39,13 +35,9 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   };
 
   useEffect(() => {
-    if (enableThemes) {
-      document.documentElement.dataset.theme = theme;
-    } else {
-      // Remove theme attribute when disabled
-      delete document.documentElement.dataset.theme;
-    }
-  }, [theme, enableThemes]);
+    // Always set theme attribute
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, enableThemes }}>

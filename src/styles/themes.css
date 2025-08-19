@@ -69,12 +69,12 @@
 /* Aqua theme */
 :root[data-theme="aqua-light"] {
   /* Inherit from neo-light except overrides */
-  --theme-bg: 250 250 250;
-  --theme-surface: 255 255 255;
-  --theme-surface-alt: 242 243 245;
-  --theme-text: 34 34 34;
-  --theme-text-muted: 102 102 102;
-  --theme-border: 230 230 230;
+  --theme-bg: 0 0% 98%;
+  --theme-surface: 0 0% 100%;
+  --theme-surface-alt: 220 9% 95%;
+  --theme-text: 0 0% 13%;
+  --theme-text-muted: 0 0% 40%;
+  --theme-border: 0 0% 90%;
   
   /* Aqua-specific colors */
   --theme-primary: 180 100% 36%; /* #00BFA6 */
@@ -101,12 +101,12 @@
 /* Violet Material theme */
 :root[data-theme="violet-material"] {
   /* Inherit from neo-light except overrides */
-  --theme-bg: 250 250 250;
-  --theme-surface: 255 255 255;
-  --theme-surface-alt: 242 243 245;
-  --theme-text: 34 34 34;
-  --theme-text-muted: 102 102 102;
-  --theme-border: 230 230 230;
+  --theme-bg: 0 0% 98%;
+  --theme-surface: 0 0% 100%;
+  --theme-surface-alt: 220 9% 95%;
+  --theme-text: 0 0% 13%;
+  --theme-text-muted: 0 0% 40%;
+  --theme-border: 0 0% 90%;
   
   /* Violet-specific colors */
   --theme-primary: 265 100% 48%; /* #6200EE */
@@ -181,7 +181,9 @@
 }
 
 .theme-recording {
-  color: hsl(var(--theme-danger, 4 86% 60%));
+  background-color: hsl(var(--theme-danger, 4 86% 60%));
+  color: hsl(var(--theme-mic-fg, 0 0% 100%));
+  border-color: hsl(var(--theme-danger, 4 86% 60%));
 }
 
 .theme-language-chip {

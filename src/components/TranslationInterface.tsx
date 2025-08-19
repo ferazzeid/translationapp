@@ -103,18 +103,18 @@ export const TranslationInterface = ({
   // Language code to flag mapping  
   const getLanguageFlag = (code: string) => {
     const flags: Record<string, string> = {
-      en: "🇺🇸",
-      hu: "🇭🇺", 
-      es: "🇪🇸",
-      fr: "🇫🇷",
-      de: "🇩🇪",
-      it: "🇮🇹",
-      pt: "🇵🇹",
-      zh: "🇨🇳",
-      ja: "🇯🇵",
-      ko: "🇰🇷"
+      en: "EN",
+      hu: "HU", 
+      es: "ES",
+      fr: "FR",
+      de: "DE",
+      it: "IT",
+      pt: "PT",
+      zh: "ZH",
+      ja: "JA",
+      ko: "KO"
     };
-    return flags[code] || "🌐";
+    return flags[code] || "??";
   };
 
   // Load admin settings and manage features
