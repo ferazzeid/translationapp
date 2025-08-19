@@ -67,15 +67,15 @@ export const SpeakerSection = ({
 
       {/* Fixed microphone and repeat button area */}
       <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center bg-background z-30 border-t border-border">
-        {/* Repeat Button - Left side */}
-        <div className="absolute left-4 top-1/2 -translate-y-1/2">
+        {/* Repeat Button - Close to microphone button */}
+        <div className="absolute -left-16 top-1/2 -translate-y-1/2">
           <button
             onClick={onRepeat}
-            className="h-12 w-12 rounded-full bg-muted hover:bg-muted/80 border border-border shadow-sm flex items-center justify-center transition-colors"
+            className="h-10 w-10 rounded-full bg-muted hover:bg-muted/80 border border-border shadow-sm flex items-center justify-center transition-colors"
             title="Repeat last message"
           >
             <svg 
-              className="h-5 w-5 text-muted-foreground" 
+              className="h-4 w-4 text-muted-foreground" 
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"
