@@ -7,42 +7,49 @@ interface ProcessingIndicatorProps {
   type?: "recording" | "processing";
 }
 
+// Animated waveform bars component
+const WaveformBars = () => {
+  return (
+    <div className="flex items-center gap-0.5">
+      {[...Array(5)].map((_, i) => (
+        <div
+          key={i}
+          className="w-1 bg-red-500 rounded-sm animate-pulse"
+          style={{
+            height: `${8 + Math.random() * 16}px`,
+            animationDelay: `${i * 0.1}s`,
+            animationDuration: '0.8s'
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
 export const ProcessingIndicator = ({ 
   isProcessing = false,
   isRecording = false,
   speaker,
   type = "processing"
 }: ProcessingIndicatorProps) => {
-  const isVisible = isProcessing || isRecording;
-  if (!isVisible) return null;
+  const isActive = isProcessing || isRecording;
+  
+  if (!isActive) return null;
 
-  const isRecordingState = type === "recording" || isRecording;
-  const barColor = isRecordingState ? "bg-red-500" : "bg-blue-500";
-  const text = isRecordingState ? "Recording..." : "Processing...";
-
+  // Position based on speaker
+  const isBottomHalf = speaker === "A";
+  
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 pointer-events-none z-50">
-      <div className="bg-white/95 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg border border-gray-200">
-        <div className="flex items-center gap-3">
-          {/* Animated bars */}
-          <div className="flex items-end gap-1">
-            {[...Array(4)].map((_, i) => (
-              <div
-                key={i}
-                className={cn(
-                  "w-1 rounded-full animate-pulse",
-                  barColor
-                )}
-                style={{
-                  height: `${12 + (i % 2) * 6}px`,
-                  animationDelay: `${i * 200}ms`,
-                  animationDuration: '0.8s'
-                }}
-              />
-            ))}
-          </div>
-          <span className="text-gray-700 text-sm font-medium">{text}</span>
-        </div>
+    <div 
+      className={cn(
+        "fixed left-1/2 -translate-x-1/2 z-50 pointer-events-none",
+        isBottomHalf 
+          ? "top-1/2 translate-y-4" // 16px below central divider
+          : "top-1/2 -translate-y-10" // 16px above central divider
+      )}
+    >
+      <div className="h-6 flex items-center">
+        <WaveformBars />
       </div>
     </div>
   );
