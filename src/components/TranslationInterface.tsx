@@ -329,43 +329,43 @@ export const TranslationInterface = ({
 
   return (
     <div className="h-full w-full flex flex-col bg-background overflow-hidden">
-      {/* Speaker A Half - Top (Rotated 180°) */}
+      {/* Speaker B Half - Top (Rotated 180°) - Other Person */}
       <div className="h-1/2 rotate-180 relative">
         <SpeakerSection
-          speaker="A"
-          isListening={isListeningA}
-          onStart={() => startListening("A")}
-          onStop={() => stopListening("A")}
-          language={speakerALanguage}
-          flag={getLanguageFlag(speakerALanguage)}
+          speaker="B"
+          isListening={isListeningB}
+          onStart={() => startListening("B")}
+          onStop={() => stopListening("B")}
+          language={speakerBLanguage}
+          flag={getLanguageFlag(speakerBLanguage)}
           isTop={true}
-          messages={getRecentMessages("A").map((message, index) => (
+          messages={getRecentMessages("B").map((message, index) => (
             <SpeechBubble
               key={`${message.id}-${index}`}
-              text={message.speaker === "A" ? message.originalText : message.translatedText}
-              isOriginal={message.speaker === "A"}
+              text={message.speaker === "B" ? message.originalText : message.translatedText}
+              isOriginal={message.speaker === "B"}
               index={index}
               speaker={message.speaker}
               isNew={index === 0}
-              isDarkMode={speakerADarkMode}
+              isDarkMode={speakerBDarkMode}
             />
           )).concat(
             isProcessing ? [
               <ProcessingIndicator 
-                key="processing-a"
+                key="processing-b"
                 isProcessing={true} 
-                speaker="A"
+                speaker="B"
               />
             ] : []
           )}
         />
         
-        {/* Speaker A Controls - Inside rotated section with relative positioning */}
+        {/* Speaker B Controls - Inside rotated section with relative positioning */}
         <SpeakerControls
-          speaker="A"
-          onOpenVoiceSelection={() => setActiveVoiceModal("A")}
-          isDarkMode={speakerADarkMode}
-          onToggleDarkMode={() => setSpeakerADarkMode(!speakerADarkMode)}
+          speaker="B"
+          onOpenVoiceSelection={() => setActiveVoiceModal("B")}
+          isDarkMode={speakerBDarkMode}
+          onToggleDarkMode={() => setSpeakerBDarkMode(!speakerBDarkMode)}
           isTop={true}
         />
       </div>
@@ -388,43 +388,43 @@ export const TranslationInterface = ({
         />
       </div>
 
-      {/* Speaker B Half - Bottom (Normal) */}
+      {/* Speaker A Half - Bottom (Normal) - You */}
       <div className="h-1/2 relative">
         <SpeakerSection
-          speaker="B"
-          isListening={isListeningB}
-          onStart={() => startListening("B")}
-          onStop={() => stopListening("B")}
-          language={speakerBLanguage}
-          flag={getLanguageFlag(speakerBLanguage)}
+          speaker="A"
+          isListening={isListeningA}
+          onStart={() => startListening("A")}
+          onStop={() => stopListening("A")}
+          language={speakerALanguage}
+          flag={getLanguageFlag(speakerALanguage)}
           isTop={false}
-          messages={getRecentMessages("B").map((message, index) => (
+          messages={getRecentMessages("A").map((message, index) => (
             <SpeechBubble
               key={`${message.id}-${index}`}
-              text={message.speaker === "B" ? message.originalText : message.translatedText}
-              isOriginal={message.speaker === "B"}
+              text={message.speaker === "A" ? message.originalText : message.translatedText}
+              isOriginal={message.speaker === "A"}
               index={index}
               speaker={message.speaker}
               isNew={index === 0}
-              isDarkMode={speakerBDarkMode}
+              isDarkMode={speakerADarkMode}
             />
           )).concat(
             isProcessing ? [
               <ProcessingIndicator 
-                key="processing-b"
+                key="processing-a"
                 isProcessing={true} 
-                speaker="B"
+                speaker="A"
               />
             ] : []
           )}
         />
         
-        {/* Speaker B Controls - Inside section with proper positioning */}
+        {/* Speaker A Controls - Inside section with proper positioning */}
         <SpeakerControls
-          speaker="B"
-          onOpenVoiceSelection={() => setActiveVoiceModal("B")}
-          isDarkMode={speakerBDarkMode}
-          onToggleDarkMode={() => setSpeakerBDarkMode(!speakerBDarkMode)}
+          speaker="A"
+          onOpenVoiceSelection={() => setActiveVoiceModal("A")}
+          isDarkMode={speakerADarkMode}
+          onToggleDarkMode={() => setSpeakerADarkMode(!speakerADarkMode)}
           isTop={false}
         />
       </div>
