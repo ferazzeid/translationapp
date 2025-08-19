@@ -67,19 +67,9 @@ export const IntroductionMode = ({ targetLanguage, onContinueToTranslation, onOp
 
   return (
     <div className="h-full flex flex-col theme-bg">
-      {/* Header with settings */}
+      {/* Header */}
       <div className="flex justify-between items-center p-4 theme-surface/50 backdrop-blur-sm border-b theme-border/50">
         <h1 className="text-lg font-bold theme-text">Introduction</h1>
-        {onOpenSettings && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onOpenSettings}
-            className="h-8 w-8 p-0"
-          >
-            <Settings size={16} />
-          </Button>
-        )}
       </div>
 
       {/* Scrollable content */}

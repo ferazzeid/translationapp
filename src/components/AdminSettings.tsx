@@ -275,7 +275,7 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
             onClick={handleSignOut}
             variant="outline"
             size="sm"
-            className="w-full border-border text-foreground hover:bg-muted"
+            className="w-full theme-button-outline hover:theme-button-outline-hover"
           >
             Sign Out
           </Button>
