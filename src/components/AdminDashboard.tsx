@@ -24,11 +24,16 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
   const [uploadingFavicon, setUploadingFavicon] = useState(false);
   const [savingKey, setSavingKey] = useState(false);
   const [testingKey, setTestingKey] = useState(false);
+  const [paidUserLimit, setPaidUserLimit] = useState("1000");
+  const [trialUserLimit, setTrialUserLimit] = useState("100");
+  const [savingPaidLimit, setSavingPaidLimit] = useState(false);
+  const [savingTrialLimit, setSavingTrialLimit] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     loadBrandingSettings();
     checkExistingKey();
+    loadApiLimits();
   }, []);
 
   const checkExistingKey = async () => {
@@ -139,6 +144,30 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
       });
     } catch (error: any) {
       console.error('Error loading branding settings:', error);
+    }
+  };
+
+  const loadApiLimits = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("admin_settings")
+        .select("setting_key, setting_value")
+        .in("setting_key", ["paid_user_api_limit", "trial_user_api_limit"]);
+
+      if (error) throw error;
+
+      data?.forEach((setting) => {
+        switch (setting.setting_key) {
+          case "paid_user_api_limit":
+            setPaidUserLimit(setting.setting_value || "1000");
+            break;
+          case "trial_user_api_limit":
+            setTrialUserLimit(setting.setting_value || "100");
+            break;
+        }
+      });
+    } catch (error: any) {
+      console.error('Error loading API limits:', error);
     }
   };
 
@@ -287,6 +316,62 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
     }
   };
 
+  const handleSavePaidUserLimit = async () => {
+    if (!paidUserLimit.trim() || isNaN(Number(paidUserLimit)) || Number(paidUserLimit) < 0) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid number for paid user API limit",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSavingPaidLimit(true);
+    try {
+      await updateSetting("paid_user_api_limit", paidUserLimit);
+      toast({
+        title: "Success",
+        description: "Paid user API limit saved successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: `Failed to save paid user limit: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setSavingPaidLimit(false);
+    }
+  };
+
+  const handleSaveTrialUserLimit = async () => {
+    if (!trialUserLimit.trim() || isNaN(Number(trialUserLimit)) || Number(trialUserLimit) < 0) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid number for trial user API limit",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSavingTrialLimit(true);
+    try {
+      await updateSetting("trial_user_api_limit", trialUserLimit);
+      toast({
+        title: "Success",
+        description: "Trial user API limit saved successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: `Failed to save trial user limit: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setSavingTrialLimit(false);
+    }
+  };
+
   return (
     <MobileFrame>
       <div className="h-full bg-background text-foreground flex flex-col">
@@ -360,6 +445,61 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
                 >
                   {testingKey ? "Testing..." : "Test Key"}
                 </Button>
+              </div>
+              
+              {/* API Usage Limits */}
+              <div className="space-y-4 pt-4 border-t border-border">
+                <div className="space-y-2">
+                  <Label htmlFor="paid-user-limit">Paid User API Limit</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="paid-user-limit"
+                      type="number"
+                      value={paidUserLimit}
+                      onChange={(e) => setPaidUserLimit(e.target.value)}
+                      placeholder="1000"
+                      min="0"
+                      className="bg-background text-foreground border-border flex-1"
+                    />
+                    <Button 
+                      size="sm"
+                      onClick={handleSavePaidUserLimit}
+                      disabled={savingPaidLimit}
+                      className="px-4"
+                    >
+                      {savingPaidLimit ? "Saving..." : "Save"}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Maximum number of API requests per month for paid users
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="trial-user-limit">Trial User API Limit</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="trial-user-limit"
+                      type="number"
+                      value={trialUserLimit}
+                      onChange={(e) => setTrialUserLimit(e.target.value)}
+                      placeholder="100"
+                      min="0"
+                      className="bg-background text-foreground border-border flex-1"
+                    />
+                    <Button 
+                      size="sm"
+                      onClick={handleSaveTrialUserLimit}
+                      disabled={savingTrialLimit}
+                      className="px-4"
+                    >
+                      {savingTrialLimit ? "Saving..." : "Save"}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Maximum number of API requests during free trial period
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>
