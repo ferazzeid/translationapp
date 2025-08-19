@@ -9,6 +9,7 @@ import AppInterface from "./pages/AppInterface";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
+import { DynamicManifest } from "./pages/DynamicManifest";
 import "@/styles/themes.css";
 
 const queryClient = new QueryClient();
@@ -17,6 +18,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
       <TooltipProvider>
+        <DynamicManifest />
         <Toaster />
         <Sonner />
         <BrowserRouter>

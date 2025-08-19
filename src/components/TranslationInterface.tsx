@@ -265,6 +265,8 @@ export const TranslationInterface = ({
       }
 
       // Step 1: Speech to text using Whisper API
+      console.log(`Processing audio for ${speaker}, size: ${audioData.length} chars`);
+      
       const { data: sttResponse, error: sttError } = await supabase.functions.invoke('speech-to-text', {
         body: {
           audio: audioData,
@@ -277,6 +279,16 @@ export const TranslationInterface = ({
 
       if (sttError) {
         console.error('Speech-to-text error details:', sttError);
+        
+        // Check for successful response with empty transcription (common case)
+        if (sttError.message && sttError.message.includes('200')) {
+          toast({
+            title: "No Speech Detected",
+            description: "Please speak more clearly or for a longer duration. Try holding the microphone button longer.",
+            variant: "default"
+          });
+          return false;
+        }
         
         // Extract better error message from the actual error
         let errorMessage = "Could not understand the audio. Please try speaking more clearly.";
@@ -295,16 +307,21 @@ export const TranslationInterface = ({
         }
         
         toast({
-          title: "Speech Recognition Failed",
+          title: "Speech Recognition Issue",
           description: errorMessage,
           variant: "destructive"
         });
         return false;
       }
 
-      if (!sttResponse?.text) {
-        console.error('No text returned from speech-to-text');
-        throw new Error('Failed to transcribe audio - no text returned');
+      if (!sttResponse?.text || sttResponse.text.trim().length === 0) {
+        console.error('Empty text returned from speech-to-text');
+        toast({
+          title: "No Speech Detected",
+          description: "No speech was detected in the recording. Please speak more clearly or for a longer duration.",
+          variant: "default"
+        });
+        return false;
       }
 
       const originalText = sttResponse.text.trim();
