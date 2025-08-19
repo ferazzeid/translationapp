@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Globe, MessageCircle, Brain } from "lucide-react";
+import { ArrowRight, Globe, MessageCircle, Brain, Users, Heart } from "lucide-react";
 const googlePlayButton = "/lovable-uploads/ea99cf28-e571-4519-b377-a7d30fea7b14.png";
 const landingHeroBg = "/lovable-uploads/7d33a979-ef4a-4ab9-84af-a3cdfa66b285.png";
 
@@ -62,10 +62,33 @@ const LandingPage = () => {
               Designed for real conversations between two people using one device. Simple, reliable, and AI-powered.
             </p>
             
-            <div className="max-w-3xl mx-auto mt-8 mb-8">
-              <p className="text-lg theme-text-secondary leading-relaxed">
-                TalkDuo is built for those moments when you simply can't avoid speaking with someone who doesn't share your language. You can't always rely on friends, translators, or expat circles—and sometimes you just have to figure it out yourself. With TalkDuo, each person speaks into the app in their own language and hears the other in theirs. Take it step by step, let the app guide the exchange, and you'll get through any conversation barrier.
-              </p>
+            {/* Use Cases Section */}
+            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mt-12 mb-16">
+              {/* Personal Use Case */}
+              <div className="p-8 rounded-2xl theme-surface border theme-border hover:shadow-lg transition-shadow">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                    <Heart className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold theme-text-primary">For Personal Life</h3>
+                </div>
+                <p className="text-lg theme-text-secondary leading-relaxed">
+                  TalkDuo is built for those moments when you simply can't avoid speaking with someone who doesn't share your language. You can't always rely on friends, translators, or expat circles—and sometimes you just have to figure it out yourself. With TalkDuo, each person speaks into the app in their own language and hears the other in theirs. Take it step by step, let the app guide the exchange, and you'll get through any conversation barrier.
+                </p>
+              </div>
+
+              {/* Business Use Case */}
+              <div className="p-8 rounded-2xl theme-surface border theme-border hover:shadow-lg transition-shadow">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
+                    <Users className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold theme-text-primary">For Business</h3>
+                </div>
+                <p className="text-lg theme-text-secondary leading-relaxed">
+                  TalkDuo for Business bridges the gap when staff and guests don't share a common language. In hotels, shops, cafés, or restaurants, not every employee speaks English—or any foreign language—but international visitors still expect to be understood. With TalkDuo, your team can instantly hand the device to a guest, let them speak in their own language, and keep the conversation flowing smoothly. It's a simple way to reduce stress for employees, serve customers better, and maintain high satisfaction in any multilingual setting.
+                </p>
+              </div>
             </div>
           </div>
 
