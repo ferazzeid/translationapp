@@ -587,7 +587,9 @@ export const TranslationInterface = ({
         isProcessing={isProcessing}
         isManagedMode={managedMode.isEnabled}
         onSwitchTurn={() => {
+          console.log('Switch turn button clicked. Current turn:', managedMode.currentTurn);
           managedMode.switchTurn();
+          console.log('New turn:', managedMode.currentTurn === "A" ? "B" : "A");
         }}
       />
         
