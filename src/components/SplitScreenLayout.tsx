@@ -15,7 +15,7 @@ export const SplitScreenLayout = ({
   className
 }: SplitScreenLayoutProps) => {
   return (
-    <div className={cn("h-full w-full relative bg-background overflow-hidden", className)}>
+    <div className={cn("h-full w-full relative theme-bg overflow-hidden", className)}>
       {/* Top Half - Rotated 180° for across-table viewing */}
       <div className="absolute inset-x-0 top-0 h-1/2 rotate-180 border-b border-border/30">
         {topContent}

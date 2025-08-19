@@ -49,40 +49,40 @@ export const LanguageSelector = ({
   const isReady = selectedLanguages.speakerA && selectedLanguages.speakerB;
 
   return (
-    <div className="h-full flex flex-col bg-white">
+    <div className="h-full flex flex-col theme-bg">
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto p-6 space-y-8">
         <div className="text-center">
-          <h1 className="text-2xl font-medium text-black mb-8">Select your language pair</h1>
+          <h1 className="text-2xl font-medium theme-text mb-8">Select your language pair</h1>
         </div>
 
         <div className="space-y-6">
           {/* Other Person's Language - TOP */}
           <div className="space-y-3">
-            <h2 className="text-lg font-medium text-black">Other person speaks</h2>
+            <h2 className="text-lg font-medium theme-text">Other person speaks</h2>
             
             <Button
               variant="outline"
               className={cn(
-                "w-full justify-between h-12 text-left border-black hover:bg-gray-50 focus-visible:ring-1 focus-visible:ring-black focus-visible:ring-offset-0",
-                expandedSelector === "speakerB" && "bg-gray-50"
+                "w-full justify-between h-12 text-left theme-border theme-text hover:theme-surface-alt focus-visible:ring-1 focus-visible:ring-theme-primary focus-visible:ring-offset-0",
+                expandedSelector === "speakerB" && "theme-surface-alt"
               )}
               onClick={() => setExpandedSelector(expandedSelector === "speakerB" ? null : "speakerB")}
             >
-              <span className="text-base font-medium text-black">{getLanguageName(selectedLanguages.speakerB)}</span>
+              <span className="text-base font-medium theme-text">{getLanguageName(selectedLanguages.speakerB)}</span>
               <ChevronDown size={20} className={cn(
-                "transition-transform text-black",
+                "transition-transform theme-text",
                 expandedSelector === "speakerB" && "rotate-180"
               )} />
             </Button>
 
             {expandedSelector === "speakerB" && (
-              <div className="grid grid-cols-1 gap-1 mt-2 max-h-60 overflow-y-auto border border-black rounded-md">
+              <div className="grid grid-cols-1 gap-1 mt-2 max-h-60 overflow-y-auto border theme-border rounded-md">
                 {LANGUAGES.map((lang) => (
                   <Button
                     key={lang.code}
                     variant="ghost"
-                    className="h-10 justify-start text-base text-black hover:bg-gray-100 focus-visible:ring-1 focus-visible:ring-black focus-visible:ring-offset-0"
+                    className="h-10 justify-start text-base theme-text hover:theme-surface-alt focus-visible:ring-1 focus-visible:ring-theme-primary focus-visible:ring-offset-0"
                     onClick={() => {
                       onLanguageChange("speakerB", lang.code);
                       setExpandedSelector(null);
@@ -97,30 +97,30 @@ export const LanguageSelector = ({
 
           {/* Your Language - BOTTOM */}
           <div className="space-y-3">
-            <h2 className="text-lg font-medium text-black">You speak</h2>
+            <h2 className="text-lg font-medium theme-text">You speak</h2>
             
             <Button
               variant="outline"
               className={cn(
-                "w-full justify-between h-12 text-left border-black hover:bg-gray-50 focus-visible:ring-1 focus-visible:ring-black focus-visible:ring-offset-0",
-                expandedSelector === "speakerA" && "bg-gray-50"
+                "w-full justify-between h-12 text-left theme-border theme-text hover:theme-surface-alt focus-visible:ring-1 focus-visible:ring-theme-primary focus-visible:ring-offset-0",
+                expandedSelector === "speakerA" && "theme-surface-alt"
               )}
               onClick={() => setExpandedSelector(expandedSelector === "speakerA" ? null : "speakerA")}
             >
-              <span className="text-base font-medium text-black">{getLanguageName(selectedLanguages.speakerA)}</span>
+              <span className="text-base font-medium theme-text">{getLanguageName(selectedLanguages.speakerA)}</span>
               <ChevronDown size={20} className={cn(
-                "transition-transform text-black",
+                "transition-transform theme-text",
                 expandedSelector === "speakerA" && "rotate-180"
               )} />
             </Button>
 
             {expandedSelector === "speakerA" && (
-              <div className="grid grid-cols-1 gap-1 mt-2 max-h-60 overflow-y-auto border border-black rounded-md">
+              <div className="grid grid-cols-1 gap-1 mt-2 max-h-60 overflow-y-auto border theme-border rounded-md">
                 {LANGUAGES.map((lang) => (
                   <Button
                     key={lang.code}
                     variant="ghost"
-                    className="h-10 justify-start text-base text-black hover:bg-gray-100 focus-visible:ring-1 focus-visible:ring-black focus-visible:ring-offset-0"
+                    className="h-10 justify-start text-base theme-text hover:theme-surface-alt focus-visible:ring-1 focus-visible:ring-theme-primary focus-visible:ring-offset-0"
                     onClick={() => {
                       onLanguageChange("speakerA", lang.code);
                       setExpandedSelector(null);
@@ -138,7 +138,7 @@ export const LanguageSelector = ({
       {/* Fixed bottom button */}
       <div className="p-6">
         <Button
-          className="w-full h-12 bg-black text-white hover:bg-gray-800 text-base font-medium"
+          className="w-full h-12 theme-action-strong hover:opacity-90 text-base font-medium"
           disabled={!isReady}
           onClick={onContinue}
         >

@@ -510,7 +510,7 @@ export const TranslationInterface = ({
 
   return (
     <div className={cn(
-      "flex flex-col bg-background overflow-hidden",
+      "flex flex-col theme-bg overflow-hidden",
       isRealMobile ? "h-[100dvh] w-full" : "h-full w-full"
     )}>
       {/* Speaker B Half - Top (Rotated 180°) - Other Person */}

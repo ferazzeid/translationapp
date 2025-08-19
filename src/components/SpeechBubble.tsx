@@ -31,7 +31,7 @@ export const SpeechBubble = ({
           "max-w-[85%] rounded-2xl px-4 py-3 shadow-sm border",
           isDarkMode 
             ? "bg-foreground text-background border-border/20" 
-            : "bg-background text-foreground border-border",
+            : "theme-surface theme-text theme-border",
           "text-base" // Consistent readable font size
         )}
       >

@@ -25,14 +25,14 @@ export const MidSectionControls = ({
       {/* Left: Volume Slider Extended */}
       <div className="flex items-center justify-start w-1/2">
         <div className="flex items-center gap-3 w-full max-w-md">
-          <Volume2 className="h-4 w-4 text-foreground flex-shrink-0" />
+          <Volume2 className="h-4 w-4 theme-text flex-shrink-0" />
           <div className="flex-1">
             <Slider
               value={[Math.round(volume * 100)]}
               onValueChange={(value) => onVolumeChange(value[0] / 100)}
               max={100}
               step={5}
-              className="w-full [&_[role=slider]]:bg-gray-800 [&_[role=slider]]:border-gray-700 [&_.bg-primary]:bg-gray-800 [&_.bg-secondary]:bg-gray-300 [&_[data-state=active]]:bg-gray-800"
+              className="w-full"
             />
           </div>
         </div>

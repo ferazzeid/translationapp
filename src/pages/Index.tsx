@@ -123,8 +123,8 @@ const Index = () => {
   const renderCurrentView = () => {
     if (loading) {
       return (
-        <div className="min-h-dvh bg-gradient-surface flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="min-h-dvh theme-bg flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderBottomColor: 'hsl(var(--theme-primary))' }}></div>
         </div>
       );
     }
@@ -252,7 +252,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen theme-bg">
       {renderCurrentView()}
     </div>
   );

@@ -103,7 +103,7 @@ export const ThemeSettings = () => {
                   className="w-8 h-8 rounded-full flex items-center justify-center"
                   style={{ backgroundColor: option.colors.micBg }}
                 >
-                  <Mic className="w-4 h-4 text-white" />
+                  <Mic className="w-4 h-4" style={{ color: '#FFFFFF' }} />
                 </div>
                 
                 {/* Action button preview */}
@@ -111,7 +111,7 @@ export const ThemeSettings = () => {
                   className="w-8 h-8 rounded-full flex items-center justify-center"
                   style={{ backgroundColor: option.colors.actionBg }}
                 >
-                  <ArrowUpDown className="w-4 h-4 text-white" />
+                  <ArrowUpDown className="w-4 h-4" style={{ color: '#FFFFFF' }} />
                 </div>
                 
                 {/* Surface preview */}

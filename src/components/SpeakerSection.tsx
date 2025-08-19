@@ -47,7 +47,7 @@ export const SpeakerSection = ({
   return (
     <div className={cn(
       "h-full w-full relative overflow-hidden",
-      isActiveTurn ? "" : "bg-background", // Only apply bg when not active turn
+      isActiveTurn ? "" : "theme-surface", // Only apply bg when not active turn
       isActiveTurn && "ring-2 ring-green-500/60",
       className
     )}>
@@ -71,7 +71,7 @@ export const SpeakerSection = ({
       {/* Fixed microphone and control area */}
       <div className={cn(
         "absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center z-30",
-        isActiveTurn ? "bg-transparent" : "bg-background"
+        isActiveTurn ? "bg-transparent" : "theme-surface"
       )}>
         {/* Left side: Repeat button aligned with other control buttons */}
         <div className="absolute left-5 bottom-6 flex items-center">

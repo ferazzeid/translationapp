@@ -80,7 +80,7 @@ export const SubscriptionStatus = () => {
             Subscription Status
           </CardTitle>
           <Badge 
-            className={`text-white ${getStatusColor()}`}
+            className={`theme-mic-fg ${getStatusColor()}`}
           >
             {getStatusText()}
           </Badge>
@@ -136,7 +136,7 @@ export const SubscriptionStatus = () => {
             <Button 
               onClick={handleUpgrade}
               disabled={billingLoading}
-              className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white"
+              className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 theme-mic-fg"
             >
               <Crown className="mr-2 h-4 w-4" />
               {billingLoading ? "Processing..." : "Upgrade to Premium"}
