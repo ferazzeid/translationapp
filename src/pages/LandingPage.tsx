@@ -136,6 +136,9 @@ const LandingPage = () => {
             <a href="/terms" className="theme-text-secondary hover:theme-text-primary transition-colors">
               Terms & Conditions
             </a>
+            <a href="/app" className="theme-text-secondary hover:theme-text-primary transition-colors">
+              Web App
+            </a>
           </div>
         </div>
       </footer>
