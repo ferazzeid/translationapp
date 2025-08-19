@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { SpeakerButton } from "./SpeakerButton";
 import { MessageArea } from "./MessageArea";
+import { RecordingCountdown } from "./RecordingCountdown";
 
 interface SpeakerSectionProps {
   speaker: "A" | "B";
@@ -19,6 +20,7 @@ interface SpeakerSectionProps {
   holdProgress?: number;
   onHoldStart?: () => void;
   onHoldEnd?: () => void;
+  recordingDuration?: number;
 }
 
 export const SpeakerSection = ({
@@ -36,7 +38,8 @@ export const SpeakerSection = ({
   holdToRecordMode = false,
   holdProgress = 0,
   onHoldStart,
-  onHoldEnd
+  onHoldEnd,
+  recordingDuration = 0
 }: SpeakerSectionProps) => {
   const showTurnIndicator = isManagedMode;
   const isActiveTurn = isManagedMode && isCurrentTurn;
@@ -72,7 +75,7 @@ export const SpeakerSection = ({
         isActiveTurn ? "theme-speaker-active-bg" : "theme-speaker-inactive-bg"
       )}>
         {/* Center: Main Microphone Button - Perfectly centered */}
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center relative">
           <SpeakerButton
             speaker={speaker}
             isListening={isListening}
@@ -87,6 +90,14 @@ export const SpeakerSection = ({
             onHoldStart={onHoldStart}
             onHoldEnd={onHoldEnd}
           />
+          
+          {/* Recording countdown */}
+          {isListening && recordingDuration > 0 && (
+            <RecordingCountdown 
+              duration={recordingDuration}
+              maxDuration={60000}
+            />
+          )}
         </div>
       </div>
 

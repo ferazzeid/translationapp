@@ -68,40 +68,50 @@ serve(async (req) => {
     const maxTTSLength = 4000 // OpenAI TTS limit
     
     if (text.length > maxTTSLength) {
-      console.log('Text too long, processing first chunk only for now')
-      const truncatedText = text.substring(0, maxTTSLength) + '...'
+      console.log('Text too long, splitting into chunks')
+      const chunks = splitTextIntoChunks(text, maxTTSLength)
+      console.log(`Split text into ${chunks.length} chunks`)
       
-      // Generate speech for truncated text
-      const response = await fetch('https://api.openai.com/v1/audio/speech', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${openaiApiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'tts-1',
-          input: truncatedText,
-          voice: voice,
-          response_format: 'mp3',
-        }),
-      })
+      const audioChunks: string[] = []
+      
+      // Process each chunk sequentially
+      for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i]
+        console.log(`Processing chunk ${i + 1}/${chunks.length}, length: ${chunk.length}`)
+        
+        const response = await fetch('https://api.openai.com/v1/audio/speech', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${openaiApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'tts-1',
+            input: chunk,
+            voice: voice,
+            response_format: 'mp3',
+          }),
+        })
 
-      if (!response.ok) {
-        const errorText = await response.text()
-        console.error('OpenAI API error:', response.status, errorText)
-        throw new Error(`OpenAI API error: ${response.status} ${errorText}`)
+        if (!response.ok) {
+          const errorText = await response.text()
+          console.error('OpenAI API error:', response.status, errorText)
+          throw new Error(`OpenAI API error: ${response.status} ${errorText}`)
+        }
+
+        const arrayBuffer = await response.arrayBuffer()
+        const base64Audio = arrayBufferToBase64(arrayBuffer)
+        audioChunks.push(base64Audio)
       }
 
-      const arrayBuffer = await response.arrayBuffer()
-      const base64Audio = arrayBufferToBase64(arrayBuffer)
-
-      console.log('TTS success (truncated), audio length:', base64Audio.length)
+      console.log('TTS success (chunked), total chunks:', audioChunks.length)
 
       return new Response(
         JSON.stringify({ 
-          audioContent: base64Audio,
-          audioData: base64Audio,
-          warning: 'Text was truncated due to length limit'
+          audioChunks: audioChunks,
+          totalChunks: audioChunks.length,
+          audioContent: audioChunks[0], // For backwards compatibility
+          audioData: audioChunks[0] // For backwards compatibility
         }),
         {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },

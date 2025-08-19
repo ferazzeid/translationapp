@@ -2,9 +2,10 @@ import { useState, useRef, useCallback } from 'react';
 
 export interface AudioRecorderHook {
   isRecording: boolean;
-  startRecording: () => Promise<void>;
+  startRecording: (maxDuration?: number) => Promise<void>;
   stopRecording: () => Promise<string | null>;
   error: string | null;
+  recordingDuration: number;
 }
 
 // Utility function to detect best audio format for the browser
@@ -57,15 +58,20 @@ const convertBlobToBase64 = (blob: Blob): Promise<string> => {
 export const useAudioRecorder = (): AudioRecorderHook => {
   const [isRecording, setIsRecording] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [recordingDuration, setRecordingDuration] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const startTimeRef = useRef<number>(0);
   const streamRef = useRef<MediaStream | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const maxDurationRef = useRef<number>(60000); // Default 60 seconds
 
-  const startRecording = useCallback(async () => {
+  const startRecording = useCallback(async (maxDuration: number = 60000) => {
     try {
       setError(null);
+      setRecordingDuration(0);
       startTimeRef.current = Date.now();
+      maxDurationRef.current = maxDuration;
       
       // Get user media with optimized settings
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -121,6 +127,17 @@ export const useAudioRecorder = (): AudioRecorderHook => {
       mediaRecorderRef.current = mediaRecorder;
       setIsRecording(true);
 
+      // Start timer to track recording duration and auto-stop
+      timerRef.current = setInterval(() => {
+        const elapsed = Date.now() - startTimeRef.current;
+        setRecordingDuration(elapsed);
+        
+        if (elapsed >= maxDurationRef.current) {
+          // Auto-stop recording when max duration reached
+          stopRecording();
+        }
+      }, 100);
+
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to start recording';
       setError(errorMessage);
@@ -140,6 +157,13 @@ export const useAudioRecorder = (): AudioRecorderHook => {
       
       // Immediately set recording to false to prevent button stuck state
       setIsRecording(false);
+      setRecordingDuration(0);
+      
+      // Clear the timer
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
       
       if (!mediaRecorder || mediaRecorder.state === 'inactive') {
         // Clean up stream if it exists
@@ -242,6 +266,7 @@ export const useAudioRecorder = (): AudioRecorderHook => {
     isRecording,
     startRecording,
     stopRecording,
-    error
+    error,
+    recordingDuration
   };
 };

@@ -160,7 +160,7 @@ export const AuthPage = ({ onAuthenticated }: AuthPageProps) => {
         <Card className="shadow-strong border-border">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold text-foreground">
-              {showResetForm ? "Reset Password" : "Welcome to Voice Translation"}
+              {showResetForm ? "Reset Password" : "Welcome to TalkDuo"}
             </CardTitle>
             <CardDescription>
               {showResetForm 

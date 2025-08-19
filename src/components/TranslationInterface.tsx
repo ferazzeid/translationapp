@@ -15,6 +15,7 @@ import { SpeakerControls } from "./SpeakerControls";
 import { SpeakerSection } from "./SpeakerSection";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
 import { ProcessingIndicator } from "./ProcessingIndicator";
+import { RecordingCountdown } from "./RecordingCountdown";
 
 
 interface Message {
@@ -183,14 +184,14 @@ export const TranslationInterface = ({
         }
         setIsListeningB(false);
         setIsListeningA(true);
-        await audioRecorderA.startRecording();
+        await audioRecorderA.startRecording(60000); // 60 second limit
       } else {
         if (audioRecorderA.isRecording) {
           await audioRecorderA.stopRecording();
         }
         setIsListeningA(false);
         setIsListeningB(true);
-        await audioRecorderB.startRecording();
+        await audioRecorderB.startRecording(60000); // 60 second limit
       }
     } catch (error) {
       console.error('Error starting recording:', error);
@@ -370,8 +371,13 @@ export const TranslationInterface = ({
         }
       });
 
-      if (!ttsError && ttsResponse?.audioData) {
-        await playAudio(ttsResponse.audioData);
+      if (!ttsError && ttsResponse) {
+        // Handle both chunked and single audio response
+        if (ttsResponse.audioChunks && Array.isArray(ttsResponse.audioChunks)) {
+          await playAudio(ttsResponse.audioChunks);
+        } else if (ttsResponse.audioData) {
+          await playAudio(ttsResponse.audioData);
+        }
       } else if (ttsError) {
         console.warn('Text-to-speech failed:', ttsError);
       }
@@ -390,7 +396,7 @@ export const TranslationInterface = ({
     }
   };
 
-  const playAudio = async (audioBase64: string) => {
+  const playAudio = async (audioBase64: string | string[]) => {
     if (!isSpeakerEnabled) {
       console.log('Speaker is disabled, skipping audio playback');
       return;
@@ -399,16 +405,22 @@ export const TranslationInterface = ({
     try {
       setIsPlayingAudio(true);
       
-      const audioData = `data:audio/wav;base64,${audioBase64}`;
-      const audio = new Audio(audioData);
-      audio.volume = volume;
+      // Handle both single audio and chunked audio
+      const audioChunks = Array.isArray(audioBase64) ? audioBase64 : [audioBase64];
       
-      // Wait for audio to finish playing
-      await new Promise((resolve, reject) => {
-        audio.onended = resolve;
-        audio.onerror = reject;
-        audio.play();
-      });
+      // Play each chunk sequentially
+      for (const chunk of audioChunks) {
+        const audioData = `data:audio/mp3;base64,${chunk}`;
+        const audio = new Audio(audioData);
+        audio.volume = volume;
+        
+        // Wait for audio to finish playing before starting next chunk
+        await new Promise<void>((resolve, reject) => {
+          audio.onended = () => resolve();
+          audio.onerror = reject;
+          audio.play().catch(reject);
+        });
+      }
     } catch (error) {
       console.error('Error playing audio:', error);
     } finally {
@@ -549,6 +561,7 @@ export const TranslationInterface = ({
           holdProgress={holdProgressB}
           onHoldStart={() => handleHoldStart("B")}
           onHoldEnd={() => handleHoldEnd("B")}
+          recordingDuration={audioRecorderB.recordingDuration}
           messages={getRecentMessages("B").map((message, index) => (
             <SpeechBubble
               key={`${message.id}-${index}`}
@@ -620,6 +633,7 @@ export const TranslationInterface = ({
           holdProgress={holdProgressA}
           onHoldStart={() => handleHoldStart("A")}
           onHoldEnd={() => handleHoldEnd("A")}
+          recordingDuration={audioRecorderA.recordingDuration}
           messages={getRecentMessages("A").map((message, index) => (
             <SpeechBubble
               key={`${message.id}-${index}`}
