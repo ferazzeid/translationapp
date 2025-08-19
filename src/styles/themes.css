@@ -320,6 +320,116 @@
   --theme-shadow-md: 0 8px 24px hsl(0 0% 0% / 0.12);
 }
 
+/* Dark Theme — elegant dark mode */
+:root[data-theme="dark"] {
+  /* 🎨 Backgrounds & Surfaces */
+  --theme-bg: 220 15% 8%;
+  --theme-surface: 220 15% 12%;
+  --theme-surface-alt: 220 15% 16%;
+  --theme-speaker-inactive-bg: 220 15% 14%;
+  --theme-speaker-active-bg: 220 15% 18%;
+  --theme-speaker-listening-overlay: 222 89% 56%; /* with opacity */
+
+  /* ✍️ Text */
+  --theme-text: 220 15% 88%;
+  --theme-text-muted: 220 10% 60%;
+
+  /* ─ Borders & Dividers */
+  --theme-border: 220 15% 20%;
+  --theme-divider: 220 15% 18%;
+
+  /* 🔵 Primary */
+  --theme-primary: 222 89% 56%;
+  --theme-primary-weak: 222 89% 16%;
+
+  /* ✅ Status */
+  --theme-success: 152 60% 50%;
+  --theme-danger: 4 85% 58%;
+  --theme-focus-ring: 222 89% 56%; /* with opacity */
+  --theme-active-ring: 222 89% 56%; /* with opacity */
+
+  /* 🧲 Strong Action Buttons (Pass / Wipe) */
+  --theme-action-strong-bg: 220 15% 85%;
+  --theme-action-strong-fg: 220 15% 8%;
+
+  /* 🎤 Microphone States */
+  --theme-mic-bg: 222 89% 56%;
+  --theme-mic-fg: 0 0% 100%;
+  --theme-mic-glow: 222 89% 56%; /* with opacity */
+  --theme-mic-inactive-bg: 220 15% 20%;
+  --theme-mic-inactive-fg: 220 10% 65%;
+  --theme-mic-inactive-hover: 220 15% 24%;
+
+  /* 🔘 Button Variants */
+  /* Primary */
+  --theme-button-primary: 222 89% 56%;
+  --theme-button-primary-hover: 222 89% 51%;
+  --theme-button-primary-fg: 0 0% 100%;
+  /* Secondary */
+  --theme-button-secondary: 220 15% 18%;
+  --theme-button-secondary-hover: 220 15% 22%;
+  --theme-button-secondary-fg: 220 15% 88%;
+  /* Outline */
+  --theme-button-outline-bg: 220 15% 12%; /* transparent changed to surface for visibility */
+  --theme-button-outline-hover: 220 15% 16%;
+  --theme-button-outline-fg: 220 15% 88%;
+  /* Ghost */
+  --theme-button-ghost-hover: 220 15% 16%;
+  --theme-button-ghost-fg: 220 15% 88%;
+
+  /* ⭕ Icon Buttons (Circular) */
+  --theme-icon-button-bg: 220 15% 12%;
+  --theme-icon-button-fg: 220 15% 88%;
+  --theme-icon-button-hover: 220 15% 18%;
+  --theme-icon-button-border: 220 15% 18%;
+
+  /* 🎯 Icon Colors */
+  --theme-icon-color: 220 10% 65%;
+  --theme-icon-color-hover: 220 10% 80%;
+  --theme-icon-color-disabled: 220 10% 30%;
+  --theme-icon-color-active: 222 89% 56%;
+  --theme-icon-color-muted: 220 10% 45%;
+  /* Light Icon Variants */
+  --theme-icon-color-light: 0 0% 100%;
+  --theme-icon-color-light-hover: 0 0% 92%;
+  --theme-icon-color-light-muted: 0 0% 70%;
+
+  /* 🏷️ Language Chips */
+  --theme-language-chip-bg: 222 89% 16%;
+  --theme-language-chip-fg: 220 15% 80%;
+  --theme-language-chip-border: 220 15% 24%;
+
+  /* 🎚️ Slider */
+  --theme-slider-track: 220 15% 22%;
+  --theme-slider-range: 222 89% 56%;
+  --theme-slider-thumb: 220 15% 85%;
+  --theme-slider-thumb-border: 220 15% 12%;
+
+  /* 🖥️ Console & UI */
+  --theme-console-bg: 220 15% 10%;
+  --theme-console-border: 220 15% 20%;
+  --theme-console-prominent-bg: 220 15% 14%;
+
+  /* 📱 Mobile Frame (for mockups) */
+  --theme-frame-bg: 220 15% 5%;
+  --theme-frame-border: 220 15% 15%;
+
+  /* 🪟 Modals & Dropdowns */
+  --theme-modal-bg: 220 15% 12%;
+  --theme-modal-border: 220 15% 20%;
+  --theme-modal-header-bg: 220 15% 16%;
+  --theme-modal-overlay: 220 15% 2%; /* with opacity */
+  --theme-dropdown-bg: 220 15% 12%;
+  --theme-dropdown-border: 220 15% 20%;
+  --theme-dropdown-hover: 220 15% 16%;
+
+  /* 🧩 Design Tokens */
+  --theme-radius-lg: 28px;
+  --theme-radius-md: 16px;
+  --theme-shadow-sm: 0 1px 2px hsl(220 15% 2% / 0.20);
+  --theme-shadow-md: 0 8px 24px hsl(220 15% 2% / 0.30);
+}
+
 /* Violet Material theme */
 :root[data-theme="violet-material"] {
   /* Violet theme - More distinctive colors */

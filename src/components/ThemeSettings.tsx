@@ -48,6 +48,17 @@ const themeOptions: Array<{
       actionBg: '#2C2C2C',
       surface: '#FFFFFF'
     }
+  },
+  {
+    name: 'dark',
+    label: 'Dark',
+    description: 'Elegant dark mode with blue accents',
+    colors: {
+      primary: '#3B82F6',
+      micBg: '#3B82F6',
+      actionBg: '#1F2937',
+      surface: '#111827'
+    }
   }
 ];
 
