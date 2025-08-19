@@ -231,8 +231,16 @@ export const TranslationInterface = ({
       }
 
       if (audioData) {
-        await processAudioData(audioData, speaker);
-        // Turn switching is now handled manually by the turn button only
+        const success = await processAudioData(audioData, speaker);
+        
+        // Automatically switch turns in managed mode after successful processing
+        if (success && managedMode.isEnabled) {
+          console.log(`Auto-switching turn after ${speaker} finished speaking`);
+          // Add a small delay to make the turn switching feel more natural
+          setTimeout(() => {
+            managedMode.switchTurn();
+          }, 500);
+        }
       }
     } catch (error) {
       console.error('Error stopping recording:', error);
