@@ -102,7 +102,7 @@ export const updateFaviconLinks = async () => {
     const { data: settings, error } = await supabase
       .from("admin_settings")
       .select("setting_key, setting_value")
-      .in("setting_key", ["app_icon_192", "app_icon_512"]);
+      .in("setting_key", ["app_icon_192", "app_icon_512", "favicon_url", "app_logo_url"]);
 
     if (error) {
       console.warn("Error fetching favicon settings:", error);
@@ -115,8 +115,8 @@ export const updateFaviconLinks = async () => {
     }, {} as Record<string, string>) || {};
 
     // Update favicon links with aggressive cache busting
-    const favicon192 = settingsMap.app_icon_192 || "/icon-192.png";
-    const favicon512 = settingsMap.app_icon_512 || "/icon-512.png";
+    const favicon192 = settingsMap.app_icon_192 || settingsMap.favicon_url || settingsMap.app_logo_url || "/icon-192.png";
+    const favicon512 = settingsMap.app_icon_512 || settingsMap.favicon_url || settingsMap.app_logo_url || "/icon-512.png";
     const timestamp = Date.now();
 
     // Remove ALL existing favicon and icon links to avoid conflicts
