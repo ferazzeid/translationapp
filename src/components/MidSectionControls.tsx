@@ -24,7 +24,7 @@ export const MidSectionControls = ({
     <div className="w-full h-full flex items-center justify-between px-5">
       {/* Left: Extended Volume Slider (no connection indicators) */}
       <div className="flex items-center justify-start flex-1">
-        <div className="flex items-center gap-3 w-full max-w-sm">
+        <div className="flex items-center gap-3 w-full max-w-xs">
           <Volume2 className="h-4 w-4 theme-icon theme-icon-hover flex-shrink-0" />
           <div className="flex-1">
             <Slider
@@ -40,7 +40,7 @@ export const MidSectionControls = ({
 
       {/* Right: Action Buttons with Equal Spacing */}
       <div className="flex items-center justify-end">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
            {/* Pass Turn Button */}
            {isManagedMode && (
               <Button
