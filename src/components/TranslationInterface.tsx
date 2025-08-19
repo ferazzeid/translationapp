@@ -199,14 +199,24 @@ export const TranslationInterface = ({
   };
 
   const stopListening = async (speaker: "A" | "B") => {
+    console.log('stopListening called for speaker:', speaker);
+    console.log('Recorder A isRecording:', audioRecorderA.isRecording);
+    console.log('Recorder B isRecording:', audioRecorderB.isRecording);
+    
     try {
       let audioData: string | null = null;
       
       if (speaker === "A" && audioRecorderA.isRecording) {
+        console.log('Stopping recorder A');
         audioData = await audioRecorderA.stopRecording();
       } else if (speaker === "B" && audioRecorderB.isRecording) {
+        console.log('Stopping recorder B');
         audioData = await audioRecorderB.stopRecording();
+      } else {
+        console.log('No active recorder found for speaker:', speaker);
       }
+
+      console.log('Audio data result:', audioData ? `YES (${audioData.length} chars)` : 'NO');
 
       // Always reset the listening state immediately after stopping recording
       // This prevents stuck button states
