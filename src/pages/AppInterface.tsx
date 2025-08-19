@@ -3,7 +3,7 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { GeneralSettings } from "@/components/GeneralSettings";
 import { TranslationInterface } from "@/components/TranslationInterface";
 import { AdminAuth } from "@/components/AdminAuth";
-import { AdminSettings } from "@/components/AdminSettings";
+
 import { AdminDashboard } from "@/components/AdminDashboard";
 import { AuthPage } from "@/components/AuthPage";
 import { MobileFrame } from "@/components/MobileFrame";
@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Settings, LogOut } from "lucide-react";
 import { usePWA } from "@/hooks/usePWA";
 
-type AppState = "auth" | "setup" | "translation" | "general-settings" | "language-settings" | "admin-auth" | "admin-settings" | "admin-dashboard";
+type AppState = "auth" | "setup" | "translation" | "general-settings" | "language-settings" | "admin-auth" | "admin-dashboard";
 
 interface LanguageSelection {
   speakerA: string;
@@ -109,7 +109,7 @@ const Index = () => {
 
   const handleAdminAuthenticated = (user: User) => {
     setAdminUser(user);
-    setCurrentState("admin-settings");
+    setCurrentState("admin-dashboard");
   };
 
   const handleAdminSignOut = () => {
@@ -188,19 +188,11 @@ const Index = () => {
             />
           );
         
-        case "admin-settings":
-          return (
-            <AdminSettings
-              onBackToApp={handleBackToApp}
-              onSignOut={handleAdminSignOut}
-              onOpenDashboard={() => setCurrentState("admin-dashboard")}
-            />
-          );
         
         case "admin-dashboard":
           return (
             <AdminDashboard
-              onBackToSettings={() => setCurrentState("admin-settings")}
+              onBackToSettings={handleBackToApp}
             />
           );
         
@@ -209,8 +201,8 @@ const Index = () => {
       }
     })();
 
-    // Don't wrap admin settings, dashboard, general settings, language settings, and auth in mobile frame
-    if (currentState === "admin-auth" || currentState === "admin-settings" || currentState === "admin-dashboard" || currentState === "auth" || currentState === "general-settings" || currentState === "language-settings") {
+    // Don't wrap admin auth in mobile frame, but wrap admin dashboard and settings
+    if (currentState === "auth" || currentState === "admin-auth") {
       return content;
     }
 

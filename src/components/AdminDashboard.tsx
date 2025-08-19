@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { MobileFrame } from "./MobileFrame";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Upload, Settings, Palette, X } from "lucide-react";
-import { MobileFrame } from "./MobileFrame";
 import { LandingPageSettings } from "./LandingPageSettings";
 
 interface AdminDashboardProps {
