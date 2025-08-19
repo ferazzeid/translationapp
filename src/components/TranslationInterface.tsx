@@ -159,8 +159,13 @@ export const TranslationInterface = ({
   }, []);
 
   const startListening = async (speaker: "A" | "B") => {
+    console.log('startListening called for speaker:', speaker);
+    console.log('managedMode.canSpeak(' + speaker + '):', managedMode.canSpeak(speaker));
+    console.log('Current turn:', managedMode.currentTurn, 'isEnabled:', managedMode.isEnabled);
+    
     // Check if speaker can speak in managed mode
     if (!managedMode.canSpeak(speaker)) {
+      console.log('Speaker cannot speak, showing toast');
       toast({
         title: "Turn Management",
         description: `It's not Speaker ${speaker}'s turn to speak`,
