@@ -72,7 +72,7 @@ export const HorizontalVolumeControl = ({
               console.log('Turn button clicked in HorizontalVolumeControl');
               onSwitchTurn();
             }}
-            className="h-12 w-12 sm:h-10 sm:w-10 rounded-full flex-shrink-0 bg-primary text-primary-foreground border-2 border-primary hover:bg-primary/90 hover:text-primary-foreground transition-all duration-200 shadow-lg animate-pulse"
+            className="h-12 w-12 sm:h-10 sm:w-10 rounded-full flex-shrink-0 bg-primary text-primary-foreground border-2 border-primary hover:bg-primary/90 hover:text-primary-foreground transition-all duration-200 shadow-lg"
             title="Pass Turn to Other Speaker"
           >
             <ArrowUpDown className="h-6 w-6 sm:h-5 sm:w-5" />

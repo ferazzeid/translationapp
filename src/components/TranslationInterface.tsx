@@ -229,19 +229,8 @@ export const TranslationInterface = ({
       }
 
       if (audioData) {
-        const success = await processAudioData(audioData, speaker);
-        
-        // Only switch turn in managed mode after successful processing
-        if (success && managedMode.isEnabled) {
-          const now = Date.now();
-          const timeSinceLastSwitch = now - lastTurnSwitchTime;
-          
-          // Only switch if enough time has passed (3 seconds cooldown)
-          if (timeSinceLastSwitch > 3000) {
-            managedMode.switchTurn();
-            setLastTurnSwitchTime(now);
-          }
-        }
+        await processAudioData(audioData, speaker);
+        // Turn switching is now handled manually by the turn button only
       }
     } catch (error) {
       console.error('Error stopping recording:', error);
