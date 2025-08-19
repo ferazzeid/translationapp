@@ -68,18 +68,18 @@
 
 /* Aqua theme */
 :root[data-theme="aqua-light"] {
-  /* Inherit from neo-light except overrides */
-  --theme-bg: 0 0% 98%;
-  --theme-surface: 0 0% 100%;
-  --theme-surface-alt: 220 9% 95%;
-  --theme-text: 0 0% 13%;
-  --theme-text-muted: 0 0% 40%;
-  --theme-border: 0 0% 90%;
+  /* Aqua theme - More distinctive colors */
+  --theme-bg: 194 100% 97%; /* Very light cyan background */
+  --theme-surface: 180 25% 98%; /* Light aqua surface */
+  --theme-surface-alt: 180 30% 94%; /* Slightly more saturated aqua */
+  --theme-text: 200 25% 15%; /* Dark blue-gray text */
+  --theme-text-muted: 200 15% 45%; /* Muted blue-gray */
+  --theme-border: 180 20% 88%; /* Aqua border */
   
   /* Aqua-specific colors */
   --theme-primary: 180 100% 36%; /* #00BFA6 */
   --theme-primary-weak: 180 55% 91%; /* #E0F7F4 */
-  --theme-action-strong-bg: 0 0% 18%; /* #2B2F31 */
+  --theme-action-strong-bg: 200 40% 25%; /* Dark teal */
   --theme-action-strong-fg: 0 0% 100%;
   --theme-mic-bg: 180 100% 36%; /* #00BFA6 */
   --theme-mic-fg: 0 0% 100%;
@@ -100,18 +100,18 @@
 
 /* Violet Material theme */
 :root[data-theme="violet-material"] {
-  /* Inherit from neo-light except overrides */
-  --theme-bg: 0 0% 98%;
-  --theme-surface: 0 0% 100%;
-  --theme-surface-alt: 220 9% 95%;
-  --theme-text: 0 0% 13%;
-  --theme-text-muted: 0 0% 40%;
-  --theme-border: 0 0% 90%;
+  /* Violet theme - More distinctive colors */
+  --theme-bg: 270 25% 97%; /* Light violet background */
+  --theme-surface: 265 15% 98%; /* Very light purple surface */
+  --theme-surface-alt: 265 20% 94%; /* Light purple surface alt */
+  --theme-text: 265 30% 20%; /* Dark purple text */
+  --theme-text-muted: 265 15% 50%; /* Muted purple */
+  --theme-border: 265 15% 88%; /* Light purple border */
   
   /* Violet-specific colors */
   --theme-primary: 265 100% 48%; /* #6200EE */
   --theme-primary-weak: 255 45% 90%; /* #EDE7F6 */
-  --theme-action-strong-bg: 0 0% 17%; /* #2C2C2C */
+  --theme-action-strong-bg: 265 30% 25%; /* Dark purple */
   --theme-action-strong-fg: 0 0% 100%;
   --theme-mic-bg: 265 100% 48%; /* #6200EE */
   --theme-mic-fg: 0 0% 100%;
