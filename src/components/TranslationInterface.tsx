@@ -269,17 +269,23 @@ export const TranslationInterface = ({
 
       // Step 1: Speech to text using Whisper API
       console.log('Step 1: Calling speech-to-text...');
+      console.log('Audio data length:', audioData ? audioData.length : 'NO DATA');
+      console.log('Original language:', originalLang);
+      
       const { data: sttResponse, error: sttError } = await supabase.functions.invoke('speech-to-text', {
         body: {
           audio: audioData,
           language: originalLang
         }
+      }).catch(networkError => {
+        console.error('Network error calling speech-to-text:', networkError);
+        return { data: null, error: { message: `Network error: ${networkError.message}` } };
       });
 
       console.log('Speech-to-text response:', { sttResponse, sttError });
 
       if (sttError) {
-        console.error('Speech-to-text error:', sttError);
+        console.error('Speech-to-text error details:', sttError);
         throw new Error(`Speech-to-text failed: ${sttError.message || 'Unknown error'}`);
       }
 
