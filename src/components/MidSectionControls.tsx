@@ -1,7 +1,6 @@
-import { Volume2, RotateCcw, SkipForward } from "lucide-react";
+import { Volume2, Eraser, ArrowUpDown, Wifi, WifiOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { ConnectionStatus } from "./ConnectionStatus";
 import { cn } from "@/lib/utils";
 
 interface MidSectionControlsProps {
@@ -14,6 +13,30 @@ interface MidSectionControlsProps {
   isManagedMode?: boolean;
 }
 
+// 5-step connection strength indicator
+const ConnectionStrengthIndicator = ({ isOnline }: { isOnline: boolean }) => {
+  const bars = Array.from({ length: 5 }, (_, i) => (
+    <div
+      key={i}
+      className={cn(
+        "w-1 rounded-sm transition-colors",
+        isOnline 
+          ? "bg-green-500" 
+          : i < 2 ? "bg-red-500" : "bg-gray-300"
+      )}
+      style={{
+        height: `${8 + i * 2}px`
+      }}
+    />
+  ));
+
+  return (
+    <div className="flex items-end gap-0.5">
+      {bars}
+    </div>
+  );
+};
+
 export const MidSectionControls = ({
   volume,
   onVolumeChange,
@@ -25,16 +48,15 @@ export const MidSectionControls = ({
 }: MidSectionControlsProps) => {
   return (
     <div className="w-full h-full flex items-center justify-between px-6">
-      {/* Left: Connection Indicator */}
+      {/* Left: 5-Step Connection Indicator */}
       <div className="flex items-center justify-start w-1/3">
-        <div className="flex items-center gap-2">
-          <div className={cn(
-            "w-2 h-2 rounded-full",
-            isOnline ? "bg-green-500" : "bg-red-500"
-          )} />
-          <span className="text-xs text-muted-foreground">
-            {isOnline ? "Connected" : "Offline"}
-          </span>
+        <div className="flex items-center gap-3">
+          <ConnectionStrengthIndicator isOnline={isOnline} />
+          {isOnline ? (
+            <Wifi className="h-4 w-4 text-foreground" />
+          ) : (
+            <WifiOff className="h-4 w-4 text-foreground" />
+          )}
         </div>
       </div>
 
@@ -57,33 +79,33 @@ export const MidSectionControls = ({
         </div>
       </div>
 
-      {/* Right: Wipe and Pass Turn Buttons */}
+      {/* Right: Pass Turn and Wipe Buttons */}
       <div className="flex items-center justify-end w-1/3">
         <div className="flex items-center gap-4">
-          {/* Wipe Button */}
+          {/* Pass Turn Button - Large and Prominent */}
+          {isManagedMode && (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={onPassTurn}
+              className="h-12 w-12 rounded-full bg-primary text-primary-foreground border-2 border-primary hover:bg-primary/90 hover:text-primary-foreground transition-all duration-200 shadow-lg"
+              title="Pass turn to other speaker"
+            >
+              <ArrowUpDown className="h-6 w-6" />
+            </Button>
+          )}
+
+          {/* Wipe Button - Same prominence as Pass Turn */}
           <Button
-            variant="ghost"
+            variant="outline"
             size="icon"
             onClick={onWipeMessages}
             disabled={!hasMessages}
-            className="h-8 w-8 rounded-full hover:bg-muted disabled:opacity-50"
+            className="h-12 w-12 rounded-full bg-muted text-foreground border-2 border-border hover:bg-muted/80 disabled:opacity-50 transition-all duration-200 shadow-lg"
             title="Clear all messages"
           >
-            <RotateCcw className="h-4 w-4 text-foreground" />
+            <Eraser className="h-6 w-6" />
           </Button>
-
-          {/* Pass Turn Button (only show in managed mode) */}
-          {isManagedMode && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onPassTurn}
-              className="h-8 w-8 rounded-full hover:bg-muted"
-              title="Pass turn to other speaker"
-            >
-              <SkipForward className="h-4 w-4 text-foreground" />
-            </Button>
-          )}
         </div>
       </div>
     </div>
