@@ -69,7 +69,7 @@ export const SpeakerSection = ({
           </span>
         </div>
         
-        <div className="h-full p-2 sm:p-4 pt-12 pr-12 overflow-y-auto flex flex-col-reverse">
+        <div className="h-full p-2 sm:p-4 pt-12 pr-12 overflow-y-auto flex flex-col-reverse message-area-scrollable">
           <div className="space-y-2 sm:space-y-3 min-h-0">
             {messages}
           </div>

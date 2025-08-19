@@ -156,6 +156,20 @@
   bottom: 0;
 }
 
+/* Allow scrolling specifically in message areas */
+.pwa-app-interface .message-area-scrollable {
+  touch-action: pan-y;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Allow text selection in message areas */
+.pwa-app-interface .message-area-scrollable * {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
 .pwa-app-interface #root {
   /* Fill the entire viewport */
   height: 100dvh;
@@ -193,10 +207,18 @@
     bottom: 0;
   }
   
-  /* Prevent any scrolling behavior in app interface */
+  /* Prevent any scrolling behavior in app interface EXCEPT message areas */
   .pwa-app-interface * {
     overscroll-behavior: none;
     -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Re-enable scrolling for message areas on mobile */
+  .pwa-app-interface .message-area-scrollable {
+    touch-action: pan-y !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
   }
   
   /* Optimize touch targets */
@@ -221,5 +243,12 @@
     overflow: hidden;
     position: fixed;
     width: 100%;
+  }
+  
+  /* Ensure message areas can scroll in standalone mode */
+  .pwa-app-interface .message-area-scrollable {
+    touch-action: pan-y !important;
+    overflow-y: auto !important;
+    scroll-behavior: smooth;
   }
 }
