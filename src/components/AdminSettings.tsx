@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Settings, X } from "lucide-react";
 import { MobileFrame } from "./MobileFrame";
@@ -17,6 +18,8 @@ export const AdminSettings = ({ onBackToApp, onSignOut }: AdminSettingsProps) =>
   const [showKey, setShowKey] = useState(false);
   const [loading, setLoading] = useState(false);
   const [testingKey, setTestingKey] = useState(false);
+  const [wakeLockEnabled, setWakeLockEnabled] = useState(true);
+  const [managedModeEnabled, setManagedModeEnabled] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -27,37 +30,53 @@ export const AdminSettings = ({ onBackToApp, onSignOut }: AdminSettingsProps) =>
     try {
       const { data, error } = await supabase
         .from("admin_settings")
-        .select("setting_value")
-        .eq("setting_key", "openai_api_key")
-        .single();
+        .select("setting_key, setting_value")
+        .in("setting_key", ["openai_api_key", "wake_lock_enabled", "managed_mode_enabled"]);
 
-      if (error && error.code !== 'PGRST116') throw error;
-      setOpenaiKey(data?.setting_value || "");
+      if (error) throw error;
+
+      data?.forEach((setting) => {
+        switch (setting.setting_key) {
+          case "openai_api_key":
+            setOpenaiKey(setting.setting_value || "");
+            break;
+          case "wake_lock_enabled":
+            setWakeLockEnabled(setting.setting_value === "true");
+            break;
+          case "managed_mode_enabled":
+            setManagedModeEnabled(setting.setting_value === "true");
+            break;
+        }
+      });
     } catch (error: any) {
       console.error('Error loading settings:', error);
     }
   };
 
-  const updateSetting = async (key: string, value: string) => {
+  const updateSetting = async (key: string, value: string, encrypted: boolean = false) => {
     try {
       const { error } = await supabase.rpc("set_admin_setting", {
         key_name: key,
         value: value,
-        encrypted: true
+        encrypted: encrypted
       });
 
       if (error) throw error;
 
+      const settingName = key === "openai_api_key" ? "API key" : 
+                         key === "wake_lock_enabled" ? "Wake lock setting" : 
+                         "Managed mode setting";
+
       toast({
         title: "Success",
-        description: "API key saved successfully",
+        description: `${settingName} saved successfully`,
       });
 
       await loadSettings();
     } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to save API key: " + error.message,
+        description: `Failed to save setting: ${error.message}`,
         variant: "destructive",
       });
     }
@@ -74,8 +93,18 @@ export const AdminSettings = ({ onBackToApp, onSignOut }: AdminSettingsProps) =>
     }
 
     setLoading(true);
-    await updateSetting("openai_api_key", openaiKey);
+    await updateSetting("openai_api_key", openaiKey, true);
     setLoading(false);
+  };
+
+  const handleWakeLockToggle = async (enabled: boolean) => {
+    setWakeLockEnabled(enabled);
+    await updateSetting("wake_lock_enabled", enabled.toString());
+  };
+
+  const handleManagedModeToggle = async (enabled: boolean) => {
+    setManagedModeEnabled(enabled);
+    await updateSetting("managed_mode_enabled", enabled.toString());
   };
 
   const testOpenAIKey = async () => {
@@ -203,6 +232,48 @@ export const AdminSettings = ({ onBackToApp, onSignOut }: AdminSettingsProps) =>
                   {testingKey ? "Testing..." : "Test"}
                 </Button>
               </div>
+            </div>
+          </div>
+
+          {/* Wake Lock Settings */}
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-base font-medium text-foreground mb-1">Screen Wake Lock</h2>
+              <p className="text-sm text-muted-foreground">
+                Prevents device screen from sleeping during conversations
+              </p>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <Label htmlFor="wake-lock" className="text-sm text-foreground">
+                Enable Wake Lock
+              </Label>
+              <Switch
+                id="wake-lock"
+                checked={wakeLockEnabled}
+                onCheckedChange={handleWakeLockToggle}
+              />
+            </div>
+          </div>
+
+          {/* Managed Mode Settings */}
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-base font-medium text-foreground mb-1">Managed Mode</h2>
+              <p className="text-sm text-muted-foreground">
+                AI-managed turn-taking system with visual indicators (Beta feature)
+              </p>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <Label htmlFor="managed-mode" className="text-sm text-foreground">
+                Enable Managed Mode
+              </Label>
+              <Switch
+                id="managed-mode"
+                checked={managedModeEnabled}
+                onCheckedChange={handleManagedModeToggle}
+              />
             </div>
           </div>
         </div>

@@ -13,6 +13,8 @@ interface SpeakerSectionProps {
   messages: ReactNode;
   isTop?: boolean;
   className?: string;
+  isCurrentTurn?: boolean;
+  isManagedMode?: boolean;
 }
 
 export const SpeakerSection = ({
@@ -24,12 +26,36 @@ export const SpeakerSection = ({
   flag,
   messages,
   isTop = false,
-  className
+  className,
+  isCurrentTurn = false,
+  isManagedMode = false
 }: SpeakerSectionProps) => {
+  const showTurnIndicator = isManagedMode;
+  const isActiveTurn = isManagedMode && isCurrentTurn;
+  const isInactiveTurn = isManagedMode && !isCurrentTurn;
+
   return (
-    <div className={cn("h-full w-full relative bg-background overflow-hidden", className)}>
+    <div className={cn(
+      "h-full w-full relative bg-background overflow-hidden transition-all duration-300",
+      isActiveTurn && "ring-2 ring-primary bg-primary/5",
+      isInactiveTurn && "opacity-60 bg-muted/20",
+      className
+    )}>
+      {/* Turn Indicator */}
+      {showTurnIndicator && (
+        <div className={cn(
+          "absolute top-2 left-2 right-2 z-20 text-center text-xs font-medium py-1 px-2 rounded-md transition-all duration-300",
+          isActiveTurn ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+        )}>
+          {isActiveTurn ? `Speaker ${speaker} - Your Turn` : `Speaker ${speaker} - Waiting`}
+        </div>
+      )}
+
       {/* Messages area - absolutely contained, can't push anything */}
-      <div className="absolute inset-0 bottom-20 sm:bottom-24 overflow-hidden">
+      <div className={cn(
+        "absolute inset-0 bottom-20 sm:bottom-24 overflow-hidden",
+        showTurnIndicator && "top-8"
+      )}>
         <div className="h-full p-2 sm:p-4 overflow-y-auto flex flex-col-reverse">
           <div className="space-y-2 sm:space-y-3 min-h-0">
             {messages}

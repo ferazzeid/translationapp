@@ -5,6 +5,8 @@ import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePWA } from "@/hooks/usePWA";
+import { useWakeLock } from "@/hooks/useWakeLock";
+import { useManagedMode } from "@/hooks/useManagedMode";
 import { SpeechBubble } from "./SpeechBubble";
 import { CentralVolumeControl } from "./CentralVolumeControl";
 import { HorizontalVolumeControl } from "./HorizontalVolumeControl";
@@ -17,6 +19,8 @@ import { SpeakerSection } from "./SpeakerSection";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
 import { SimpleLanguageModal } from "./SimpleLanguageModal";
 import { ProcessingIndicator } from "./ProcessingIndicator";
+import { WakeLockIndicator } from "./WakeLockIndicator";
+import { ManagedModeControls } from "./ManagedModeControls";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 
@@ -68,6 +72,8 @@ export const TranslationInterface = ({
   const audioRecorderB = useAudioRecorder();
   const isMobile = useIsMobile();
   const { isStandalone } = usePWA();
+  const wakeLock = useWakeLock();
+  const managedMode = useManagedMode();
   
   // Determine if we're on a real mobile device (not desktop with mobile frame)
   const isRealMobile = isMobile || isStandalone;
@@ -106,6 +112,37 @@ export const TranslationInterface = ({
     return flags[code] || "🌐";
   };
 
+  // Load admin settings and manage features
+  useEffect(() => {
+    const loadAdminSettings = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("admin_settings")
+          .select("setting_key, setting_value")
+          .in("setting_key", ["wake_lock_enabled", "managed_mode_enabled"]);
+
+        if (error) throw error;
+
+        data?.forEach((setting) => {
+          switch (setting.setting_key) {
+            case "wake_lock_enabled":
+              if (setting.setting_value === "true" && wakeLock.isSupported) {
+                wakeLock.request();
+              }
+              break;
+            case "managed_mode_enabled":
+              managedMode.setEnabled(setting.setting_value === "true");
+              break;
+          }
+        });
+      } catch (error: any) {
+        console.error('Error loading admin settings:', error);
+      }
+    };
+
+    loadAdminSettings();
+  }, [wakeLock, managedMode]);
+
   // Monitor online status
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -121,6 +158,16 @@ export const TranslationInterface = ({
   }, []);
 
   const startListening = async (speaker: "A" | "B") => {
+    // Check if speaker can speak in managed mode
+    if (!managedMode.canSpeak(speaker)) {
+      toast({
+        title: "Turn Management",
+        description: `It's not Speaker ${speaker}'s turn to speak`,
+        variant: "destructive"
+      });
+      return;
+    }
+
     try {
       // Stop other speaker if listening
       if (speaker === "A") {
@@ -170,6 +217,11 @@ export const TranslationInterface = ({
 
       if (audioData) {
         await processAudioData(audioData, speaker);
+        
+        // Switch turn in managed mode after successful processing
+        if (managedMode.isEnabled) {
+          managedMode.switchTurn();
+        }
       }
     } catch (error) {
       console.error('Error stopping recording:', error);
@@ -357,6 +409,8 @@ export const TranslationInterface = ({
           flag={getLanguageFlag(speakerBLanguage)}
           isTop={true}
           className={isRealMobile ? "h-full" : ""}
+          isCurrentTurn={managedMode.currentTurn === "B"}
+          isManagedMode={managedMode.isEnabled}
           messages={getRecentMessages("B").map((message, index) => (
             <SpeechBubble
               key={`${message.id}-${index}`}
@@ -398,6 +452,21 @@ export const TranslationInterface = ({
           <CentralVolumeControl isOnline={isOnline} />
         </div>
         
+        {/* Wake Lock Indicator - Left Side */}
+        <div className="absolute left-12 top-1/2 -translate-y-1/2">
+          <WakeLockIndicator
+            isActive={wakeLock.isActive}
+            isSupported={wakeLock.isSupported}
+            onToggle={() => {
+              if (wakeLock.isActive) {
+                wakeLock.release();
+              } else {
+                wakeLock.request();
+              }
+            }}
+          />
+        </div>
+        
         {/* Volume Control - Center */}
         <HorizontalVolumeControl
           volume={volume}
@@ -407,6 +476,15 @@ export const TranslationInterface = ({
           onClearMessages={clearAllMessages}
           isProcessing={isProcessing}
         />
+        
+        {/* Managed Mode Controls - Right Side */}
+        <div className="absolute right-2 top-1/2 -translate-y-1/2">
+          <ManagedModeControls
+            isEnabled={managedMode.isEnabled}
+            currentTurn={managedMode.currentTurn}
+            onSwitchTurn={managedMode.switchTurn}
+          />
+        </div>
       </div>
 
       {/* Speaker A Half - Bottom (Normal) - You */}
@@ -423,6 +501,8 @@ export const TranslationInterface = ({
           flag={getLanguageFlag(speakerALanguage)}
           isTop={false}
           className={isRealMobile ? "h-full" : ""}
+          isCurrentTurn={managedMode.currentTurn === "A"}
+          isManagedMode={managedMode.isEnabled}
           messages={getRecentMessages("A").map((message, index) => (
             <SpeechBubble
               key={`${message.id}-${index}`}
