@@ -67,17 +67,17 @@ export const LandingPageSettings = () => {
         }, {} as Record<string, string>);
 
         setSettings({
-          hero_title: settingsMap.hero_title || "Your Amazing App",
-          hero_subtitle: settingsMap.hero_subtitle || "Experience the future of communication",
-          hero_cta_text: settingsMap.hero_cta_text || "Try Web App",
-          feature_1_title: settingsMap.feature_1_title || "Real-time Translation",
-          feature_1_description: settingsMap.feature_1_description || "Instantly translate conversations between languages",
-          feature_2_title: settingsMap.feature_2_title || "Voice Recognition",
-          feature_2_description: settingsMap.feature_2_description || "Advanced speech-to-text technology",
-          feature_3_title: settingsMap.feature_3_title || "Cross-platform",
-          feature_3_description: settingsMap.feature_3_description || "Available on web and mobile devices",
-          app_name: settingsMap.app_name || "Translation App",
-          google_play_url: settingsMap.google_play_url || "",
+          hero_title: settingsMap.hero_title || "One Device Two People",
+          hero_subtitle: settingsMap.hero_subtitle || "AI-powered real-time translation designed for one-on-one conversations. Reliable, accurate, and simple enough for anyone to use together.",
+          hero_cta_text: settingsMap.hero_cta_text || "Get it on Google Play",
+          feature_1_title: settingsMap.feature_1_title || "Any Language",
+          feature_1_description: settingsMap.feature_1_description || "Real-time translation across 100+ languages with AI-powered accuracy. No language barriers.",
+          feature_2_title: settingsMap.feature_2_title || "One-on-One Conversations",
+          feature_2_description: settingsMap.feature_2_description || "Two people, one device. Share the screen and have natural conversations with instant translation.",
+          feature_3_title: settingsMap.feature_3_title || "Managed Mode",
+          feature_3_description: settingsMap.feature_3_description || "Perfect for non-tech-savvy users. The app guides the conversation flow, making it reliable and easy to use together.",
+          app_name: settingsMap.app_name || "TalkDuo",
+          google_play_url: settingsMap.google_play_url || "https://play.google.com/store/apps/details?id=com.talkduo.app",
         });
       }
     } catch (error: any) {
