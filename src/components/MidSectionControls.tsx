@@ -23,7 +23,7 @@ export const MidSectionControls = ({
   return (
     <div className="w-full h-full flex items-center justify-between px-5">
       {/* Left: Volume Slider - Fixed width, not flexible */}
-      <div className="flex items-center gap-3 w-60">
+      <div className="flex items-center gap-3 w-32">
         <Volume2 className="h-4 w-4 theme-icon theme-icon-hover flex-shrink-0" />
         <div className="flex-1">
           <Slider
