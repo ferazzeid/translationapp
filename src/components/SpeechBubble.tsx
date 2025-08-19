@@ -6,7 +6,6 @@ interface SpeechBubbleProps {
   index: number;
   speaker: "A" | "B";
   isNew?: boolean;
-  isDarkMode?: boolean;
   totalMessages?: number;
 }
 
@@ -15,8 +14,7 @@ export const SpeechBubble = ({
   isOriginal = true, 
   index, 
   speaker,
-  isNew = false,
-  isDarkMode = false,
+  isNew = false
 }: SpeechBubbleProps) => {
   const isLeftAligned = speaker === "A";
   
@@ -29,9 +27,7 @@ export const SpeechBubble = ({
       <div
         className={cn(
           "max-w-[85%] rounded-2xl px-4 py-3 shadow-sm border",
-          isDarkMode 
-            ? "bg-foreground text-background border-border/20" 
-            : "theme-surface theme-text theme-border",
+          "theme-surface theme-text theme-border",
           "text-base" // Consistent readable font size
         )}
       >

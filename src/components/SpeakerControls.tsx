@@ -1,20 +1,18 @@
-import { MessageCircle, Sun, Moon } from "lucide-react";
+import { MessageCircle, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface SpeakerControlsProps {
   speaker: "A" | "B";
   onOpenVoiceSelection: () => void;
-  isDarkMode: boolean;
-  onToggleDarkMode: () => void;
+  onOpenAdminSettings?: () => void;
   isTop?: boolean;
 }
 
 export const SpeakerControls = ({
   speaker,
   onOpenVoiceSelection,
-  isDarkMode,
-  onToggleDarkMode,
+  onOpenAdminSettings,
   isTop = false
 }: SpeakerControlsProps) => {
   return (
@@ -35,21 +33,23 @@ export const SpeakerControls = ({
         </Button>
       </div>
       
-      {/* Right Control - Dark/Light Mode */}
-      <div className={cn(
-        "absolute pointer-events-auto",
-        isTop ? "bottom-6 right-5" : "bottom-6 right-5"
-      )}>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={onToggleDarkMode}
-          className="h-10 w-10 rounded-full theme-icon-button hover:theme-icon-button-hover"
-          title={isDarkMode ? "Switch to Light Bubbles" : "Switch to Dark Bubbles"}
-        >
-          {isDarkMode ? <Sun className="h-4 w-4 theme-icon theme-icon-hover" /> : <Moon className="h-4 w-4 theme-icon theme-icon-hover" />}
-        </Button>
-      </div>
+      {/* Right Control - Admin Settings (only show for one speaker to avoid duplication) */}
+      {speaker === "A" && onOpenAdminSettings && (
+        <div className={cn(
+          "absolute pointer-events-auto",
+          isTop ? "bottom-6 right-5" : "bottom-6 right-5"
+        )}>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onOpenAdminSettings}
+            className="h-10 w-10 rounded-full theme-icon-button hover:theme-icon-button-hover"
+            title="Admin Settings"
+          >
+            <Settings className="h-4 w-4 theme-icon theme-icon-hover" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

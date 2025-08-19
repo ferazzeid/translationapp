@@ -9,16 +9,14 @@ import { useWakeLock } from "@/hooks/useWakeLock";
 import { useManagedMode } from "@/hooks/useManagedMode";
 import { SpeechBubble } from "./SpeechBubble";
 import { MidSectionControls } from "./MidSectionControls";
-import { AdminControls } from "./AdminControls";
-import { LanguageSettings } from "./LanguageSettings";
 
 import { SpeakerButton } from "./SpeakerButton";
 import { SpeakerControls } from "./SpeakerControls";
 import { SpeakerSection } from "./SpeakerSection";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
-import { SimpleLanguageModal } from "./SimpleLanguageModal";
 import { ProcessingIndicator } from "./ProcessingIndicator";
 import { WakeLockIndicator } from "./WakeLockIndicator";
+import { SettingsButton } from "./SettingsButton";
 
 
 interface Message {
@@ -57,7 +55,6 @@ export const TranslationInterface = ({
   const [lastTurnSwitchTime, setLastTurnSwitchTime] = useState<number>(0);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [isSpeakerEnabled, setIsSpeakerEnabled] = useState(true);
   const [holdToRecordMode, setHoldToRecordMode] = useState(false);
   const [holdProgressA, setHoldProgressA] = useState(0);
@@ -66,10 +63,7 @@ export const TranslationInterface = ({
   // Individual settings for each speaker
   const [speakerAVoice, setSpeakerAVoice] = useState("alloy");
   const [speakerBVoice, setSpeakerBVoice] = useState("nova");
-  const [speakerADarkMode, setSpeakerADarkMode] = useState(false);
-  const [speakerBDarkMode, setSpeakerBDarkMode] = useState(false);
   const [activeVoiceModal, setActiveVoiceModal] = useState<"A" | "B" | null>(null);
-  const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
   
   const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
@@ -548,7 +542,6 @@ export const TranslationInterface = ({
               index={index}
               speaker={message.speaker}
               isNew={index === 0}
-              isDarkMode={speakerBDarkMode}
             />
           ))}
         />
@@ -557,8 +550,7 @@ export const TranslationInterface = ({
         <SpeakerControls
           speaker="B"
           onOpenVoiceSelection={() => setActiveVoiceModal("B")}
-          isDarkMode={speakerBDarkMode}
-          onToggleDarkMode={() => setSpeakerBDarkMode(!speakerBDarkMode)}
+          onOpenAdminSettings={onOpenAdminSettings}
           isTop={true}
         />
 
@@ -566,7 +558,7 @@ export const TranslationInterface = ({
 
       {/* Central Controls Strip */}
       <div className={cn(
-        "flex-shrink-0 bg-muted z-30 border-t border-b border-border/30",
+        "flex-shrink-0 theme-console-prominent-bg z-30 border-t border-b theme-console-border",
         isRealMobile ? "h-20" : "h-20"
       )}>
         <MidSectionControls
@@ -618,7 +610,6 @@ export const TranslationInterface = ({
               index={index}
               speaker={message.speaker}
               isNew={index === 0}
-              isDarkMode={speakerADarkMode}
             />
           ))}
         />
@@ -627,20 +618,25 @@ export const TranslationInterface = ({
         <SpeakerControls
           speaker="A"
           onOpenVoiceSelection={() => setActiveVoiceModal("A")}
-          isDarkMode={speakerADarkMode}
-          onToggleDarkMode={() => setSpeakerADarkMode(!speakerADarkMode)}
+          onOpenAdminSettings={onOpenAdminSettings}
           isTop={false}
         />
 
       </div>
 
-      {/* Admin Settings - Bottom Left */}
-      {onOpenAdminSettings && (
-        <AdminControls onOpenAdminSettings={onOpenAdminSettings} />
-      )}
+      {/* Settings Button - Bottom Right */}
+      <SettingsButton onOpenSettings={onOpenSettings} />
 
-      {/* Language Settings - Bottom Right */}
-      <LanguageSettings onOpenSettings={() => setIsLanguageModalOpen(true)} />
+      {/* Wake Lock Indicator - Bottom Left */}
+      {wakeLock.isSupported && (
+        <div className="absolute bottom-5 left-5 z-40">
+          <WakeLockIndicator
+            isActive={wakeLock.isActive}
+            isSupported={wakeLock.isSupported}
+            onToggle={() => wakeLock.isActive ? wakeLock.release() : wakeLock.request()}
+          />
+        </div>
+      )}
 
 
       {/* Modals - Outside rotated areas */}
@@ -656,17 +652,6 @@ export const TranslationInterface = ({
             setSpeakerBVoice(voice);
           }
           setActiveVoiceModal(null);
-        }}
-      />
-
-      <SimpleLanguageModal
-        isOpen={isLanguageModalOpen}
-        onClose={() => setIsLanguageModalOpen(false)}
-        speakerALanguage={speakerALanguage}
-        speakerBLanguage={speakerBLanguage}
-        onLanguagesSave={(speakerA, speakerB) => {
-          onLanguageChange?.(speakerA, speakerB);
-          setIsLanguageModalOpen(false);
         }}
       />
 
