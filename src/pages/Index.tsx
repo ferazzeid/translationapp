@@ -3,6 +3,7 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { TranslationInterface } from "@/components/TranslationInterface";
 import { AdminAuth } from "@/components/AdminAuth";
 import { AdminSettings } from "@/components/AdminSettings";
+import { AdminDashboard } from "@/components/AdminDashboard";
 import { AuthPage } from "@/components/AuthPage";
 import { MobileFrame } from "@/components/MobileFrame";
 import { useAuth } from "@/hooks/useAuth";
@@ -11,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Settings, LogOut } from "lucide-react";
 import { usePWA } from "@/hooks/usePWA";
 
-type AppState = "auth" | "setup" | "translation" | "settings" | "admin-auth" | "admin-settings";
+type AppState = "auth" | "setup" | "translation" | "settings" | "admin-auth" | "admin-settings" | "admin-dashboard";
 
 interface LanguageSelection {
   speakerA: string;
@@ -192,6 +193,14 @@ const Index = () => {
             <AdminSettings
               onBackToApp={handleBackToApp}
               onSignOut={handleAdminSignOut}
+              onOpenDashboard={() => setCurrentState("admin-dashboard")}
+            />
+          );
+        
+        case "admin-dashboard":
+          return (
+            <AdminDashboard
+              onBackToSettings={() => setCurrentState("admin-settings")}
             />
           );
         
@@ -200,8 +209,8 @@ const Index = () => {
       }
     })();
 
-    // Don't wrap admin settings and auth in mobile frame
-    if (currentState === "admin-auth" || currentState === "admin-settings" || currentState === "auth") {
+    // Don't wrap admin settings, dashboard, and auth in mobile frame
+    if (currentState === "admin-auth" || currentState === "admin-settings" || currentState === "admin-dashboard" || currentState === "auth") {
       return content;
     }
 

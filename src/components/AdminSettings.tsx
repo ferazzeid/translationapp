@@ -11,9 +11,10 @@ import { MobileFrame } from "./MobileFrame";
 interface AdminSettingsProps {
   onBackToApp: () => void;
   onSignOut: () => void;
+  onOpenDashboard: () => void;
 }
 
-export const AdminSettings = ({ onBackToApp, onSignOut }: AdminSettingsProps) => {
+export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: AdminSettingsProps) => {
   const [openaiKey, setOpenaiKey] = useState("");
   const [showKey, setShowKey] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -279,7 +280,16 @@ export const AdminSettings = ({ onBackToApp, onSignOut }: AdminSettingsProps) =>
         </div>
 
         {/* Footer */}
-        <div className="flex-shrink-0 p-4 border-t border-border bg-background">
+        <div className="flex-shrink-0 p-4 border-t border-border bg-background space-y-3">
+          <Button 
+            onClick={onOpenDashboard}
+            variant="default"
+            size="sm"
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            Open Admin Dashboard
+          </Button>
+          
           <Button 
             onClick={handleSignOut}
             variant="outline"
