@@ -38,9 +38,8 @@ export const SpeakerSection = ({
 
   return (
     <div className={cn(
-      "h-full w-full relative overflow-hidden",
-      isActiveTurn ? "" : "bg-background", // Only apply bg when not active turn
-      isActiveTurn && "ring-2 ring-green-400/60",
+      "h-full w-full relative overflow-hidden bg-secondary",
+      isActiveTurn && "ring-2 ring-primary/60",
       className
     )}>
 
@@ -53,10 +52,16 @@ export const SpeakerSection = ({
         </div>
       </div>
 
+      {/* Speaker Label */}
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
+        <h2 className="text-xl font-semibold text-foreground">
+          Speaker {speaker}
+        </h2>
+      </div>
+
       {/* Fixed microphone and repeat button area */}
       <div className={cn(
-        "absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center z-30 border-t border-border",
-        isActiveTurn ? "bg-transparent" : "bg-background"
+        "absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center z-30 bg-secondary"
       )}>
         {/* Container for microphone and repeat button */}
         <div className="flex items-center gap-3">
