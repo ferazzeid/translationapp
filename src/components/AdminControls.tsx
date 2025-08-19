@@ -16,9 +16,9 @@ export const AdminControls = ({
         onClick={onOpenAdminSettings}
         className="h-10 w-10 rounded-full theme-icon-button hover:theme-icon-button-hover"
         title="Admin Settings"
-      >
-        <Settings className="h-4 w-4" />
-      </Button>
+        >
+          <Settings className="h-4 w-4 theme-icon theme-icon-hover" />
+        </Button>
     </div>
   );
 };

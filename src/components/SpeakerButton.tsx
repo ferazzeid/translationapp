@@ -141,9 +141,12 @@ export const SpeakerButton = ({
           onPointerLeave={holdToRecordMode ? handlePointerUp : undefined}
         >
           {isListening ? (
-            <Square className="h-8 w-8 fill-current relative z-10" />
+            <Square className="h-8 w-8 fill-current relative z-10 theme-icon-active" />
           ) : (
-            <Mic className="h-8 w-8 relative z-10" />
+            <Mic className={cn(
+              "h-8 w-8 relative z-10",
+              isDisabled ? "theme-icon-disabled" : isActiveInManagedMode ? "theme-icon-active" : "theme-icon theme-icon-hover"
+            )} />
           )}
           
           {/* Hold to Record Progress Indicator */}

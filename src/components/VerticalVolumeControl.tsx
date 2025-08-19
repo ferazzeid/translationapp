@@ -39,7 +39,7 @@ export const VerticalVolumeControl = ({
           )}
           title={isSpeakerEnabled ? "Disable Speaker" : "Enable Speaker"}
         >
-          <VolumeIcon className="h-4 w-4" />
+          <VolumeIcon className="h-4 w-4 theme-icon theme-icon-hover" />
         </Button>
 
         {/* Vertical Volume Slider */}

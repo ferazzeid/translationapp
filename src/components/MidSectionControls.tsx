@@ -25,7 +25,7 @@ export const MidSectionControls = ({
       {/* Left: Extended Volume Slider (no connection indicators) */}
       <div className="flex items-center justify-start flex-1">
         <div className="flex items-center gap-3 w-full max-w-lg">
-          <Volume2 className="h-4 w-4 theme-text flex-shrink-0" />
+          <Volume2 className="h-4 w-4 theme-icon flex-shrink-0" />
           <div className="flex-1">
             <Slider
               value={[Math.round(volume * 100)]}
@@ -50,7 +50,7 @@ export const MidSectionControls = ({
                 className="min-h-[44px] min-w-[44px] h-12 w-12 rounded-full theme-icon-button hover:theme-icon-button-hover border theme-icon-button-border transition-all duration-200"
                 title="Pass turn to other speaker"
               >
-                <ArrowUpDown className="h-5 w-5" />
+                <ArrowUpDown className="h-5 w-5 theme-icon theme-icon-hover" />
               </Button>
            )}
 
@@ -63,7 +63,7 @@ export const MidSectionControls = ({
               className="min-h-[44px] min-w-[44px] h-12 w-12 rounded-full theme-icon-button hover:theme-icon-button-hover disabled:opacity-50 border theme-icon-button-border transition-all duration-200"
               title="Clear all messages"
             >
-              <Eraser className="h-5 w-5" />
+              <Eraser className="h-5 w-5 theme-icon theme-icon-hover" />
             </Button>
         </div>
       </div>

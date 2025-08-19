@@ -31,7 +31,7 @@ export const SpeakerControls = ({
           className="h-10 w-10 rounded-full theme-icon-button hover:theme-icon-button-hover"
           title={`Voice Selection for Speaker ${speaker}`}
         >
-          <MessageCircle className="h-4 w-4" />
+          <MessageCircle className="h-4 w-4 theme-icon theme-icon-hover" />
         </Button>
       </div>
       
@@ -47,7 +47,7 @@ export const SpeakerControls = ({
           className="h-10 w-10 rounded-full theme-icon-button hover:theme-icon-button-hover"
           title={isDarkMode ? "Switch to Light Bubbles" : "Switch to Dark Bubbles"}
         >
-          {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          {isDarkMode ? <Sun className="h-4 w-4 theme-icon theme-icon-hover" /> : <Moon className="h-4 w-4 theme-icon theme-icon-hover" />}
         </Button>
       </div>
     </div>

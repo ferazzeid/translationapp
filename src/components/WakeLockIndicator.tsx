@@ -30,9 +30,9 @@ export const WakeLockIndicator = ({
       title={isActive ? "Screen lock prevented" : "Allow screen lock"}
     >
       {isActive ? (
-        <Shield className="h-3 w-3" />
+        <Shield className="h-3 w-3 theme-icon-active" />
       ) : (
-        <ShieldOff className="h-3 w-3" />
+        <ShieldOff className="h-3 w-3 theme-icon theme-icon-hover" />
       )}
     </Button>
   );

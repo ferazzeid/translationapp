@@ -70,6 +70,13 @@
   --theme-mic-inactive-fg: 0 0% 40%; /* Inactive mic text */
   --theme-mic-inactive-hover: 0 0% 90%; /* Inactive mic hover */
 
+  /* Icon colors for buttons and indicators */
+  --theme-icon-color: 0 0% 20%; /* Default icon color */
+  --theme-icon-color-hover: 0 0% 10%; /* Icon hover color */
+  --theme-icon-color-disabled: 0 0% 60%; /* Disabled icon color */
+  --theme-icon-color-active: 0 0% 100%; /* Active/selected icon color */
+  --theme-icon-color-muted: 0 0% 50%; /* Muted icon color */
+  
   /* Console prominent background */
   --theme-console-prominent-bg: 0 0% 94%; /* Prominent console background */
   
@@ -127,6 +134,13 @@
   --theme-speaker-inactive-bg: 210 40% 96%; /* Light blue-gray inactive */
   --theme-speaker-active-bg: 210 40% 98%; /* Very light blue-gray active */
   --theme-speaker-listening-overlay: 221.2 83.2% 53.3%; /* Primary blue overlay */
+
+  /* Neo theme icon colors */
+  --theme-icon-color: 215.4 16.3% 46.9%; /* Muted blue-gray icons */
+  --theme-icon-color-hover: 221.2 83.2% 53.3%; /* Primary blue on hover */
+  --theme-icon-color-disabled: 215.4 16.3% 65%; /* Light gray disabled */
+  --theme-icon-color-active: 210 40% 98%; /* Light text for active */
+  --theme-icon-color-muted: 215.4 16.3% 55%; /* Muted icons */
 
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -203,6 +217,13 @@
   --theme-speaker-inactive-bg: 180 25% 95%; /* Light aqua inactive */
   --theme-speaker-active-bg: 180 25% 97%; /* Very light aqua active */
   --theme-speaker-listening-overlay: 185 85% 45%; /* Aqua overlay */
+
+  /* Aqua theme icon colors */
+  --theme-icon-color: 180 15% 35%; /* Dark aqua icons */
+  --theme-icon-color-hover: 185 85% 45%; /* Bright aqua on hover */
+  --theme-icon-color-disabled: 180 15% 65%; /* Light disabled */
+  --theme-icon-color-active: 0 0% 100%; /* White for active */
+  --theme-icon-color-muted: 180 15% 50%; /* Muted aqua */
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -279,6 +300,13 @@
   --theme-speaker-inactive-bg: 270 15% 95%; /* Light violet inactive */
   --theme-speaker-active-bg: 270 15% 97%; /* Very light violet active */
   --theme-speaker-listening-overlay: 262 83% 58%; /* Violet overlay */
+
+  /* Violet theme icon colors */
+  --theme-icon-color: 265 30% 35%; /* Dark violet icons */
+  --theme-icon-color-hover: 262 83% 58%; /* Bright violet on hover */
+  --theme-icon-color-disabled: 265 20% 65%; /* Light disabled */
+  --theme-icon-color-active: 0 0% 100%; /* White for active */
+  --theme-icon-color-muted: 265 25% 50%; /* Muted violet */
   
   /* Radius and shadows */
   --theme-radius-lg: 28px;
@@ -487,4 +515,25 @@
 
 .theme-speaker-listening-overlay {
   background-color: hsl(var(--theme-speaker-listening-overlay, 218 100% 58%) / 0.1);
+}
+
+/* Icon color utilities */
+.theme-icon {
+  color: hsl(var(--theme-icon-color, 0 0% 20%));
+}
+
+.theme-icon-hover:hover {
+  color: hsl(var(--theme-icon-color-hover, 0 0% 10%));
+}
+
+.theme-icon-disabled {
+  color: hsl(var(--theme-icon-color-disabled, 0 0% 60%));
+}
+
+.theme-icon-active {
+  color: hsl(var(--theme-icon-color-active, 0 0% 100%));
+}
+
+.theme-icon-muted {
+  color: hsl(var(--theme-icon-color-muted, 0 0% 50%));
 }
