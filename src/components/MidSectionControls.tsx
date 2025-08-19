@@ -1,4 +1,4 @@
-import { Volume2, Eraser, ArrowUpDown, Wifi, WifiOff } from "lucide-react";
+import { Volume2, Eraser, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -6,41 +6,15 @@ import { cn } from "@/lib/utils";
 interface MidSectionControlsProps {
   volume: number;
   onVolumeChange: (volume: number) => void;
-  isOnline: boolean;
   onWipeMessages: () => void;
   onPassTurn: () => void;
   hasMessages: boolean;
   isManagedMode?: boolean;
 }
 
-// 5-step connection strength indicator
-const ConnectionStrengthIndicator = ({ isOnline }: { isOnline: boolean }) => {
-  const bars = Array.from({ length: 5 }, (_, i) => (
-    <div
-      key={i}
-      className={cn(
-        "w-1 rounded-sm transition-colors",
-        isOnline 
-          ? "bg-green-500" 
-          : i < 2 ? "bg-red-500" : "bg-gray-300"
-      )}
-      style={{
-        height: `${8 + i * 2}px`
-      }}
-    />
-  ));
-
-  return (
-    <div className="flex items-end gap-0.5">
-      {bars}
-    </div>
-  );
-};
-
 export const MidSectionControls = ({
   volume,
   onVolumeChange,
-  isOnline,
   onWipeMessages,
   onPassTurn,
   hasMessages,
@@ -48,23 +22,11 @@ export const MidSectionControls = ({
 }: MidSectionControlsProps) => {
   return (
     <div className="w-full h-full flex items-center justify-between px-4">
-      {/* Left: 5-Step Connection Indicator - Consistent 16px padding */}
-      <div className="flex items-center justify-start w-1/3">
-        <div className="flex items-center gap-3">
-          <ConnectionStrengthIndicator isOnline={isOnline} />
-          {isOnline ? (
-            <Wifi className="h-4 w-4 text-foreground" />
-          ) : (
-            <WifiOff className="h-4 w-4 text-foreground" />
-          )}
-        </div>
-      </div>
-
-      {/* Middle: Volume Slider */}
-      <div className="flex items-center justify-center w-1/3">
-        <div className="flex items-center gap-3 px-4">
+      {/* Left: Volume Slider Extended */}
+      <div className="flex items-center justify-start w-1/2">
+        <div className="flex items-center gap-3 w-full max-w-md">
           <Volume2 className="h-4 w-4 text-foreground flex-shrink-0" />
-          <div className="w-24">
+          <div className="flex-1">
             <Slider
               value={[Math.round(volume * 100)]}
               onValueChange={(value) => onVolumeChange(value[0] / 100)}
@@ -80,7 +42,7 @@ export const MidSectionControls = ({
       </div>
 
       {/* Right: Pass Turn and Wipe Buttons */}
-      <div className="flex items-center justify-end w-1/3">
+      <div className="flex items-center justify-end w-1/2">
         <div className="flex items-center gap-4">
           {/* Pass Turn Button - Large with Black Background */}
           {isManagedMode && (
@@ -95,7 +57,7 @@ export const MidSectionControls = ({
             </Button>
           )}
 
-          {/* Wipe Button - Large with Black Background */}
+          {/* Wipe Button - Black Background (same as Pass Turn) */}
           <Button
             variant="outline"
             size="icon"

@@ -573,7 +573,6 @@ export const TranslationInterface = ({
         <MidSectionControls
           volume={volume}
           onVolumeChange={setVolume}
-          isOnline={isOnline}
           onWipeMessages={clearAllMessages}
           onPassTurn={() => {
             console.log('Switch turn button clicked. Current turn:', managedMode.currentTurn);

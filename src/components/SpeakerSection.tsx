@@ -68,35 +68,34 @@ export const SpeakerSection = ({
         </div>
       </div>
 
-      {/* Fixed microphone and repeat button area */}
+      {/* Fixed microphone area - perfectly centered */}
       <div className={cn(
         "absolute bottom-0 left-0 right-0 h-20 sm:h-24 flex items-center justify-center z-30",
         isActiveTurn ? "bg-transparent" : "bg-background"
       )}>
-        {/* Container for microphone and repeat button with ample padding */}
-        <div className="flex items-center gap-4 p-8">
-          {/* Repeat Button - White background with gray icon */}
-          <button
-            onClick={onRepeat}
-            className="h-10 w-10 rounded-full bg-white text-gray-600 hover:bg-gray-100 border-2 border-gray-300 shadow-sm flex items-center justify-center transition-colors"
-            title="Repeat last message"
+        {/* Repeat Button - Absolute positioned to left, doesn't affect mic centering */}
+        <button
+          onClick={onRepeat}
+          className="absolute left-8 h-10 w-10 rounded-full bg-white text-gray-600 hover:bg-gray-100 border-2 border-gray-300 shadow-sm flex items-center justify-center transition-colors"
+          title="Repeat last message"
+        >
+          <svg 
+            className="h-4 w-4 text-gray-600" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
           >
-            <svg 
-              className="h-4 w-4 text-gray-600" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
-              />
-            </svg>
-          </button>
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={2} 
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
+            />
+          </svg>
+        </button>
 
-          {/* Main Microphone Button - Primary focal element */}
+        {/* Main Microphone Button - Perfectly centered regardless of other elements */}
+        <div className="flex items-center justify-center">
           <SpeakerButton
             speaker={speaker}
             isListening={isListening}
