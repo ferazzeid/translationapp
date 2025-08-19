@@ -78,7 +78,7 @@ export const VoiceSelectionModal = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className={cn(
-        "max-w-xs theme-modal-bg theme-modal-border shadow-lg p-0",
+        "max-w-xs theme-modal-bg theme-modal-border shadow-lg p-0 rounded-lg",
         speaker === "B" && "rotate-180"
       )}>
         <DialogTitle className="sr-only">Voice Selection</DialogTitle>
@@ -88,7 +88,7 @@ export const VoiceSelectionModal = ({
         </div>
         
         {/* Voice List */}
-        <div className="p-4 space-y-2 max-h-60 overflow-y-auto scrollbar-hide">
+        <div className="p-4 space-y-2">
           {AVAILABLE_VOICES.map((voice) => (
             <div
               key={voice.id}
@@ -103,7 +103,7 @@ export const VoiceSelectionModal = ({
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="font-medium theme-text text-sm">{voice.name}</span>
-                  <span className="text-xs theme-text-muted">({voice.gender})</span>
+                  <span className="text-sm theme-text-muted">{voice.gender === "female" ? "♀" : "♂"}</span>
                 </div>
               </div>
               

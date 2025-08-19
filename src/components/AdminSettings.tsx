@@ -189,7 +189,7 @@ export const AdminSettings = ({ onBackToApp, onSignOut, onOpenDashboard }: Admin
           </div>
         </div>
 
-        <div className="flex-1 p-4 space-y-6 overflow-y-auto">
+        <div className="flex-1 p-4 space-y-8 overflow-y-auto">
 
           {/* Theme Settings */}
           <div className="space-y-4">
