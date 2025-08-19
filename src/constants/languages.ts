@@ -139,5 +139,5 @@ export const getLanguageCode = (language: string): string => {
     "Welsh": "CY"
   };
   
-  return languageMap[language] || "EN";
+  return languageMap[language] || "??"; // Show ?? instead of defaulting to EN
 };
