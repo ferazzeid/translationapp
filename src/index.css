@@ -2,114 +2,141 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Translation App Design System - Mobile-first, High Contrast
+All colors MUST be HSL for maximum compatibility and theming.
+*/
+
 @layer base {
   :root {
-    /* Base yellow color scheme matching your design */
-    --background: 0 0% 98%;
-    --foreground: 0 0% 15%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 15%;
+    /* Base colors - clean whites and dark grays */
+    --background: 0 0% 100%;
+    --foreground: 215 25% 15%;
+
+    /* Card system - subtle elevation */
+    --card: 0 0% 98%;
+    --card-foreground: 215 25% 15%;
+
+    /* Popover system */
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 15%;
-    
-    /* Yellow primary matching your design */
-    --primary: 51 100% 50%;
-    --primary-foreground: 0 0% 15%;
-    --primary-light: 51 100% 60%;
-    --primary-glow: 51 100% 70%;
-    
-    /* Light grays for sections */
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 15%;
-    --muted: 0 0% 94%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 0 0% 92%;
-    --accent-foreground: 0 0% 15%;
-    
-    /* Status colors */
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --popover-foreground: 215 25% 15%;
+
+    /* Primary - Deep professional blue for trust */
+    --primary: 213 94% 35%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 213 94% 45%;
+    --primary-glow: 213 94% 55%;
+
+    /* Secondary - Warm neutral for secondary actions */
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 215 25% 15%;
+
+    /* Muted - For subtle text and backgrounds */
+    --muted: 220 14% 96%;
+    --muted-foreground: 215 16% 46%;
+
+    /* Accent - Vibrant green for active/listening states */
+    --accent: 142 71% 45%;
+    --accent-foreground: 0 0% 100%;
+    --accent-light: 142 71% 55%;
+
+    /* Success - For positive feedback */
     --success: 142 71% 45%;
-    --success-foreground: 0 0% 98%;
+    --success-foreground: 0 0% 100%;
+
+    /* Warning - For attention states */
     --warning: 45 93% 47%;
-    --warning-foreground: 0 0% 15%;
-    
-    /* Borders and inputs */
-    --border: 0 0% 88%;
-    --input: 0 0% 88%;
-    --ring: 51 100% 50%;
-    --radius: 12px;
-    
+    --warning-foreground: 0 0% 100%;
+
+    /* Destructive - For errors and dangerous actions */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Border and input styling */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 213 94% 35%;
+
+    /* Border radius for modern feel */
+    --radius: 0.75rem;
+
     /* Translation app specific colors */
-    --speaker-a: 51 100% 50%;
-    --speaker-b: 51 100% 50%;
-    --listening-glow: 51 100% 60%;
-    
-    /* Connection status */
+    --speaker-a: 213 94% 35%;  /* Primary blue for speaker A */
+    --speaker-b: 213 94% 35%;  /* Also primary blue for speaker B to avoid confusion */
+    --listening-glow: 213 94% 55%;
     --connection-good: 142 71% 45%;
     --connection-poor: 45 93% 47%;
     --connection-bad: 0 84% 60%;
-    
-    /* Sidebar colors */
+
+    /* Gradients for visual appeal */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-light)));
+    --gradient-listening: linear-gradient(135deg, hsl(var(--primary-glow)), hsl(var(--accent-light)));
+    --gradient-surface: linear-gradient(180deg, hsl(var(--background)), hsl(var(--card)));
+
+    /* Shadows for depth */
+    --shadow-soft: 0 2px 8px -2px hsl(var(--primary) / 0.1);
+    --shadow-medium: 0 4px 16px -4px hsl(var(--primary) / 0.2);
+    --shadow-strong: 0 8px 32px -8px hsl(var(--primary) / 0.3);
+    --shadow-glow: 0 0 24px hsl(var(--listening-glow) / 0.4);
+
+    /* Animation variables */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --pulse-duration: 20s; /* Much slower pulse for better UX */
+
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 15%;
-    --sidebar-primary: 0 0% 15%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 0 0% 92%;
-    --sidebar-accent-foreground: 0 0% 15%;
-    --sidebar-border: 0 0% 88%;
-    --sidebar-ring: 51 100% 50%;
-    
-    /* Yellow header bar color */
-    --header-yellow: 51 100% 50%;
-    
-    /* Shadows */
-    --shadow-soft: 0 2px 8px hsl(0 0% 0% / 0.1);
-    --shadow-medium: 0 4px 16px hsl(0 0% 0% / 0.15);
-    --shadow-strong: 0 8px 32px hsl(0 0% 0% / 0.2);
-    
-    /* Chart colors */
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 0 0% 8%;
-    --foreground: 0 0% 95%;
-    --card: 0 0% 8%;
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 95%;
-    
-    /* Keep yellow primary in dark mode */
-    --primary: 51 100% 50%;
-    --primary-foreground: 0 0% 15%;
-    
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 95%;
-    
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 51 100% 50%;
-    
-    --sidebar-background: 0 0% 8%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 0 0% 95%;
-    --sidebar-primary-foreground: 0 0% 8%;
-    --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 51 100% 50%;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -117,12 +144,13 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
-/* Recording pulse animation for yellow microphone */
+/* Custom animation keyframes for recording states */
 @keyframes recording-pulse {
   0%, 100% {
     transform: scale(1);
@@ -130,28 +158,31 @@
   }
   50% {
     transform: scale(1.05);
-    opacity: 0.9;
+    opacity: 0.8;
   }
 }
 
 @keyframes recording-glow {
   0%, 100% {
-    box-shadow: 0 0 20px hsl(var(--primary) / 0.5);
+    box-shadow: 0 0 20px hsl(var(--destructive) / 0.3);
   }
   50% {
-    box-shadow: 0 0 30px hsl(var(--primary) / 0.8), 0 0 40px hsl(var(--primary) / 0.3);
+    box-shadow: 0 0 30px hsl(var(--destructive) / 0.6);
   }
 }
 
+/* Recording button animation class */
 .recording-pulse {
-  animation: recording-pulse 1.5s ease-in-out infinite, recording-glow 1.5s ease-in-out infinite;
+  animation: recording-pulse var(--pulse-duration) ease-in-out infinite, 
+             recording-glow var(--pulse-duration) ease-in-out infinite;
 }
 
+/* Hide scrollbars */
 .scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
 }
 
 .scrollbar-hide::-webkit-scrollbar { 
-  display: none;
+  display: none;  /* Safari and Chrome */
 }
