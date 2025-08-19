@@ -158,13 +158,6 @@ const Index = () => {
                 </div>
               )}
               
-              {/* Subscription Status */}
-              {isAuthenticated && (
-                <div className="absolute top-20 right-4 w-80 z-40">
-                  <SubscriptionStatus />
-                </div>
-              )}
-              
               <LanguageSelector
                 selectedLanguages={selectedLanguages}
                 onLanguageChange={handleLanguageChange}
