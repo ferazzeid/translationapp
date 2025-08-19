@@ -3,7 +3,7 @@ import { ChevronDown, Languages, Settings, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { LANGUAGES, getLanguageName, type Language } from "@/constants/languages";
+import { LANGUAGES, getLanguageCode } from "@/constants/languages";
 
 interface LanguageSelectorProps {
   selectedLanguages: { speakerA: string; speakerB: string };
@@ -47,7 +47,7 @@ export const LanguageSelector = ({
               )}
               onClick={() => setExpandedSelector(expandedSelector === "speakerB" ? null : "speakerB")}
             >
-              <span className="text-base font-medium theme-text">{getLanguageName(selectedLanguages.speakerB)}</span>
+              <span className="text-base font-medium theme-text">{selectedLanguages.speakerB || "Select a language"}</span>
               <ChevronDown size={20} className={cn(
                 "transition-transform theme-text",
                 expandedSelector === "speakerB" && "rotate-180"
@@ -56,17 +56,22 @@ export const LanguageSelector = ({
 
             {expandedSelector === "speakerB" && (
               <div className="grid grid-cols-1 gap-1 mt-2 max-h-60 overflow-y-auto border-2 theme-border rounded-md theme-surface">
-                {LANGUAGES.map((lang) => (
+                {LANGUAGES.map((language) => (
                   <Button
-                    key={lang.code}
+                    key={language}
                     variant="ghost"
-                    className="h-10 justify-start text-base theme-button border-0 hover:theme-surface-alt"
+                    className="h-10 justify-between text-base theme-button border-0 hover:theme-surface-alt px-3"
                     onClick={() => {
-                      onLanguageChange("speakerB", lang.code);
+                      onLanguageChange("speakerB", language);
                       setExpandedSelector(null);
                     }}
                   >
-                    {lang.name}
+                    <div className="flex flex-col">
+                      <span className="font-medium">{language}</span>
+                      <span className="text-xs theme-text-muted">
+                        {getLanguageCode(language)}
+                      </span>
+                    </div>
                   </Button>
                 ))}
               </div>
@@ -85,7 +90,7 @@ export const LanguageSelector = ({
               )}
               onClick={() => setExpandedSelector(expandedSelector === "speakerA" ? null : "speakerA")}
             >
-              <span className="text-base font-medium theme-text">{getLanguageName(selectedLanguages.speakerA)}</span>
+              <span className="text-base font-medium theme-text">{selectedLanguages.speakerA || "Select a language"}</span>
               <ChevronDown size={20} className={cn(
                 "transition-transform theme-text",
                 expandedSelector === "speakerA" && "rotate-180"
@@ -94,17 +99,22 @@ export const LanguageSelector = ({
 
             {expandedSelector === "speakerA" && (
               <div className="grid grid-cols-1 gap-1 mt-2 max-h-60 overflow-y-auto border-2 theme-border rounded-md theme-surface">
-                {LANGUAGES.map((lang) => (
+                {LANGUAGES.map((language) => (
                   <Button
-                    key={lang.code}
+                    key={language}
                     variant="ghost"
-                    className="h-10 justify-start text-base theme-button border-0 hover:theme-surface-alt"
+                    className="h-10 justify-between text-base theme-button border-0 hover:theme-surface-alt px-3"
                     onClick={() => {
-                      onLanguageChange("speakerA", lang.code);
+                      onLanguageChange("speakerA", language);
                       setExpandedSelector(null);
                     }}
                   >
-                    {lang.name}
+                    <div className="flex flex-col">
+                      <span className="font-medium">{language}</span>
+                      <span className="text-xs theme-text-muted">
+                        {getLanguageCode(language)}
+                      </span>
+                    </div>
                   </Button>
                 ))}
               </div>

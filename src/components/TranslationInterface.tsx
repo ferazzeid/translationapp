@@ -7,7 +7,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { usePWA } from "@/hooks/usePWA";
 import { useWakeLock } from "@/hooks/useWakeLock";
 import { useManagedMode } from "@/hooks/useManagedMode";
-import { getLanguageFlag } from "@/constants/languages";
+import { getLanguageCode } from "@/constants/languages";
 import { SpeechBubble } from "./SpeechBubble";
 import { MidSectionControls } from "./MidSectionControls";
 import { SpeakerButton } from "./SpeakerButton";
@@ -520,7 +520,7 @@ export const TranslationInterface = ({
           onStart={() => startListening("B")}
           onStop={() => stopListening("B")}
           language={speakerBLanguage}
-          flag={getLanguageFlag(speakerBLanguage)}
+          flag={getLanguageCode(speakerBLanguage)}
           isTop={true}
           className={isRealMobile ? "h-full" : ""}
           isCurrentTurn={managedMode.currentTurn === "B"}
@@ -594,7 +594,7 @@ export const TranslationInterface = ({
           onStart={() => startListening("A")}
           onStop={() => stopListening("A")}
           language={speakerALanguage}
-          flag={getLanguageFlag(speakerALanguage)}
+          flag={getLanguageCode(speakerALanguage)}
           isTop={false}
           className={isRealMobile ? "h-full" : ""}
           isCurrentTurn={managedMode.currentTurn === "A"}

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { AppSettings } from "./AppSettings";
-import { getLanguageName } from "@/constants/languages";
+import { getLanguageCode } from "@/constants/languages";
 
 interface GeneralSettingsProps {
   onBack: () => void;
@@ -31,7 +31,7 @@ export const GeneralSettings = ({
       icon: Languages,
       description: "Change your conversation languages",
       action: onOpenLanguageSettings,
-      info: `You: ${getLanguageName(speakerALanguage)} → Other: ${getLanguageName(speakerBLanguage)}`
+      info: `You: ${speakerALanguage} (${getLanguageCode(speakerALanguage)}) → Other: ${speakerBLanguage} (${getLanguageCode(speakerBLanguage)})`
     }
   ];
 
