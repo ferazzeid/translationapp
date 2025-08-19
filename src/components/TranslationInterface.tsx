@@ -535,14 +535,6 @@ export const TranslationInterface = ({
               isNew={index === 0}
               isDarkMode={speakerBDarkMode}
             />
-          )).concat(
-            isProcessing ? [
-              <ProcessingIndicator 
-                key="processing-b"
-                isProcessing={true} 
-                speaker="B"
-              />
-            ] : []
           )}
         />
         
@@ -680,6 +672,14 @@ export const TranslationInterface = ({
           onLanguageChange?.(speakerA, speakerB);
           setIsLanguageModalOpen(false);
         }}
+      />
+
+      {/* Processing/Recording Indicator */}
+      <ProcessingIndicator 
+        isProcessing={isProcessing}
+        isRecording={isListeningA || isListeningB}
+        speaker={isListeningA ? "A" : "B"}
+        type={isListeningA || isListeningB ? "recording" : "processing"}
       />
 
     </div>

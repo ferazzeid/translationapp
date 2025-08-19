@@ -1,35 +1,47 @@
 import { cn } from "@/lib/utils";
 
 interface ProcessingIndicatorProps {
-  isProcessing: boolean;
+  isProcessing?: boolean;
+  isRecording?: boolean;
   speaker: "A" | "B";
+  type?: "recording" | "processing";
 }
 
 export const ProcessingIndicator = ({ 
-  isProcessing, 
-  speaker 
+  isProcessing = false,
+  isRecording = false,
+  speaker,
+  type = "processing"
 }: ProcessingIndicatorProps) => {
-  if (!isProcessing) return null;
+  const isVisible = isProcessing || isRecording;
+  if (!isVisible) return null;
+
+  const isRecordingState = type === "recording" || isRecording;
+  const barColor = isRecordingState ? "bg-red-500" : "bg-blue-500";
+  const text = isRecordingState ? "Recording..." : "Processing...";
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
-      <div className="bg-background/90 backdrop-blur-sm rounded-xl p-6 shadow-2xl border border-border">
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 pointer-events-none z-50">
+      <div className="bg-white/95 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg border border-gray-200">
         <div className="flex items-center gap-3">
-          {/* Animated dots */}
-          <div className="flex gap-1">
-            {[...Array(5)].map((_, i) => (
+          {/* Animated bars */}
+          <div className="flex items-end gap-1">
+            {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="w-2 h-8 bg-primary rounded-full animate-pulse"
+                className={cn(
+                  "w-1 rounded-full animate-pulse",
+                  barColor
+                )}
                 style={{
-                  animationDelay: `${i * 150}ms`,
-                  animationDuration: '1s',
-                  height: `${20 + Math.sin(Date.now() / 300 + i) * 12}px`
+                  height: `${12 + (i % 2) * 6}px`,
+                  animationDelay: `${i * 200}ms`,
+                  animationDuration: '0.8s'
                 }}
               />
             ))}
           </div>
-          <span className="text-foreground font-medium">Processing...</span>
+          <span className="text-gray-700 text-sm font-medium">{text}</span>
         </div>
       </div>
     </div>
