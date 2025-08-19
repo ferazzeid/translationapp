@@ -147,11 +147,6 @@ export const SpeakerButton = ({
               "!h-8 !w-8 relative z-10 icon",
               isDisabled ? "theme-icon-disabled" : isActiveInManagedMode ? "theme-icon-active" : "theme-icon theme-icon-hover"
             )}
-            style={{
-              filter: isActiveInManagedMode 
-                ? "drop-shadow(0 0 2px rgba(0,0,0,0.8))" 
-                : "none"
-            }}
             strokeWidth={2}
             />
           )}

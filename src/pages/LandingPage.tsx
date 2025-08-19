@@ -27,6 +27,12 @@ const LandingPage = () => {
               AI-powered real-time translation designed for one-on-one conversations. Reliable, accurate, and simple enough for anyone to use together.
             </p>
             
+            <div className="max-w-3xl mx-auto mb-8">
+              <p className="text-lg md:text-xl opacity-80 leading-relaxed">
+                TalkDuo is built for those moments when you simply can't avoid speaking with someone who doesn't share your language. You can't always rely on friends, translators, or expat circles—and sometimes you just have to figure it out yourself. With TalkDuo, each person speaks into the app in their own language and hears the other in theirs. Take it step by step, let the app guide the exchange, and you'll get through any conversation barrier.
+              </p>
+            </div>
+            
             {/* Google Play Button */}
             <div className="flex justify-center mb-12">
               <button 
