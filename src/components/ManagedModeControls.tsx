@@ -101,10 +101,11 @@ export const ManagedModeControls = ({
         variant="outline"
         size="sm"
         onClick={onSwitchTurn}
-        className="h-6 px-2 text-xs bg-background/90 border border-border shadow-sm hover:bg-foreground hover:text-background"
+        className="h-8 px-3 text-xs bg-background/90 border border-border shadow-sm hover:bg-foreground hover:text-background min-w-[60px] touch-manipulation"
         title="Pass turn"
       >
-        <ArrowUpDown className="h-3 w-3" />
+        <ArrowUpDown className="h-4 w-4 mr-1" />
+        <span className="hidden sm:inline">Pass</span>
       </Button>
     </div>
   );

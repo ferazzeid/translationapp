@@ -19,6 +19,18 @@ export const SpeechBubble = ({
   const isLeftAligned = speaker === "A";
   const isMostRecent = index === 0;
   
+  // Dynamic font sizing based on text length and recency
+  const getTextSize = () => {
+    if (!isMostRecent) return "text-base";
+    
+    const textLength = text.length;
+    if (textLength > 300) return "text-sm";
+    if (textLength > 150) return "text-lg";
+    return "text-2xl";
+  };
+  
+  const textSizeClass = getTextSize();
+  
   return (
     <div className={cn(
       "w-full flex",
@@ -29,8 +41,9 @@ export const SpeechBubble = ({
         className={cn(
           "max-w-[85%] rounded-2xl px-4 py-3 shadow-sm border",
           "theme-surface theme-text theme-border",
-          isMostRecent ? "text-2xl" : "text-base", // Double size for most recent message
-          isLeftAligned ? "bubble--theirs" : "bubble--mine"
+          textSizeClass,
+          isLeftAligned ? "bubble--theirs" : "bubble--mine",
+          text.length > 200 && "max-h-32 overflow-y-auto" // Add scrolling for very long messages
         )}
       >
         <p className="leading-relaxed whitespace-pre-wrap break-words">
