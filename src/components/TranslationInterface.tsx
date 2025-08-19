@@ -217,11 +217,14 @@ export const TranslationInterface = ({
       }
 
       if (audioData) {
+        console.log('Processing audio data for speaker:', speaker);
         await processAudioData(audioData, speaker);
         
         // Switch turn in managed mode after successful processing
         if (managedMode.isEnabled) {
+          console.log('Switching turn from', managedMode.currentTurn, 'in managed mode');
           managedMode.switchTurn();
+          console.log('Turn switched to:', managedMode.currentTurn);
         }
       }
     } catch (error) {
@@ -500,7 +503,11 @@ export const TranslationInterface = ({
         onClearMessages={clearAllMessages}
         isProcessing={isProcessing}
         isManagedMode={managedMode.isEnabled}
-        onSwitchTurn={managedMode.switchTurn}
+        onSwitchTurn={() => {
+          console.log('Manual turn switch clicked, current turn:', managedMode.currentTurn);
+          managedMode.switchTurn();
+          console.log('Manual turn switched to:', managedMode.currentTurn);
+        }}
       />
         
         {/* Right side space for symmetry */}

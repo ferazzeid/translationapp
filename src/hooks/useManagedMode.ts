@@ -24,8 +24,13 @@ export const useManagedMode = (initialEnabled: boolean = false): ManagedModeStat
   }, []);
 
   const switchTurn = useCallback(() => {
-    setCurrentTurn(prev => prev === "A" ? "B" : "A");
-  }, []);
+    console.log('useManagedMode: switchTurn called, current turn:', currentTurn);
+    setCurrentTurn(prev => {
+      const newTurn = prev === "A" ? "B" : "A";
+      console.log('useManagedMode: switching from', prev, 'to', newTurn);
+      return newTurn;
+    });
+  }, [currentTurn]);
 
   const canSpeak = useCallback((speaker: Speaker) => {
     // In standard mode, both speakers can always speak
