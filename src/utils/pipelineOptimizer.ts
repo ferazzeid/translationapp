@@ -1,12 +1,15 @@
 import { supabase } from "@/integrations/supabase/client";
 import { performanceAnalytics } from "./performanceAnalytics";
 import { validateBeforeEdgeFunction } from "./audioValidation";
+import { sttServiceFactory } from "@/services/stt/STTServiceFactory";
+import { STTTranscriptionResult } from "@/types/stt";
 
 export interface ProcessingResult {
   success: boolean;
   originalText: string;
   translatedText?: string;
   audioData?: string;
+  sttProvider?: string;
   error?: string;
 }
 
@@ -40,54 +43,49 @@ export class PipelineOptimizer {
         estimatedDurationMs: validation.estimatedDurationMs
       });
       
-      console.log('🚀 Sending to speech-to-text edge function...');
+      console.log('🚀 Starting STT using service factory...');
 
-      // Speech-to-text
-      const { data: sttData, error: sttError } = await supabase.functions.invoke('speech-to-text', {
-        body: {
-          audio: audioData,
-          language: originalLang
-        }
-      });
+      // Speech-to-text using STT Service Factory
+      const sttProvider = await sttServiceFactory.getProviderWithFallback();
+      const sttResult: STTTranscriptionResult = await sttProvider.transcribe(audioData, originalLang);
 
       timing.recordStage('stt');
       
-      console.log('📥 Speech-to-text response received');
+      console.log(`📥 STT response received from ${sttResult.provider}`);
 
-      if (sttError) {
+      if (!sttResult.success) {
         console.error('❌ SPEECH-TO-TEXT ERROR:', {
-          error: sttError,
-          message: sttError.message,
-          context: sttError.context,
+          error: sttResult.error,
+          provider: sttResult.provider,
           audioSample: audioData.slice(0, 50) + '...',
           requestPayloadSize: JSON.stringify({audio: audioData, language: originalLang}).length
         });
         
         let userError = 'Speech recognition failed';
         
-        if (sttError.message?.includes('API key') || sttError.message?.includes('not configured')) {
+        if (sttResult.error?.includes('API key') || sttResult.error?.includes('not configured')) {
           userError = 'Speech recognition service not configured - please contact administrator';
-        } else if (sttError.message?.includes('too short')) {
+        } else if (sttResult.error?.includes('too short')) {
           userError = 'Please speak longer - minimum 0.5 seconds required';
-        } else if (sttError.message?.includes('too long')) {
+        } else if (sttResult.error?.includes('too long')) {
           userError = 'Please speak shorter phrases - maximum 60 seconds allowed';
-        } else if (sttError.message?.includes('non-2xx')) {
+        } else if (sttResult.error?.includes('non-2xx')) {
           userError = 'Speech recognition service temporarily unavailable - please try again';
-        } else if (sttError.message?.includes('timeout')) {
+        } else if (sttResult.error?.includes('timeout')) {
           userError = 'Speech recognition timed out - please try shorter phrases';
         }
         
         throw new Error(userError);
       }
       
-      if (!sttData?.text || sttData.text.trim().length === 0) {
-        console.error('❌ No transcription received:', sttData);
+      if (!sttResult.text || sttResult.text.trim().length === 0) {
+        console.error('❌ No transcription received:', sttResult);
         throw new Error('No speech detected - please speak clearly and try again');
       }
 
-      const originalText = sttData.text.trim();
+      const originalText = sttResult.text.trim();
       console.log(`✅ Transcription successful: "${originalText}" (${originalText.length} chars)`);
-      console.log(`📊 Speech-to-text completed in ${timing.stages.stt || 0}ms`);
+      console.log(`📊 Speech-to-text completed in ${timing.stages.stt || 0}ms using ${sttResult.provider}`);
       console.log(`Transcription (${speaker}):`, originalText);
 
       onStepChange?.("translating");
@@ -131,7 +129,8 @@ export class PipelineOptimizer {
         success: true,
         originalText,
         translatedText,
-        audioData: ttsData.audioContent
+        audioData: ttsData.audioContent,
+        sttProvider: sttResult.provider
       };
 
     } catch (error) {
