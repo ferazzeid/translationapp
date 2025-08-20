@@ -9,23 +9,23 @@ interface SpeakerStatusMessageProps {
   className?: string;
 }
 
-// Translation mappings for status messages
+// Translations for different processing states
 const translations = {
   // Processing messages
   "Processing...": {
     "English": "Processing...",
     "Spanish": "Procesando...",
     "French": "Traitement...",
-    "German": "Verarbeitung...",
+    "German": "Wird verarbeitet...",
     "Italian": "Elaborazione...",
     "Portuguese": "Processando...",
-    "Dutch": "Verwerking...",
+    "Dutch": "Verwerken...",
     "Russian": "Обработка...",
     "Chinese (Simplified)": "处理中...",
     "Chinese (Traditional)": "處理中...",
     "Japanese": "処理中...",
     "Korean": "처리 중...",
-    "Arabic": "جاري المعالجة...",
+    "Arabic": "معالجة...",
     "Hebrew": "מעבד...",
     "Hindi": "प्रसंस्करण...",
     "Thai": "กำลังประมวลผล...",
@@ -34,46 +34,14 @@ const translations = {
     "Polish": "Przetwarzanie...",
     "Czech": "Zpracovává se...",
     "Hungarian": "Feldolgozás...",
-    "Romanian": "Procesare...",
-    "Bulgarian": "Обработка...",
+    "Romanian": "Se procesează...",
+    "Bulgarian": "Обработва се...",
     "Croatian": "Obrađuje se...",
     "Slovak": "Spracováva sa...",
     "Slovenian": "Obdelava...",
     "Estonian": "Töötlemine...",
     "Latvian": "Apstrāde...",
     "Lithuanian": "Apdorojimas...",
-  },
-  // Listening messages
-  "Listening...": {
-    "English": "Listening...",
-    "Spanish": "Escuchando...",
-    "French": "Écoute...",
-    "German": "Zuhören...",
-    "Italian": "Ascolto...",
-    "Portuguese": "Ouvindo...",
-    "Dutch": "Luisteren...",
-    "Russian": "Прослушивание...",
-    "Chinese (Simplified)": "聆听中...",
-    "Chinese (Traditional)": "聆聽中...",
-    "Japanese": "聞いています...",
-    "Korean": "듣고 있습니다...",
-    "Arabic": "يستمع...",
-    "Hebrew": "מאזין...",
-    "Hindi": "सुन रहा है...",
-    "Thai": "กำลังฟัง...",
-    "Vietnamese": "Đang nghe...",
-    "Turkish": "Dinliyor...",
-    "Polish": "Słuchanie...",
-    "Czech": "Poslouchá...",
-    "Hungarian": "Hallgat...",
-    "Romanian": "Ascultă...",
-    "Bulgarian": "Слуша...",
-    "Croatian": "Sluša...",
-    "Slovak": "Počúva...",
-    "Slovenian": "Posluša...",
-    "Estonian": "Kuulab...",
-    "Latvian": "Klausās...",
-    "Lithuanian": "Klauso...",
   }
 };
 
@@ -85,39 +53,49 @@ export const SpeakerStatusMessage = ({
   language,
   className 
 }: SpeakerStatusMessageProps) => {
-  const isActive = isProcessing || isRecording;
+  // CRITICAL FIX: Don't show individual speaker status when recording
+  // The central status display handles recording state to prevent duplication
+  // This eliminates the duplicate "Listening..." indicators from the screenshots
+  if (isRecording) return null;
   
-  if (!isActive) return null;
+  // Only show processing status (not recording status) for individual speakers
+  if (!isProcessing) return null;
 
-  const getStatusText = () => {
-    if (isRecording && speaker) {
-      return getTranslation("Listening...", language);
-    }
+  const getTranslation = (key: string, lang: string): string => {
+    return translations[key]?.[lang] || translations[key]?.["English"] || key;
+  };
+
+  const getStatusMessage = () => {
+    // Only handle processing states, not recording states
     if (currentStep) {
-      return currentStep;
+      switch (currentStep) {
+        case 'transcribing':
+          return getTranslation("Processing...", language);
+        case 'translating':
+          return getTranslation("Processing...", language);
+        case 'generating':
+          return getTranslation("Processing...", language);
+        default:
+          return getTranslation("Processing...", language);
+      }
     }
+    
     if (isProcessing) {
       return getTranslation("Processing...", language);
     }
+    
     return "";
   };
 
-  const getTranslation = (key: string, targetLanguage: string) => {
-    const translationMap = translations[key as keyof typeof translations];
-    if (translationMap && translationMap[targetLanguage as keyof typeof translationMap]) {
-      return translationMap[targetLanguage as keyof typeof translationMap];
-    }
-    return key; // Fallback to English
-  };
+  const statusMessage = getStatusMessage();
+  if (!statusMessage) return null;
 
   return (
     <div className={cn(
-      "text-xs theme-text opacity-75 font-medium text-center animate-fade-in",
-      "px-2 py-1 rounded-md theme-surface-alt/80 backdrop-blur-sm",
-      "whitespace-nowrap",
+      "text-xs theme-text opacity-60 text-center mt-1",
       className
     )}>
-      {getStatusText()}
+      {statusMessage}
     </div>
   );
 };

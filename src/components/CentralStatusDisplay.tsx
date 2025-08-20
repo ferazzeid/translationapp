@@ -56,8 +56,10 @@ export const CentralStatusDisplay = ({
   if (!isActive) return null;
 
   const getStatusText = () => {
+    // CRITICAL FIX: Only show recording status, not duplicate "Listening" messages
+    // The individual speaker components handle their own listening indicators
     if (isRecording && speaker) {
-      return `Listening to Speaker ${speaker}...`;
+      return `Recording Speaker ${speaker}`;
     }
     if (currentStep) {
       return currentStep;
@@ -69,16 +71,24 @@ export const CentralStatusDisplay = ({
   };
 
   const getDetailedStatusText = () => {
+    // CRITICAL FIX: Use "Recording" instead of "Listening" to avoid duplication
+    // This prevents the duplicate status indicators shown in the user's screenshots
     if (isRecording && speaker) {
-      return `Listening to Speaker ${speaker}...`;
+      return `Recording Speaker ${speaker}`;
     }
     
     // Enhanced progress states for better user feedback
     switch (currentStep) {
+      case 'transcribing':
+        return "Transcribing speech...";
+      case 'translating': 
+        return "Translating text...";
+      case 'generating':
+        return "Generating voice...";
       case 'speech-to-text':
-        return "Transcribing...";
+        return "Transcribing speech...";
       case 'parallel-translation-tts':
-        return "Translating...";
+        return "Translating text...";
       case 'text-to-speech':
         return "Generating voice...";
       case 'pipeline-start':
