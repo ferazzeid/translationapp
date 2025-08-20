@@ -41,13 +41,28 @@ export class PipelineOptimizer {
         return await this.processAudioWithChunking(audioBlob, speaker, originalLang, targetLang, voiceToUse, featureFlags, onStepChange);
       }
       
-      // Speech-to-text
-      const formData = new FormData();
-      formData.append('audio', audioBlob);
-      formData.append('language', originalLang);
+      // CRITICAL: Speech-to-text function expects JSON with base64 audio, NOT FormData
+      // This was the root cause of "Edge Function returned non-2xx status code" errors
+      // The function tries to parse JSON but receives FormData, causing JSON parsing errors
+      
+      // Convert audio blob to base64 for the speech-to-text function
+      const audioBase64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result as string;
+          // Remove data URL prefix to get pure base64
+          const base64 = result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(audioBlob);
+      });
 
       const { data: sttData, error: sttError } = await supabase.functions.invoke('speech-to-text', {
-        body: formData
+        body: {
+          audio: audioBase64,
+          language: originalLang
+        }
       });
 
       timing.recordStage('stt');
@@ -96,8 +111,8 @@ export class PipelineOptimizer {
         const { data: translateData, error: translateError } = await supabase.functions.invoke('translate-text', {
           body: {
             text: originalText,
-            sourceLang: originalLang,
-            targetLang: targetLang
+            fromLanguage: originalLang,
+            toLanguage: targetLang
           }
         });
         
@@ -161,12 +176,12 @@ export class PipelineOptimizer {
     onStepChange?: (step: string) => void,
     timing?: any
   ): Promise<ProcessingResult> {
-    // Translation
+    // Translation - CRITICAL: Use correct parameter names as expected by translate-text function
     const { data: translateData, error: translateError } = await supabase.functions.invoke('translate-text', {
       body: {
         text: originalText,
-        sourceLang: originalLang,
-        targetLang: targetLang
+        fromLanguage: originalLang,
+        toLanguage: targetLang
       }
     });
 
@@ -267,12 +282,25 @@ export class PipelineOptimizer {
     for (const chunk of chunks) {
       // Process each chunk sequentially for now
       // Could be parallelized in the future
-      const formData = new FormData();
-      formData.append('audio', chunk.blob);
-      formData.append('language', originalLang);
+      
+      // CRITICAL: Convert chunk blob to base64 for speech-to-text function
+      // Same issue as main pipeline - function expects JSON with base64, not FormData
+      const chunkBase64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result as string;
+          const base64 = result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(chunk.blob);
+      });
 
       const { data: sttData, error: sttError } = await supabase.functions.invoke('speech-to-text', {
-        body: formData
+        body: {
+          audio: chunkBase64,
+          language: originalLang
+        }
       });
 
       if (sttError) throw sttError;
@@ -281,12 +309,12 @@ export class PipelineOptimizer {
       const chunkText = sttData.text;
       fullOriginalText += (fullOriginalText ? ' ' : '') + chunkText;
 
-      // Translate chunk
+      // Translate chunk - CRITICAL: Use correct parameter names
       const { data: translateData, error: translateError } = await supabase.functions.invoke('translate-text', {
         body: {
           text: chunkText,
-          sourceLang: originalLang,
-          targetLang: targetLang
+          fromLanguage: originalLang,
+          toLanguage: targetLang
         }
       });
 
