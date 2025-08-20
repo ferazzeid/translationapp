@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Upload, Settings, Palette, X } from "lucide-react";
 import { LandingPageSettings } from "./LandingPageSettings";
+import { AdminDeveloperSettings } from "./AdminDeveloperSettings";
 
 interface AdminDashboardProps {
   onBackToSettings: () => void;
@@ -1027,6 +1028,9 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
               </div>
             </CardContent>
           </Card>
+
+          {/* STT Developer Settings */}
+          <AdminDeveloperSettings />
 
           {/* Landing Page Settings */}
           <div className="space-y-4">
