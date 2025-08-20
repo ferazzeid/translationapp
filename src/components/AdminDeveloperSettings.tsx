@@ -96,25 +96,22 @@ export const AdminDeveloperSettings = () => {
       ];
 
       for (const update of updates) {
-        const { error } = await supabase
-          .from('admin_settings')
-          .upsert({
-            setting_key: update.key,
-            setting_value: update.value
-          });
+        const { error } = await supabase.rpc('set_admin_setting', {
+          key_name: update.key,
+          value: update.value,
+          encrypted: false
+        });
 
         if (error) throw error;
       }
 
       // Save Google Cloud service account key separately (encrypted)
       if (googleCloudKey.trim()) {
-        const { error: keyError } = await supabase
-          .from('admin_settings')
-          .upsert({
-            setting_key: 'google_cloud_service_account_key',
-            setting_value: googleCloudKey,
-            is_encrypted: true
-          });
+        const { error: keyError } = await supabase.rpc('set_admin_setting', {
+          key_name: 'google_cloud_service_account_key',
+          value: googleCloudKey,
+          encrypted: true
+        });
 
         if (keyError) throw keyError;
       }
