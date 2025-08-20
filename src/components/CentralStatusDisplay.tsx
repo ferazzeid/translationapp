@@ -68,6 +68,26 @@ export const CentralStatusDisplay = ({
     return "";
   };
 
+  const getDetailedStatusText = () => {
+    if (isRecording && speaker) {
+      return `Listening to Speaker ${speaker}...`;
+    }
+    
+    // Enhanced progress states for better user feedback
+    switch (currentStep) {
+      case 'speech-to-text':
+        return "Transcribing...";
+      case 'parallel-translation-tts':
+        return "Translating...";
+      case 'text-to-speech':
+        return "Generating voice...";
+      case 'pipeline-start':
+        return "Processing...";
+      default:
+        return currentStep || (isProcessing ? "Processing..." : "");
+    }
+  };
+
   return (
     <div className={cn(
       "flex items-center gap-2 text-sm theme-text opacity-75",
@@ -75,7 +95,7 @@ export const CentralStatusDisplay = ({
     )}>
       {isRecording ? <RecordingWave /> : <ProcessingDots />}
       <span className="font-medium">
-        {getStatusText()}
+        {getDetailedStatusText()}
       </span>
     </div>
   );

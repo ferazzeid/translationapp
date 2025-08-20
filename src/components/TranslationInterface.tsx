@@ -15,6 +15,9 @@ import { SpeakerButton } from "./SpeakerButton";
 import { SpeakerControls } from "./SpeakerControls";
 import { SpeakerSection } from "./SpeakerSection";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
+import { pipelineOptimizer } from "@/utils/pipelineOptimizer";
+import { voicePrewarming } from "@/utils/voicePrewarming";
+import { performanceAnalytics } from "@/utils/performanceAnalytics";
 
 import { RecordingCountdown } from "./RecordingCountdown";
 
@@ -59,6 +62,7 @@ export const TranslationInterface = ({
   const [holdToRecordMode, setHoldToRecordMode] = useState(false);
   const [holdProgressA, setHoldProgressA] = useState(0);
   const [holdProgressB, setHoldProgressB] = useState(0);
+  const [currentProcessingStep, setCurrentProcessingStep] = useState<string>("");
   
   // Individual settings for each speaker
   const [speakerAVoice, setSpeakerAVoice] = useState("alloy");
@@ -66,6 +70,7 @@ export const TranslationInterface = ({
   const [activeVoiceModal, setActiveVoiceModal] = useState<"A" | "B" | null>(null);
   const [speakerAGenderDetected, setSpeakerAGenderDetected] = useState(false);
   const [speakerBGenderDetected, setSpeakerBGenderDetected] = useState(false);
+  const [voicesPrewarmed, setVoicesPrewarmed] = useState(false);
   
   const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -120,6 +125,28 @@ export const TranslationInterface = ({
 
     loadAdminSettings();
   }, [wakeLock, managedMode, setInitialManagedModeEnabled]);
+
+  // Voice prewarming effect - runs when voices change
+  useEffect(() => {
+    const prewarmVoices = async () => {
+      if (!voicesPrewarmed && speakerAVoice && speakerBVoice) {
+        setVoicesPrewarmed(true);
+        await voicePrewarming.prewarmVoicePair(
+          speakerAVoice, 
+          speakerBVoice, 
+          speakerALanguage, 
+          speakerBLanguage
+        );
+      }
+    };
+
+    prewarmVoices();
+  }, [speakerAVoice, speakerBVoice, speakerALanguage, speakerBLanguage, voicesPrewarmed]);
+
+  // Initialize performance analytics session
+  useEffect(() => {
+    performanceAnalytics.generateSessionId();
+  }, []);
 
   // Monitor online status
   useEffect(() => {
@@ -256,11 +283,13 @@ export const TranslationInterface = ({
 
   const processAudioData = async (audioData: string, speaker: "A" | "B"): Promise<boolean> => {
     setIsProcessing(true);
+    setCurrentProcessingStep("");
     
     try {
       const isFromA = speaker === "A";
       const originalLang = isFromA ? speakerALanguage : speakerBLanguage;
       const targetLang = isFromA ? speakerBLanguage : speakerALanguage;
+      const voiceToUse = speaker === "A" ? speakerAVoice : speakerBVoice;
 
       // Validate audio data before processing
       if (!audioData || audioData.length < 100) {
@@ -272,121 +301,39 @@ export const TranslationInterface = ({
         return false;
       }
 
-      // Step 1: Speech to text using Whisper API
-      console.log(`Processing audio for ${speaker}, size: ${audioData.length} chars`);
-      
-      const { data: sttResponse, error: sttError } = await supabase.functions.invoke('speech-to-text', {
-        body: {
-          audio: audioData,
-          language: originalLang
-        }
-      }).catch(networkError => {
-        console.error('Network error calling speech-to-text:', networkError);
-        return { data: null, error: { message: `Network error: ${networkError.message}` } };
-      });
+      // Use optimized pipeline processor
+      const result = await pipelineOptimizer.processAudioOptimized(
+        audioData,
+        speaker,
+        originalLang,
+        targetLang,
+        voiceToUse,
+        setCurrentProcessingStep // Pass step callback
+      );
 
-      if (sttError) {
-        console.error('Speech-to-text error details:', sttError);
-        
-        // Check for successful response with empty transcription (common case)
-        if (sttError.message && sttError.message.includes('200')) {
-          toast({
-            title: "No Speech Detected",
-            description: "Please speak more clearly or for a longer duration. Try holding the microphone button longer.",
-            variant: "default"
-          });
-          return false;
-        }
-        
-        // Extract better error message from the actual error
-        let errorMessage = "Could not understand the audio. Please try speaking more clearly.";
-        if (sttError.message) {
-          if (sttError.message.includes('Audio format not supported')) {
-            errorMessage = "Audio format issue. Please try recording again.";
-          } else if (sttError.message.includes('recording too short')) {
-            errorMessage = "Recording too short. Please speak longer.";
-          } else if (sttError.message.includes('Network error')) {
-            errorMessage = "Connection issue. Please check your internet and try again.";
-          } else if (sttError.message.includes('API key not configured')) {
-            errorMessage = "Service configuration issue. Please contact support.";
-          } else {
-            errorMessage = sttError.message;
-          }
-        }
-        
+      if (!result.success) {
         toast({
-          title: "Speech Recognition Issue",
-          description: errorMessage,
+          title: "Processing Error",
+          description: result.error || "Failed to process audio",
           variant: "destructive"
         });
         return false;
       }
 
-      if (!sttResponse?.text || sttResponse.text.trim().length === 0) {
-        console.error('Empty text returned from speech-to-text');
-        toast({
-          title: "No Speech Detected",
-          description: "No speech was detected in the recording. Please speak more clearly or for a longer duration.",
-          variant: "default"
-        });
-        return false;
-      }
-
-      const originalText = sttResponse.text.trim();
-
-      // Step 2: Translate text using GPT-4o
-      const { data: translateResponse, error: translateError } = await supabase.functions.invoke('translate-text', {
-        body: {
-          text: originalText,
-          fromLanguage: originalLang,
-          toLanguage: targetLang
-        }
-      });
-
-      if (translateError) {
-        console.error('Translation error:', translateError);
-        throw new Error(`Translation failed: ${translateError.message || 'Unknown error'}`);
-      }
-
-      if (!translateResponse?.translatedText) {
-        console.error('No translated text returned');
-        throw new Error('Failed to translate text - no translation returned');
-      }
-
-      const translatedText = translateResponse.translatedText.trim();
-
       // Step 3: Add message to conversation
       const newMessage: Message = {
         id: Date.now().toString(),
         speaker,
-        originalText,
-        translatedText,
+        originalText: result.originalText,
+        translatedText: result.translatedText || "",
         timestamp: new Date()
       };
 
       setMessages(prev => [newMessage, ...prev]);
 
-      // Step 4: Text to speech for the translation
-      // Use the ORIGINAL speaker's voice (the person who spoke), not the target listener's voice
-      const voiceToUse = speaker === "A" ? speakerAVoice : speakerBVoice;
-      
-      const { data: ttsResponse, error: ttsError } = await supabase.functions.invoke('text-to-speech', {
-        body: {
-          text: translatedText,
-          language: targetLang,
-          voice: voiceToUse
-        }
-      });
-
-      if (!ttsError && ttsResponse) {
-        // Handle both chunked and single audio response
-        if (ttsResponse.audioChunks && Array.isArray(ttsResponse.audioChunks)) {
-          await playAudio(ttsResponse.audioChunks);
-        } else if (ttsResponse.audioData) {
-          await playAudio(ttsResponse.audioData);
-        }
-      } else if (ttsError) {
-        console.warn('Text-to-speech failed:', ttsError);
+      // Step 4: Play audio if available
+      if (result.audioData) {
+        await playAudio(result.audioData);
       }
 
       return true; // Success
@@ -400,6 +347,7 @@ export const TranslationInterface = ({
       return false; // Failure
     } finally {
       setIsProcessing(false);
+      setCurrentProcessingStep("");
     }
   };
 
@@ -624,6 +572,7 @@ export const TranslationInterface = ({
           isProcessing={isProcessing}
           isRecording={isListeningA || isListeningB}
           isPlayingAudio={isPlayingAudio}
+          currentStep={currentProcessingStep}
           speaker={isListeningA ? "A" : isListeningB ? "B" : undefined}
           speakerALanguage={speakerALanguage}
           speakerBLanguage={speakerBLanguage}
