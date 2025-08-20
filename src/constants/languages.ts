@@ -1,3 +1,5 @@
+import { PROTECTED_LANGUAGE_MAPPING } from '@/constants/protected';
+
 export const LANGUAGES = [
   "Afrikaans",
   "Albanian", 
@@ -72,8 +74,6 @@ export const LANGUAGES = [
 // This language mapping is critical for proper speech-to-text and translation
 // Any changes can break OpenAI API integration and language detection
 export const getLanguageCode = (language: string): string => {
-  const { PROTECTED_LANGUAGE_MAPPING } = require('@/constants/protected');
-  
   // Validate the mapping exists and hasn't been corrupted
   if (!PROTECTED_LANGUAGE_MAPPING[language as keyof typeof PROTECTED_LANGUAGE_MAPPING]) {
     console.warn(`Language code not found for: ${language}, using EN as fallback`);
