@@ -17,6 +17,7 @@ import { SpeakerSection } from "./SpeakerSection";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
 import { pipelineOptimizer } from "@/utils/pipelineOptimizer";
 import { voicePrewarming } from "@/utils/voicePrewarming";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 import { performanceAnalytics } from "@/utils/performanceAnalytics";
 
 import { RecordingCountdown } from "./RecordingCountdown";
@@ -83,6 +84,7 @@ export const TranslationInterface = ({
   const [initialManagedModeEnabled, setInitialManagedModeEnabled] = useState(false);
   const managedMode = useManagedMode(initialManagedModeEnabled);
   const voiceGenderDetection = useVoiceGenderDetection();
+  const { flags: featureFlags } = useFeatureFlags();
   
   // Determine if we're on a real mobile device (not desktop with mobile frame)
   const isRealMobile = isMobile || isStandalone;
@@ -126,11 +128,11 @@ export const TranslationInterface = ({
     loadAdminSettings();
   }, [wakeLock, managedMode, setInitialManagedModeEnabled]);
 
-  // Voice prewarming effect - runs when voices change
+  // Voice prewarming effect - runs when voices or feature flags change
   useEffect(() => {
     const prewarmVoices = async () => {
-      if (!voicesPrewarmed && speakerAVoice && speakerBVoice) {
-        setVoicesPrewarmed(true);
+      // Prewarm voices when languages or voices change (if enabled)
+      if (featureFlags.ttsPrewarm && speakerAVoice && speakerBVoice) {
         await voicePrewarming.prewarmVoicePair(
           speakerAVoice, 
           speakerBVoice, 
@@ -141,7 +143,7 @@ export const TranslationInterface = ({
     };
 
     prewarmVoices();
-  }, [speakerAVoice, speakerBVoice, speakerALanguage, speakerBLanguage, voicesPrewarmed]);
+  }, [speakerAVoice, speakerBVoice, speakerALanguage, speakerBLanguage, featureFlags.ttsPrewarm]);
 
   // Initialize performance analytics session
   useEffect(() => {
@@ -308,7 +310,8 @@ export const TranslationInterface = ({
         originalLang,
         targetLang,
         voiceToUse,
-        setCurrentProcessingStep // Pass step callback
+        featureFlags,
+        setCurrentProcessingStep
       );
 
       if (!result.success) {
@@ -331,9 +334,20 @@ export const TranslationInterface = ({
 
       setMessages(prev => [newMessage, ...prev]);
 
-      // Step 4: Play audio if available
+      // Play the audio
       if (result.audioData) {
-        await playAudio(result.audioData);
+        if (result.audioData === 'streaming') {
+          // Audio is already playing via streaming
+          console.log('Audio streaming completed');
+        } else if (Array.isArray(result.audioData)) {
+          // Play chunked audio sequentially
+          for (const chunk of result.audioData) {
+            await playAudio(chunk);
+          }
+        } else {
+          // Play single audio file
+          await playAudio(result.audioData);
+        }
       }
 
       return true; // Success

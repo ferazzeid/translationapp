@@ -136,6 +136,28 @@ class PerformanceAnalytics {
       warning: 2500  // 2.5s warning threshold
     };
   }
+
+  // Simplified timing interface for pipeline optimizer
+  startTiming(speaker: "A" | "B", originalLang: string, targetLang: string) {
+    return {
+      speaker,
+      originalLang,
+      targetLang,
+      stages: {} as Record<string, number>,
+      startTime: performance.now(),
+      recordStage: function(stage: string) {
+        this.stages[stage] = performance.now() - this.startTime;
+      }
+    };
+  }
+
+  logTiming(timing: any) {
+    const total = timing.stages.total || (performance.now() - timing.startTime);
+    console.log(`[Performance] ${timing.speaker}: ${timing.originalLang} → ${timing.targetLang}`, {
+      stages: timing.stages,
+      total: `${total.toFixed(0)}ms`
+    });
+  }
 }
 
 export const performanceAnalytics = new PerformanceAnalytics();

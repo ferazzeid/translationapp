@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Upload, Settings, Palette, X } from "lucide-react";
 import { LandingPageSettings } from "./LandingPageSettings";
+import { PerformanceSettings } from "./PerformanceSettings";
 
 interface AdminDashboardProps {
   onBackToSettings: () => void;
@@ -1028,9 +1029,17 @@ export const AdminDashboard = ({ onBackToSettings }: AdminDashboardProps) => {
             </CardContent>
           </Card>
 
-          {/* Landing Page Settings */}
-          <LandingPageSettings />
+          {/* Performance Settings */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Performance Settings</h2>
+            <PerformanceSettings />
+          </div>
 
+          {/* Landing Page Settings */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Landing Page Settings</h2>
+            <LandingPageSettings />
+          </div>
         </div>
       </div>
     </MobileFrame>
