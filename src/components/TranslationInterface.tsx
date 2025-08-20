@@ -19,6 +19,7 @@ import { pipelineOptimizer } from "@/utils/pipelineOptimizer";
 import { voicePrewarming } from "@/utils/voicePrewarming";
 import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 import { performanceAnalytics } from "@/utils/performanceAnalytics";
+import { settingsCache } from "@/utils/settingsCache";
 
 import { RecordingCountdown } from "./RecordingCountdown";
 
@@ -91,10 +92,28 @@ export const TranslationInterface = ({
 
 
 
-  // Load admin settings and manage features
+  // Load admin settings and manage features - ONLY ON MOUNT
   useEffect(() => {
     const loadAdminSettings = async () => {
       try {
+        // Check cache first (24 hour expiry)
+        const cached = settingsCache.get<Record<string, boolean>>('admin_settings');
+        if (cached) {
+          console.log('TranslationInterface: Using cached admin settings');
+          
+          if (cached.wake_lock_enabled && wakeLock.isSupported) {
+            wakeLock.request();
+          }
+          
+          const shouldEnable = cached.managed_mode_enabled ?? false;
+          setInitialManagedModeEnabled(shouldEnable);
+          managedMode.setEnabled(shouldEnable);
+          
+          setHoldToRecordMode(cached.hold_to_record_enabled ?? false);
+          return;
+        }
+
+        console.log('TranslationInterface: Loading admin settings from database...');
         const { data, error } = await supabase
           .from("admin_settings")
           .select("setting_key, setting_value")
@@ -102,44 +121,65 @@ export const TranslationInterface = ({
 
         if (error) throw error;
 
+        const settings: Record<string, boolean> = {
+          wake_lock_enabled: true,
+          managed_mode_enabled: false,
+          hold_to_record_enabled: false
+        };
+
         data?.forEach((setting) => {
+          const value = setting.setting_value === "true";
+          settings[setting.setting_key] = value;
+
           switch (setting.setting_key) {
             case "wake_lock_enabled":
-              if (setting.setting_value === "true" && wakeLock.isSupported) {
+              if (value && wakeLock.isSupported) {
                 wakeLock.request();
               }
               break;
             case "managed_mode_enabled":
-              const shouldEnable = setting.setting_value === "true";
-              console.log('Admin settings: managed_mode_enabled =', shouldEnable, 'current enabled =', managedMode.isEnabled);
-              setInitialManagedModeEnabled(shouldEnable);
-              managedMode.setEnabled(shouldEnable);
+              console.log('Admin settings: managed_mode_enabled =', value);
+              setInitialManagedModeEnabled(value);
+              managedMode.setEnabled(value);
               break;
             case "hold_to_record_enabled":
-              setHoldToRecordMode(setting.setting_value === "true");
+              setHoldToRecordMode(value);
               break;
           }
         });
+
+        // Cache for 24 hours
+        settingsCache.set('admin_settings', settings, 1440);
       } catch (error: any) {
         console.error('Error loading admin settings:', error);
       }
     };
 
     loadAdminSettings();
-  }, [wakeLock, managedMode, setInitialManagedModeEnabled]);
+  }, []); // EMPTY DEPENDENCY ARRAY - only run once on mount
 
-  // Voice prewarming effect - runs when voices or feature flags change
+  // Voice prewarming effect - SESSION-BASED (only once per session)
   useEffect(() => {
     const prewarmVoices = async () => {
-      // Prewarm voices when languages or voices change (if enabled)
-      if (featureFlags.ttsPrewarm && speakerAVoice && speakerBVoice) {
-        await voicePrewarming.prewarmVoicePair(
-          speakerAVoice, 
-          speakerBVoice, 
-          speakerALanguage, 
-          speakerBLanguage
-        );
+      if (!featureFlags.ttsPrewarm || !speakerAVoice || !speakerBVoice) return;
+
+      // Check if voices already prewarmed in this session
+      const sessionKey = `prewarmed_${speakerAVoice}_${speakerBVoice}_${speakerALanguage}_${speakerBLanguage}`;
+      if (sessionStorage.getItem(sessionKey)) {
+        console.log('Voices already prewarmed in this session, skipping...');
+        return;
       }
+
+      console.log('Prewarming voices for session...');
+      await voicePrewarming.prewarmVoicePair(
+        speakerAVoice, 
+        speakerBVoice, 
+        speakerALanguage, 
+        speakerBLanguage
+      );
+      
+      // Mark as prewarmed for this session
+      sessionStorage.setItem(sessionKey, 'true');
     };
 
     prewarmVoices();

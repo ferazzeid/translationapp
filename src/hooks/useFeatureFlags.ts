@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { settingsCache } from '@/utils/settingsCache';
 
 export interface FeatureFlags {
   ttsPrewarm: boolean;
@@ -14,7 +15,7 @@ const DEFAULT_FLAGS: FeatureFlags = {
   parallelMTTTS: true,
   ttsStreaming: false,
   timingAnalytics: true,
-  audioChunking: false,
+  audioChunking: false, // Disabled - causes overhead for short audio
 };
 
 export const useFeatureFlags = () => {
@@ -27,6 +28,16 @@ export const useFeatureFlags = () => {
 
   const loadFeatureFlags = async () => {
     try {
+      // Check cache first (5 minute expiry for feature flags)
+      const cached = settingsCache.get<FeatureFlags>('feature_flags');
+      if (cached) {
+        console.log('useFeatureFlags: Using cached feature flags');
+        setFlags(cached);
+        setLoading(false);
+        return;
+      }
+
+      console.log('useFeatureFlags: Loading feature flags from database...');
       const { data, error } = await supabase
         .from("admin_settings")
         .select("setting_key, setting_value")
@@ -52,17 +63,19 @@ export const useFeatureFlags = () => {
             newFlags.parallelMTTTS = value;
             break;
           case "feat_tts_streaming":
-            newFlags.ttsStreaming = value;
+            newFlags.ttsStreaming = false; // Force disable for now
             break;
           case "feat_timing_analytics":
             newFlags.timingAnalytics = value;
             break;
           case "feat_audio_chunking":
-            newFlags.audioChunking = value;
+            newFlags.audioChunking = false; // Force disable for now
             break;
         }
       });
 
+      // Cache for 5 minutes
+      settingsCache.set('feature_flags', newFlags, 5);
       setFlags(newFlags);
     } catch (error) {
       console.error('Error loading feature flags:', error);

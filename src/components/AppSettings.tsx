@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Palette, Settings } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { settingsCache } from "@/utils/settingsCache";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,6 +21,16 @@ export const AppSettings = () => {
 
   const loadSettings = async () => {
     try {
+      // Check cache first (24 hour expiry for admin settings)
+      const cached = settingsCache.get<Record<string, boolean>>('admin_settings');
+      if (cached) {
+        console.log('AppSettings: Using cached admin settings');
+        setWakeLockEnabled(cached.wake_lock_enabled ?? true);
+        setManagedModeEnabled(cached.managed_mode_enabled ?? false);
+        setHoldToRecordEnabled(cached.hold_to_record_enabled ?? false);
+        return;
+      }
+
       console.log('AppSettings: Loading settings from database...');
       const { data, error } = await supabase
         .from("admin_settings")
@@ -34,27 +45,26 @@ export const AppSettings = () => {
       console.log('AppSettings: Loaded settings data:', data);
 
       // Set defaults first
-      setWakeLockEnabled(true);
-      setManagedModeEnabled(false);
-      setHoldToRecordEnabled(false);
+      const settings: Record<string, boolean> = {
+        wake_lock_enabled: true,
+        managed_mode_enabled: false,
+        hold_to_record_enabled: false
+      };
 
       // Then update with actual values from database
       data?.forEach((setting) => {
         const value = setting.setting_value === "true";
         console.log(`AppSettings: Setting ${setting.setting_key} to ${value}`);
-        
-        switch (setting.setting_key) {
-          case "wake_lock_enabled":
-            setWakeLockEnabled(value);
-            break;
-          case "managed_mode_enabled":
-            setManagedModeEnabled(value);
-            break;
-          case "hold_to_record_enabled":
-            setHoldToRecordEnabled(value);
-            break;
-        }
+        settings[setting.setting_key] = value;
       });
+
+      // Cache for 24 hours
+      settingsCache.set('admin_settings', settings, 1440);
+
+      // Update state
+      setWakeLockEnabled(settings.wake_lock_enabled);
+      setManagedModeEnabled(settings.managed_mode_enabled);
+      setHoldToRecordEnabled(settings.hold_to_record_enabled);
     } catch (error: any) {
       console.error('AppSettings: Error loading settings:', error);
       toast({
@@ -96,6 +106,9 @@ export const AppSettings = () => {
       } else {
         console.log(`AppSettings: Successfully updated ${key} = ${value}`);
       }
+
+      // Invalidate cache so it reloads on next access
+      settingsCache.invalidate('admin_settings');
 
       const settingName = key === "wake_lock_enabled" ? "Wake lock setting" : 
                          key === "managed_mode_enabled" ? "Managed mode setting" :
