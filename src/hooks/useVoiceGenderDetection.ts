@@ -66,16 +66,13 @@ export const useVoiceGenderDetection = () => {
   // Returns deterministic voice choices to prevent random assignment issues
   // Male: "onyx", Female: "alloy" as specifically requested by user
   const getDefaultVoiceForGender = useCallback((gender: 'male' | 'female' | 'unknown'): string => {
-    // Import constants synchronously to avoid async issues
-    const { PROTECTED_VOICE_DEFAULTS } = require('@/constants/protected');
-    
     switch (gender) {
       case 'male':
-        return PROTECTED_VOICE_DEFAULTS.MALE; // "onyx"
+        return 'onyx'; // PROTECTED: User specifically requested onyx for male
       case 'female':
-        return PROTECTED_VOICE_DEFAULTS.FEMALE; // "alloy"
+        return 'alloy'; // PROTECTED: User specifically requested alloy for female
       default:
-        return PROTECTED_VOICE_DEFAULTS.FALLBACK; // "alloy"
+        return 'alloy'; // Safe fallback if gender detection fails
     }
   }, []);
 
