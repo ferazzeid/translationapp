@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface SpeechBubbleProps {
   text: string;
@@ -42,13 +43,20 @@ export const SpeechBubble = ({
           "max-w-[85%] rounded-2xl px-4 py-3 shadow-sm border",
           "theme-surface theme-text theme-border",
           textSizeClass,
-          isLeftAligned ? "bubble--theirs" : "bubble--mine",
-          text.length > 200 && "max-h-32 overflow-y-auto" // Add scrolling for very long messages
+          isLeftAligned ? "bubble--theirs" : "bubble--mine"
         )}
       >
-        <p className="leading-relaxed whitespace-pre-wrap break-words">
-          {text}
-        </p>
+        {text.length > 150 ? (
+          <ScrollArea className="max-h-40 w-full">
+            <p className="leading-relaxed whitespace-pre-wrap break-words pr-4">
+              {text}
+            </p>
+          </ScrollArea>
+        ) : (
+          <p className="leading-relaxed whitespace-pre-wrap break-words">
+            {text}
+          </p>
+        )}
       </div>
     </div>
   );
