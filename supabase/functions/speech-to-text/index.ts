@@ -12,51 +12,100 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-// Map language names to ISO-639-1 codes for OpenAI Whisper API
+// COMPREHENSIVE LANGUAGE MAPPING FOR OPENAI WHISPER API
+// This mapping is synchronized with the frontend PROTECTED_LANGUAGE_MAPPING
+// and provides complete coverage for all 70+ supported languages
+// CRITICAL: Keep this mapping in sync with frontend constants/protected.ts
 function getLanguageCode(language: string): string {
-  const languageMap: { [key: string]: string } = {
-    'english': 'en',
-    'spanish': 'es',
-    'french': 'fr',
-    'german': 'de',
-    'italian': 'it',
-    'portuguese': 'pt',
-    'russian': 'ru',
-    'japanese': 'ja',
-    'korean': 'ko',
-    'chinese': 'zh',
+  // Complete language mapping - covers all languages in the UI
+  const COMPLETE_LANGUAGE_MAPPING: { [key: string]: string } = {
+    // Full language name to ISO-639-1 code mapping for OpenAI Whisper
+    'afrikaans': 'af',
+    'albanian': 'sq', 
     'arabic': 'ar',
-    'hindi': 'hi',
-    'turkish': 'tr',
-    'polish': 'pl',
-    'dutch': 'nl',
-    'swedish': 'sv',
-    'danish': 'da',
-    'norwegian': 'no',
-    'finnish': 'fi',
-    'hungarian': 'hu',
+    'armenian': 'hy',
+    'azerbaijani': 'az',
+    'basque': 'eu',
+    'belarusian': 'be',
+    'bengali': 'bn',
+    'bosnian': 'bs',
+    'bulgarian': 'bg',
+    'catalan': 'ca',
+    'chinese (simplified)': 'zh',
+    'chinese (traditional)': 'zh',
+    'croatian': 'hr',
     'czech': 'cs',
+    'danish': 'da',
+    'dutch': 'nl',
+    'english': 'en',
+    'estonian': 'et',
+    'filipino': 'tl', // OpenAI uses 'tl' for Filipino/Tagalog
+    'finnish': 'fi',
+    'french': 'fr',
+    'galician': 'gl',
+    'georgian': 'ka',
+    'german': 'de',
+    'greek': 'el',
+    'gujarati': 'gu',
+    'hebrew': 'he',
+    'hindi': 'hi',
+    'hungarian': 'hu',
+    'icelandic': 'is',
+    'indonesian': 'id',
+    'irish': 'ga',
+    'italian': 'it',
+    'japanese': 'ja',
+    'kannada': 'kn',
+    'kazakh': 'kk',
+    'korean': 'ko',
+    'latvian': 'lv',
+    'lithuanian': 'lt',
+    'luxembourgish': 'lb',
+    'macedonian': 'mk',
+    'malay': 'ms',
+    'malayalam': 'ml',
+    'maltese': 'mt',
+    'marathi': 'mr',
+    'norwegian': 'no',
+    'persian': 'fa',
+    'polish': 'pl',
+    'portuguese': 'pt',
+    'punjabi': 'pa',
+    'romanian': 'ro',
+    'russian': 'ru',
+    'serbian': 'sr',
     'slovak': 'sk',
     'slovenian': 'sl',
-    'croatian': 'hr',
-    'serbian': 'sr',
-    'bulgarian': 'bg',
-    'romanian': 'ro',
-    'ukrainian': 'uk',
-    'greek': 'el',
-    'hebrew': 'he',
+    'spanish': 'es',
+    'swahili': 'sw',
+    'swedish': 'sv',
+    'tamil': 'ta',
+    'telugu': 'te',
     'thai': 'th',
+    'turkish': 'tr',
+    'ukrainian': 'uk',
+    'urdu': 'ur',
     'vietnamese': 'vi',
-    'indonesian': 'id',
-    'malay': 'ms',
-    'tagalog': 'tl'
+    'welsh': 'cy'
   };
   
-  // Convert to lowercase for matching
-  const lowerLang = language.toLowerCase();
+  // Normalize language name to lowercase for consistent matching
+  const normalizedLanguage = language.toLowerCase().trim();
   
-  // Return mapped code or assume it's already in correct format
-  return languageMap[lowerLang] || language;
+  // First, try exact match with the complete mapping
+  const mappedCode = COMPLETE_LANGUAGE_MAPPING[normalizedLanguage];
+  
+  if (mappedCode) {
+    console.log(`Language mapping successful: "${language}" → "${mappedCode}"`);
+    return mappedCode;
+  }
+  
+  // If no mapping found, log the issue for future fixes
+  console.warn(`Language mapping not found for: "${language}". Using auto-detection fallback.`);
+  console.warn(`Available mappings: ${Object.keys(COMPLETE_LANGUAGE_MAPPING).join(', ')}`);
+  
+  // Return undefined to trigger auto-detection instead of passing invalid language codes
+  return '';
 }
 
 // PROTECTED AUDIO PROCESSING FUNCTION - DO NOT MODIFY UNLESS CRITICAL BUG
@@ -203,11 +252,21 @@ serve(async (req) => {
     formData.append('model', 'whisper-1');
     formData.append('response_format', 'json');
     
-    // Add language parameter if specified, convert to proper ISO code
+    // ROBUST LANGUAGE PARAMETER HANDLING WITH FALLBACK TO AUTO-DETECTION
+    // This prevents "non-2xx status code" errors from invalid language parameters
     if (language && language !== 'auto-detect') {
       const languageCode = getLanguageCode(language);
-      console.log(`Language conversion: ${language} -> ${languageCode}`);
-      formData.append('language', languageCode);
+      
+      // Only add language parameter if we have a valid mapping
+      // Empty string means fallback to auto-detection (no language parameter)
+      if (languageCode && languageCode.length > 0) {
+        console.log(`Language mapping: "${language}" → "${languageCode}" (sending to OpenAI)`);
+        formData.append('language', languageCode);
+      } else {
+        console.log(`Language "${language}" not mapped, using auto-detection (no language parameter)`);
+      }
+    } else {
+      console.log('Using auto-detection (no language specified or explicitly auto-detect)');
     }
 
     console.log('Sending to OpenAI Whisper API...');
