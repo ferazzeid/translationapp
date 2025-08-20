@@ -28,47 +28,44 @@ export class PipelineOptimizer {
       
       onStepChange?.("transcribing");
       
-      // Convert base64 to blob for processing
-      const binaryString = atob(audioData);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-      const audioBlob = new Blob([bytes], { type: 'audio/webm' });
+      // CRITICAL FIX: audioData is already base64 from audio recorder
+      // No need to convert to blob and back to base64 - this was causing corruption!
       
-      // Audio chunking if enabled
+      // Audio chunking if enabled - convert to blob only for chunking
       if (featureFlags?.audioChunking) {
+        const binaryString = atob(audioData);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        const audioBlob = new Blob([bytes], { type: 'audio/webm' });
         return await this.processAudioWithChunking(audioBlob, speaker, originalLang, targetLang, voiceToUse, featureFlags, onStepChange);
       }
       
-      // CRITICAL: Speech-to-text function expects JSON with base64 audio, NOT FormData
-      // This was the root cause of "Edge Function returned non-2xx status code" errors
-      // The function tries to parse JSON but receives FormData, causing JSON parsing errors
-      
-      // Convert audio blob to base64 for the speech-to-text function
-      const audioBase64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const result = reader.result as string;
-          // Remove data URL prefix to get pure base64
-          const base64 = result.split(',')[1];
-          resolve(base64);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(audioBlob);
-      });
+      // Validate audio data before sending
+      if (!audioData || audioData.length === 0) {
+        throw new Error('Empty audio data - cannot process');
+      }
+
+      console.log(`Sending audio data to speech-to-text: ${audioData.length} chars, language: ${originalLang}`);
 
       const { data: sttData, error: sttError } = await supabase.functions.invoke('speech-to-text', {
         body: {
-          audio: audioBase64,
+          audio: audioData, // Use audioData directly - it's already base64!
           language: originalLang
         }
       });
 
       timing.recordStage('stt');
 
-      if (sttError) throw sttError;
-      if (!sttData?.text) throw new Error('No transcription received');
+      if (sttError) {
+        console.error('Speech-to-text error:', sttError);
+        throw new Error(`Speech-to-text failed: ${sttError.message || 'Unknown error'}`);
+      }
+      if (!sttData?.text) {
+        console.error('No transcription received from speech-to-text');
+        throw new Error('No transcription received');
+      }
 
       const originalText = sttData.text;
       console.log(`Transcription (${speaker}):`, originalText);
@@ -289,12 +286,28 @@ export class PipelineOptimizer {
         const reader = new FileReader();
         reader.onloadend = () => {
           const result = reader.result as string;
+          if (!result || !result.includes(',')) {
+            reject(new Error('Invalid file reader result for chunk'));
+            return;
+          }
           const base64 = result.split(',')[1];
+          if (!base64) {
+            reject(new Error('Failed to extract base64 data from chunk'));
+            return;
+          }
           resolve(base64);
         };
-        reader.onerror = reject;
+        reader.onerror = () => reject(new Error('FileReader error for chunk'));
         reader.readAsDataURL(chunk.blob);
       });
+
+      // Validate chunk data
+      if (!chunkBase64 || chunkBase64.length === 0) {
+        console.warn('Empty chunk detected, skipping');
+        continue;
+      }
+
+      console.log(`Processing chunk: ${chunkBase64.length} chars`);
 
       const { data: sttData, error: sttError } = await supabase.functions.invoke('speech-to-text', {
         body: {
@@ -303,8 +316,14 @@ export class PipelineOptimizer {
         }
       });
 
-      if (sttError) throw sttError;
-      if (!sttData?.text) continue;
+      if (sttError) {
+        console.error('Speech-to-text chunk error:', sttError);
+        throw new Error(`Speech-to-text chunk failed: ${sttError.message || 'Unknown error'}`);
+      }
+      if (!sttData?.text) {
+        console.log('No transcription for this chunk, skipping');
+        continue;
+      }
 
       const chunkText = sttData.text;
       fullOriginalText += (fullOriginalText ? ' ' : '') + chunkText;
