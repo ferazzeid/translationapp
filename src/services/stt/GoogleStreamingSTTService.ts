@@ -19,16 +19,77 @@ export class GoogleStreamingSTTService extends AbstractSTTProvider {
 
   // Batch transcription (fallback mode)
   async transcribe(audioData: string, language?: string): Promise<STTTranscriptionResult> {
-    console.log('[Google STT] Batch transcription not yet implemented, falling back...');
+    const startTime = Date.now();
     
-    // TODO: Implement Google Cloud Speech batch API
-    // For now, return a mock response to maintain interface compatibility
-    return {
-      success: false,
-      text: '',
-      provider: 'google_streaming',
-      error: 'Google STT batch mode not yet implemented'
-    };
+    try {
+      console.log('[Google STT] Starting batch transcription...', { 
+        audioLength: audioData.length,
+        language 
+      });
+
+      const { data, error } = await supabase.functions.invoke('google-stt-streaming', {
+        body: { 
+          action: 'batch_transcribe',
+          audio: audioData,
+          language: language || 'en-US'
+        }
+      });
+
+      if (error) {
+        throw new Error(`Google STT batch transcription error: ${error.message}`);
+      }
+
+      if (!data?.success) {
+        throw new Error(data?.error || 'Batch transcription failed');
+      }
+
+      const processingTime = Date.now() - startTime;
+      
+      // Log telemetry
+      this.logTelemetry({
+        provider: 'google_streaming',
+        firstTokenLatency: processingTime,
+        fullTranscriptTime: processingTime,
+        audioLength: audioData.length,
+        success: true
+      });
+
+      console.log('[Google STT] Batch transcription completed:', { 
+        text: data.text,
+        processingTime 
+      });
+
+      return {
+        success: true,
+        text: data.text,
+        processingTime,
+        provider: 'google_streaming'
+      };
+
+    } catch (error) {
+      const processingTime = Date.now() - startTime;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown transcription error';
+      
+      // Log telemetry for failed attempts
+      this.logTelemetry({
+        provider: 'google_streaming',
+        firstTokenLatency: processingTime,
+        fullTranscriptTime: processingTime,
+        audioLength: audioData.length,
+        success: false,
+        error: errorMessage
+      });
+
+      console.error('[Google STT] Batch transcription failed:', errorMessage);
+
+      return {
+        success: false,
+        text: '',
+        processingTime,
+        provider: 'google_streaming',
+        error: errorMessage
+      };
+    }
   }
 
   async startStreaming(language = 'en-US'): Promise<STTStreamingSession> {

@@ -136,8 +136,8 @@ export const AdminDeveloperSettings = () => {
 
       const provider = await sttServiceFactory.getSTTProvider();
       
-      // For OpenAI, test connection by checking if API key is configured
       if (provider.getProviderName() === 'openai') {
+        // Test OpenAI connection
         const { data, error } = await supabase.functions.invoke('validate-openai-key');
         
         if (error) {
@@ -149,8 +149,24 @@ export const AdminDeveloperSettings = () => {
         } else {
           toast.error(`❌ ${provider.getProviderName()} provider: Invalid or missing API key`);
         }
+      } else if (provider.getProviderName() === 'google_streaming') {
+        // Test Google Cloud STT connection
+        const { data, error } = await supabase.functions.invoke('google-stt-streaming', {
+          body: {
+            action: 'test_connection'
+          }
+        });
+        
+        if (error) {
+          throw new Error(`Google STT connection test failed: ${error.message}`);
+        }
+        
+        if (data?.success) {
+          toast.success(`✅ Google Cloud STT provider connected and service account key valid`);
+        } else {
+          toast.error(`❌ Google Cloud STT provider failed: ${data?.error || 'Unknown error'}`);
+        }
       } else {
-        // For other providers, you could add specific connection tests
         toast.success(`✅ ${provider.getProviderName()} provider loaded successfully`);
       }
     } catch (error) {
