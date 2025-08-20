@@ -1,4 +1,5 @@
 import { AbstractSTTProvider, STTConfig, STTTranscriptionResult, STTStreamingSession, STTTelemetry } from '@/types/stt';
+import { supabase } from '@/integrations/supabase/client';
 
 export class GoogleStreamingSTTService extends AbstractSTTProvider {
   private activeSessions: Map<string, STTStreamingSession> = new Map();
@@ -43,8 +44,31 @@ export class GoogleStreamingSTTService extends AbstractSTTProvider {
 
     console.log('[Google STT] Starting streaming session:', { sessionId, language });
 
-    // TODO: Initialize Google Cloud Speech streaming session
-    // For now, return mock session
+    try {
+      // Initialize Google Cloud Speech streaming session via edge function
+      const { data, error } = await supabase.functions.invoke('google-stt-streaming', {
+        body: {
+          action: 'start',
+          sessionId,
+          language
+        }
+      });
+
+      if (error) {
+        throw new Error(`Failed to start Google STT session: ${error.message}`);
+      }
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to start streaming session');
+      }
+
+      console.log('[Google STT] Session started successfully:', data);
+    } catch (error) {
+      console.error('[Google STT] Failed to start session:', error);
+      session.isActive = false;
+      this.activeSessions.delete(sessionId);
+      throw error;
+    }
     
     return session;
   }
@@ -69,16 +93,49 @@ export class GoogleStreamingSTTService extends AbstractSTTProvider {
       chunkSize: audioChunk.byteLength 
     });
 
-    // TODO: Send audio chunk to Google Cloud Speech streaming API
-    // For now, return mock partial results
-    
-    return {
-      success: true,
-      text: `[Mock partial transcript from chunk ${audioChunk.byteLength} bytes]`,
-      isPartial: true,
-      confidence: 0.8,
-      provider: 'google_streaming'
-    };
+    try {
+      // Convert ArrayBuffer to base64
+      const uint8Array = new Uint8Array(audioChunk);
+      const base64Audio = btoa(String.fromCharCode(...uint8Array));
+
+      // Send audio chunk to Google Cloud Speech streaming API via edge function
+      const { data, error } = await supabase.functions.invoke('google-stt-streaming', {
+        body: {
+          action: 'send_audio',
+          sessionId,
+          audioChunk: base64Audio
+        }
+      });
+
+      if (error) {
+        throw new Error(`Failed to process audio chunk: ${error.message}`);
+      }
+
+      if (!data.success) {
+        return {
+          success: false,
+          text: '',
+          provider: 'google_streaming',
+          error: data.error || 'Failed to process audio chunk'
+        };
+      }
+
+      return {
+        success: true,
+        text: data.text || '',
+        isPartial: data.isPartial || true,
+        confidence: data.confidence || 0.8,
+        provider: 'google_streaming'
+      };
+    } catch (error) {
+      console.error('[Google STT] Error processing audio chunk:', error);
+      return {
+        success: false,
+        text: '',
+        provider: 'google_streaming',
+        error: error.message
+      };
+    }
   }
 
   async stopStreaming(sessionId: string): Promise<STTTranscriptionResult> {
@@ -100,31 +157,55 @@ export class GoogleStreamingSTTService extends AbstractSTTProvider {
 
     console.log('[Google STT] Stopping streaming session:', { sessionId, processingTime });
 
-    // TODO: Finalize Google Cloud Speech streaming session and get final transcript
-    
-    // Mock final result
-    const finalText = `[Mock final transcript for session ${sessionId}]`;
+    try {
+      // Finalize Google Cloud Speech streaming session and get final transcript
+      const { data, error } = await supabase.functions.invoke('google-stt-streaming', {
+        body: {
+          action: 'stop',
+          sessionId
+        }
+      });
 
-    // Log telemetry
-    this.logTelemetry({
-      provider: 'google_streaming',
-      firstTokenLatency: 500, // Mock: first partial result time
-      fullTranscriptTime: processingTime,
-      audioLength: processingTime, // Approximate based on duration
-      success: true
-    });
+      if (error) {
+        console.error('[Google STT] Error stopping session:', error);
+      }
 
-    // Clean up session
-    this.activeSessions.delete(sessionId);
+      const finalText = data?.text || '';
 
-    return {
-      success: true,
-      text: finalText,
-      isPartial: false,
-      confidence: 0.95,
-      processingTime,
-      provider: 'google_streaming'
-    };
+      // Log telemetry
+      this.logTelemetry({
+        provider: 'google_streaming',
+        firstTokenLatency: 500, // Mock: first partial result time
+        fullTranscriptTime: processingTime,
+        audioLength: processingTime, // Approximate based on duration
+        success: true
+      });
+
+      // Clean up session
+      this.activeSessions.delete(sessionId);
+
+      return {
+        success: true,
+        text: finalText,
+        isPartial: false,
+        confidence: 0.95,
+        processingTime,
+        provider: 'google_streaming'
+      };
+    } catch (error) {
+      console.error('[Google STT] Error stopping session:', error);
+      
+      // Clean up session even on error
+      this.activeSessions.delete(sessionId);
+      
+      return {
+        success: false,
+        text: '',
+        provider: 'google_streaming',
+        error: error.message,
+        processingTime
+      };
+    }
   }
 
   // Cleanup inactive sessions

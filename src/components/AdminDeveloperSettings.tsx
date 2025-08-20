@@ -17,6 +17,7 @@ export const AdminDeveloperSettings = () => {
   const [timeout, setTimeout] = useState('60000');
   const [telemetryEnabled, setTelemetryEnabled] = useState(false);
   const [developerMode, setDeveloperMode] = useState(false);
+  const [googleCloudKey, setGoogleCloudKey] = useState('');
   const [currentProvider, setCurrentProvider] = useState<string>('');
   const [streamingSupported, setStreamingSupported] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -36,7 +37,8 @@ export const AdminDeveloperSettings = () => {
           'stt_fallback_provider', 
           'stt_timeout',
           'stt_telemetry_enabled',
-          'stt_developer_mode'
+          'stt_developer_mode',
+          'google_cloud_service_account_key'
         ]);
 
       if (settings) {
@@ -56,6 +58,9 @@ export const AdminDeveloperSettings = () => {
               break;
             case 'stt_developer_mode':
               setDeveloperMode(setting.setting_value === 'true');
+              break;
+            case 'google_cloud_service_account_key':
+              setGoogleCloudKey(setting.setting_value || '');
               break;
           }
         });
@@ -99,6 +104,19 @@ export const AdminDeveloperSettings = () => {
           });
 
         if (error) throw error;
+      }
+
+      // Save Google Cloud service account key separately (encrypted)
+      if (googleCloudKey.trim()) {
+        const { error: keyError } = await supabase
+          .from('admin_settings')
+          .upsert({
+            setting_key: 'google_cloud_service_account_key',
+            setting_value: googleCloudKey,
+            is_encrypted: true
+          });
+
+        if (keyError) throw keyError;
       }
 
       // Force reload of STT service factory
@@ -222,6 +240,23 @@ export const AdminDeveloperSettings = () => {
                 onCheckedChange={setDeveloperMode}
               />
             </div>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium">Google Cloud Configuration</h3>
+          <div className="space-y-2">
+            <Label htmlFor="google-cloud-key">Service Account Key (JSON)</Label>
+            <textarea
+              id="google-cloud-key"
+              className="w-full h-32 p-3 text-sm border rounded-md resize-none font-mono"
+              placeholder="Paste your Google Cloud service account JSON key here..."
+              value={googleCloudKey}
+              onChange={(e) => setGoogleCloudKey(e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground">
+              This key will be encrypted and stored securely. Required for Google Cloud Speech-to-Text streaming.
+            </p>
           </div>
         </div>
 
