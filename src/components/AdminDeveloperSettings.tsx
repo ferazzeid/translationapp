@@ -134,18 +134,28 @@ export const AdminDeveloperSettings = () => {
       setLoading(true);
       toast.info('Testing STT provider...');
 
-      // Test with mock audio data
       const provider = await sttServiceFactory.getSTTProvider();
-      const testResult = await provider.transcribe('mock_audio_data', 'en');
       
-      if (testResult.success) {
-        toast.success(`✅ ${provider.getProviderName()} provider working`);
+      // For OpenAI, test connection by checking if API key is configured
+      if (provider.getProviderName() === 'openai') {
+        const { data, error } = await supabase.functions.invoke('validate-openai-key');
+        
+        if (error) {
+          throw new Error(`Connection test failed: ${error.message}`);
+        }
+        
+        if (data?.isValid) {
+          toast.success(`✅ ${provider.getProviderName()} provider connected and API key valid`);
+        } else {
+          toast.error(`❌ ${provider.getProviderName()} provider: Invalid or missing API key`);
+        }
       } else {
-        toast.error(`❌ ${provider.getProviderName()} provider failed: ${testResult.error}`);
+        // For other providers, you could add specific connection tests
+        toast.success(`✅ ${provider.getProviderName()} provider loaded successfully`);
       }
     } catch (error) {
       console.error('Provider test failed:', error);
-      toast.error('Provider test failed');
+      toast.error(`Provider test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
