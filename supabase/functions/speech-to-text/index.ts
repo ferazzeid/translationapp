@@ -134,17 +134,28 @@ serve(async (req) => {
       )
     }
 
-    // Get OpenAI API key from admin settings
+    // Get OpenAI API key from admin settings - CRITICAL FIX: Use .maybeSingle() to prevent errors
     const { data: settingsData, error: settingsError } = await supabase
       .from('admin_settings')
       .select('setting_value')
       .eq('setting_key', 'openai_api_key')
-      .single();
+      .maybeSingle();
 
-    if (settingsError || !settingsData?.setting_value) {
+    if (settingsError) {
       console.error('Failed to get OpenAI API key:', settingsError);
       return new Response(
-        JSON.stringify({ error: 'API key not configured' }),
+        JSON.stringify({ error: 'Database error accessing API key configuration' }),
+        { 
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    if (!settingsData?.setting_value) {
+      console.error('OpenAI API key not configured in admin settings');
+      return new Response(
+        JSON.stringify({ error: 'OpenAI API key not configured - please contact administrator' }),
         { 
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }

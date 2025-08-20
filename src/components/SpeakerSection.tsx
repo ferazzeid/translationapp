@@ -109,12 +109,14 @@ export const SpeakerSection = ({
         </div>
       </div>
 
-      {/* Speaker Status Message */}
+      {/* CRITICAL FIX: Disable individual speaker status messages completely
+          Only the central status display should show processing/recording states
+          This prevents duplicate "Feldolgozás..." messages in Hungarian */}
       <SpeakerStatusMessage
-        isProcessing={isProcessing}
-        isRecording={isListening}
-        currentStep={currentStep}
-        speaker={activeSpeaker}
+        isProcessing={false}
+        isRecording={false}
+        currentStep=""
+        speaker={undefined}
         language={language}
       />
 

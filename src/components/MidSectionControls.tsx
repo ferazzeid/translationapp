@@ -40,18 +40,8 @@ export const MidSectionControls = ({
 }: MidSectionControlsProps) => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center px-5">
-      {/* Top Status Messages */}
-      <div className="absolute top-2 left-1/2 transform -translate-x-1/2">
-        {(isProcessing || isRecording) && (
-          <SpeakerStatusMessage
-            isProcessing={isProcessing}
-            isRecording={isRecording}
-            currentStep={currentStep}
-            speaker={speaker}
-            language={speaker === "A" ? speakerALanguage : speakerBLanguage}
-          />
-        )}
-      </div>
+      {/* CRITICAL FIX: Removed duplicate SpeakerStatusMessage from here
+          This was causing duplicate "Feldolgozás..." messages at the top */}
 
       {/* Main Controls Row */}
       <div className="w-full flex items-center justify-between">
@@ -69,7 +59,7 @@ export const MidSectionControls = ({
           </div>
         </div>
 
-        {/* Center: Loading Animation */}
+        {/* Center: Loading Animation - This handles all central status display */}
         <div className="flex-1 flex items-center justify-center">
           <CentralLoadingAnimation
             isProcessing={isProcessing}
