@@ -17,9 +17,7 @@ import { SpeakerSection } from "./SpeakerSection";
 import { VoiceSelectionModal } from "./VoiceSelectionModal";
 import { pipelineOptimizer } from "@/utils/pipelineOptimizer";
 import { voicePrewarming } from "@/utils/voicePrewarming";
-import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 import { performanceAnalytics } from "@/utils/performanceAnalytics";
-import { settingsCache } from "@/utils/settingsCache";
 
 import { RecordingCountdown } from "./RecordingCountdown";
 
@@ -85,7 +83,6 @@ export const TranslationInterface = ({
   const [initialManagedModeEnabled, setInitialManagedModeEnabled] = useState(false);
   const managedMode = useManagedMode(initialManagedModeEnabled);
   const voiceGenderDetection = useVoiceGenderDetection();
-  const { flags: featureFlags } = useFeatureFlags();
   
   // Determine if we're on a real mobile device (not desktop with mobile frame)
   const isRealMobile = isMobile || isStandalone;
@@ -96,23 +93,6 @@ export const TranslationInterface = ({
   useEffect(() => {
     const loadAdminSettings = async () => {
       try {
-        // Check cache first (24 hour expiry)
-        const cached = settingsCache.get<Record<string, boolean>>('admin_settings');
-        if (cached) {
-          console.log('TranslationInterface: Using cached admin settings');
-          
-          if (cached.wake_lock_enabled && wakeLock.isSupported) {
-            wakeLock.request();
-          }
-          
-          const shouldEnable = cached.managed_mode_enabled ?? false;
-          setInitialManagedModeEnabled(shouldEnable);
-          managedMode.setEnabled(shouldEnable);
-          
-          setHoldToRecordMode(cached.hold_to_record_enabled ?? false);
-          return;
-        }
-
         console.log('TranslationInterface: Loading admin settings from database...');
         const { data, error } = await supabase
           .from("admin_settings")
@@ -121,15 +101,8 @@ export const TranslationInterface = ({
 
         if (error) throw error;
 
-        const settings: Record<string, boolean> = {
-          wake_lock_enabled: true,
-          managed_mode_enabled: false,
-          hold_to_record_enabled: false
-        };
-
         data?.forEach((setting) => {
           const value = setting.setting_value === "true";
-          settings[setting.setting_key] = value;
 
           switch (setting.setting_key) {
             case "wake_lock_enabled":
@@ -147,9 +120,6 @@ export const TranslationInterface = ({
               break;
           }
         });
-
-        // Cache for 24 hours
-        settingsCache.set('admin_settings', settings, 1440);
       } catch (error: any) {
         console.error('Error loading admin settings:', error);
       }
@@ -161,7 +131,7 @@ export const TranslationInterface = ({
   // Voice prewarming effect - SESSION-BASED (only once per session)
   useEffect(() => {
     const prewarmVoices = async () => {
-      if (!featureFlags.ttsPrewarm || !speakerAVoice || !speakerBVoice) return;
+      if (!speakerAVoice || !speakerBVoice) return;
 
       // Check if voices already prewarmed in this session
       const sessionKey = `prewarmed_${speakerAVoice}_${speakerBVoice}_${speakerALanguage}_${speakerBLanguage}`;
@@ -183,7 +153,7 @@ export const TranslationInterface = ({
     };
 
     prewarmVoices();
-  }, [speakerAVoice, speakerBVoice, speakerALanguage, speakerBLanguage, featureFlags.ttsPrewarm]);
+  }, [speakerAVoice, speakerBVoice, speakerALanguage, speakerBLanguage]);
 
   // Initialize performance analytics session
   useEffect(() => {
@@ -343,14 +313,13 @@ export const TranslationInterface = ({
         return false;
       }
 
-      // Use optimized pipeline processor
+      // Use simple pipeline processor
       const result = await pipelineOptimizer.processAudioOptimized(
         audioData,
         speaker,
         originalLang,
         targetLang,
         voiceToUse,
-        featureFlags,
         setCurrentProcessingStep
       );
 
